@@ -26,14 +26,14 @@ export default function Home() {
         <p className='font-semibold text-3xl'>Erik Bautista Santibanez</p>
         <p className='text-lg text-gray-300'>iOS Developer & Software Engineer</p>
         {/* TODO: Add buttons to find me */}
-        <div>
+        {/* <div>
           {socialMedia.map(SocialButton)}
-        </div>
+        </div> */}
       </div>
 
       {/* Cards */}
       <ul className="h-full w-full overflow-x-auto flex flex-nowrap items-center gap-6 snap-x snap-mandatory scroll-px-8">
-        {projectButtons.map(element => <li className="h-full max-h-[32rem] min-h-32 flex-none snap-start first:ps-8 last:pe-8">{ProjectCard(element)}</li>)}
+        {projectButtons.map(element => <li key={element.title} className="h-full max-h-[32rem] min-h-32 flex-none snap-start first:ps-8 last:pe-8">{ProjectCard(element)}</li>)}
       </ul>
 
       {/* Footer */}
