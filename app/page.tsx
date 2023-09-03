@@ -2,42 +2,45 @@ const socialMedia: Social[] = [];
 
 const projectButtons: Project[] = [
   {
-    title: "Title 1",
-    description: "Some Description"
+    title: "Mochi",
+    description: "iOS Mobile Application",
+    link: undefined
   },
   {
-    title: "Title 2",
-    description: "Some Description"
+    title: "Anime Now!",
+    description: "",
+    link: undefined
   },
+  {
+    title: "Safer Together",
+    description: "",
+    link: undefined
+  }
 ];
 
 export default function Home() {
   return (
-    <div className="h-screen container max-w-6xl mx-auto p-8 grid space-y-8">
-      <div className='row-span-6 md:grid md:grid-cols-2 md:gap-8 h-full content-center'>
-        <div className="pb-8 self-center">
-          {/* Name & Title */}
-          <div>
-            <p className='font-semibold text-3xl'>Erik Bautista Santibanez</p>
-            <p className='my-2 text-lg text-gray-300'>iOS Developer & Software Engineer</p>
-          </div>
-          {/* TODO: Add buttons to find me */}
-          <div>
-            {socialMedia.map(SocialButton)}
-          </div>
-        </div>
-        <div className='self-center w-fill'>
-          <div className='flex flex-col space-y-4'>
-            {projectButtons.map(ProjectButton)}
-          </div>
+    <main className="h-screen w-full flex flex-col">
+      {/* Name & Title */}
+      <div className="container max-w-6xl mx-auto p-8">
+        <p className='font-semibold text-3xl'>Erik Bautista Santibanez</p>
+        <p className='text-lg text-gray-300'>iOS Developer & Software Engineer</p>
+        {/* TODO: Add buttons to find me */}
+        <div>
+          {socialMedia.map(SocialButton)}
         </div>
       </div>
 
+      {/* Cards */}
+      <ul className="h-full w-full overflow-x-auto flex flex-nowrap items-center gap-6 snap-x snap-mandatory scroll-px-8">
+        {projectButtons.map(element => <li className="h-full max-h-[32rem] min-h-32 flex-none snap-start first:ps-8 last:pe-8">{ProjectCard(element)}</li>)}
+      </ul>
+
       {/* Footer */}
-      <div className="mx-auto md:mx-0 self-end">
+      <div className="container max-w-6xl mx-auto self-center md:self-start p-8">
         <p className="text-sm text-neutral-400">© 2023 Erik Bautista Santibanez. All rights reserved.</p>
       </div>
-    </div>
+    </main>
   )
 }
 
@@ -45,10 +48,10 @@ const SocialButton = (social: Social) => {
   return (<div></div>)
 }
 
-const ProjectButton = (project: Project) => {
+const ProjectCard = (project: Project) => {
   return (
-    <button className="bg-neutral-500/40 rounded-lg h-24">
-      <div className="px-6 text-white text-left">
+    <button className="h-full aspect-[2/3] rounded-lg transition ease-in-out duration-300 bg-neutral-500/40 hover:bg-green-500">
+      <div className="p-6 text-white text-left h-full">
         <p className="text-lg font-semibold">{project.title}</p>
         <p className="text-sm font-normal">{project.description}</p>
       </div>
@@ -64,5 +67,6 @@ interface Social {
 
 interface Project {
   title: string,
-  description: string
+  description: string,
+  link: string | undefined
 }
