@@ -1,72 +1,81 @@
-const socialMedia: Social[] = [];
+import Image from 'next/image'
+import { FiGithub, FiMail, FiExternalLink } from 'react-icons/fi';
 
 const projectButtons: Project[] = [
   {
     title: "Mochi",
-    description: "iOS Mobile Application",
-    link: undefined
+    description: "iOS App",
+    image: "",
+    link: "https://github.com/Mochi-Team/mochi"
   },
   {
     title: "Anime Now!",
-    description: "",
-    link: undefined
+    description: "iOS App",
+    image: "",
+    link: "https://github.com/AnimeNow-Team/AnimeNow"
   },
   {
     title: "Safer Together",
-    description: "",
+    description: "iOS App",
+    image: "",
     link: undefined
   }
 ];
 
 export default function Home() {
   return (
-    <main className="h-screen w-full flex flex-col">
+    <main className="h-[calc(100dvh)] w-full flex flex-col">
       {/* Name & Title */}
-      <div className="container max-w-6xl mx-auto p-8">
-        <p className='font-semibold text-3xl'>Erik Bautista Santibanez</p>
-        <p className='text-lg text-gray-300'>iOS Developer & Software Engineer</p>
-        {/* TODO: Add buttons to find me */}
-        {/* <div>
-          {socialMedia.map(SocialButton)}
-        </div> */}
+      <div className="p-8 flex-none">
+        <p className='font-semibold text-2xl'>Erik Bautista Santibanez</p>
+        <p className='text-md text-neutral-400 pb-4'>iOS Developer & Software Engineer</p>
+        <div className='flex flex-row text-neutral-200 space-x-3 text-2xl'>
+          <a href='mailto:erikbautista15@gmail.com'><FiMail /></a>
+          <a href='https://github.com/ErrorErrorError'><FiGithub /></a>
+        </div>
       </div>
 
       {/* Cards */}
-      <ul className="h-full w-full overflow-x-auto flex flex-nowrap items-center gap-6 snap-x snap-mandatory scroll-px-8">
-        {projectButtons.map(element => <li key={element.title} className="h-full max-h-[32rem] min-h-32 flex-none snap-start first:ps-8 last:pe-8">{ProjectCard(element)}</li>)}
+      <ul className="h-full w-full flex-auto overflow-y-hidden overflow-x-auto flex flex-nowrap items-center gap-4 md:gap-6 snap-x snap-mandatory scroll-px-8 scrollbar-padding">
+        {projectButtons.map(element => <li key={element.title} className="h-full flex-none snap-start first:ps-8 last:pe-8">{ProjectCard(element)}</li>)}
       </ul>
 
       {/* Footer */}
-      <div className="container max-w-6xl mx-auto self-center md:self-start p-8">
-        <p className="text-sm text-neutral-400">© 2023 Erik Bautista Santibanez. All rights reserved.</p>
+      <div className="self-center md:self-start p-8">
+        <p className="text-xs text-neutral-400">© 2023 Erik Bautista Santibanez. All rights reserved.</p>
       </div>
     </main>
   )
 }
 
-const SocialButton = (social: Social) => {
-  return (<div></div>)
-}
-
 const ProjectCard = (project: Project) => {
   return (
-    <button className="h-full aspect-[2/3] rounded-lg transition ease-in-out duration-300 bg-neutral-500/40 hover:bg-green-500">
-      <div className="p-6 text-white text-left h-full">
-        <p className="text-lg font-semibold">{project.title}</p>
-        <p className="text-sm font-normal">{project.description}</p>
+    <a href={project.link}>
+      <div className="h-full p-6 aspect-[5/8] rounded-3xl transition ease-in-out duration-300 bg-neutral-500/40 hover:bg-green-500 cursor-pointer">
+        <div className='flex flex-row items-center space-x-4'>
+          {/* <Image
+            className='row-start-1'
+            src={project.image}
+            width={64}
+            height={64}
+            alt='Picture of '
+          /> */}
+          <div className='flex-auto text-white text-left'>
+            <p className="text-lg font-semibold">{project.title}</p>
+            <p className="text-sm font-normal">{project.description}</p>
+          </div>
+          <div className='text-right'>
+            <a className='inline-flex items-center gap-1 rounded-full bg-neutral-500 p-1.5 px-3 text-xs'>Open <FiExternalLink className="text-lg" /></a>
+          </div>
+        </div>
       </div>
-    </button>
+    </a>
   )
-}
-
-interface Social {
-  name: string,
-  image: string,
-  link: string
 }
 
 interface Project {
   title: string,
   description: string,
+  image: string,
   link: string | undefined
 }
