@@ -42,3 +42,7 @@ body {
 .scrollbar-padding {
   scrollbar-gutter: 8px;
 }
+
+.blur-view {
+  @apply px-2 py-0.5 rounded-full backdrop-blur-xl bg-neutral-500/50 border-neutral-200/25 border;
+}

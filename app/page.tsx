@@ -1,25 +1,71 @@
 import Image from 'next/image'
 import { type } from 'os';
 import { FiGithub, FiMail, FiExternalLink } from 'react-icons/fi';
+import { Conditional } from './utils/contitional';
+
+enum Deployments {
+  GitHub = "GitHub",
+  TestFlight = "TestFlight",
+  BitBucket = "Bitbucket"
+}
+
+enum Frameworks {
+  iOS = "iOS",
+  Swift = "Swift",
+  NextJS = "NextJS"
+}
+
+namespace Frameworks {
+  function color(framework: Frameworks) {
+    switch (framework) {
+      case Frameworks.iOS:
+        break
+      case Frameworks.Swift:
+        break
+      case Frameworks.NextJS:
+        break
+    }
+  }
+}
+
+interface Tag {
+  name: string,
+  color: string
+}
+
+interface Project {
+  title: string,
+  description: string,
+  image: string | undefined,
+  link: string | undefined,
+  deployment: Deployments,
+  tags: Frameworks[]
+}
 
 const projectButtons: Project[] = [
   {
     title: "Mochi",
-    description: "iOS App",
-    image: "",
-    link: "https://github.com/Mochi-Team/mochi"
+    description: "All-in-one multi media app!",
+    image: undefined,
+    link: "https://github.com/Mochi-Team/mochi",
+    deployment: Deployments.GitHub,
+    tags: [Frameworks.iOS]
   },
   {
     title: "Anime Now!",
-    description: "iOS App",
-    image: "",
-    link: "https://github.com/AnimeNow-Team/AnimeNow"
+    description: "",
+    image: undefined,
+    link: "https://github.com/AnimeNow-Team/AnimeNow",
+    deployment: Deployments.GitHub,
+    tags: [Frameworks.iOS]
   },
   {
     title: "Safer Together",
-    description: "iOS App",
-    image: "",
-    link: undefined
+    description: "",
+    image: undefined,
+    link: undefined,
+    deployment: Deployments.BitBucket,
+    tags: [Frameworks.iOS]
   }
 ];
 
@@ -52,17 +98,27 @@ export default function Home() {
 const ProjectCard = (project: Project) => {
   return (
     <div className="h-full p-6 aspect-[5/8] flex flex-col rounded-3xl transition ease-in-out duration-300 bg-neutral-500/40 hover:bg-green-500">
-      <a href={project.link} className='w-fit ml-auto cursor-pointer inline-flex items-center gap-1 rounded-full bg-neutral-500 p-1.5 px-3 text-xs'>Open <FiExternalLink className="text-lg" /></a>
+        <a href={project.link} className='blur-view !py-1 items-center self-end cursor-pointer flex flex-row text-xs space-x-1'>
+          <p className=''>{project.deployment}</p> 
+          <FiExternalLink className="text-[16px]" />
+        </a>
 
-      <div className='mt-auto flex flex-row items-center space-x-4'>
-        {/* <Image
-            className='row-start-1'
-            src={project.image}
-            width={64}
-            height={64}
-            alt='Picture of '
-          /> */}
+      <Conditional showWhen={project.image !== undefined}>
+        <Image
+          className='mt-auto'
+          src={project.image!}
+          width={64}
+          height={64}
+          alt={`Logo of ${project.title}`}
+        />
+      </Conditional>
+      <div className={`${project.image === undefined ? 'mt-auto' : ''} flex flex-row items-center space-x-4`}>
         <div className='flex-auto text-white text-left'>
+          <div className='flex flex-row pb-1'>
+            {project.tags.map(tag => {
+              return <p className='blur-view text-sm font-normal'>{tag}</p>
+            })}
+          </div>
           <p className="text-lg font-semibold">{project.title}</p>
           <p className="text-sm font-normal">{project.description}</p>
         </div>
@@ -70,17 +126,3 @@ const ProjectCard = (project: Project) => {
     </div>
   )
 }
-
-interface Project {
-  title: string,
-  description: string,
-  image: string,
-  link: string | undefined
-}
-
-// interface Deployments {
-//   GitLab = "",
-//   GitHub = ""
-// }
-
-// type Deployed = string | 
