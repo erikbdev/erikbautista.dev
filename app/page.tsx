@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { type } from 'os';
 import { FiGithub, FiMail, FiExternalLink } from 'react-icons/fi';
 
 const projectButtons: Project[] = [
@@ -50,26 +51,23 @@ export default function Home() {
 
 const ProjectCard = (project: Project) => {
   return (
-    <a href={project.link}>
-      <div className="h-full p-6 aspect-[5/8] rounded-3xl transition ease-in-out duration-300 bg-neutral-500/40 hover:bg-green-500 cursor-pointer">
-        <div className='flex flex-row items-center space-x-4'>
-          {/* <Image
+    <div className="h-full p-6 aspect-[5/8] flex flex-col rounded-3xl transition ease-in-out duration-300 bg-neutral-500/40 hover:bg-green-500">
+      <a href={project.link} className='w-fit ml-auto cursor-pointer inline-flex items-center gap-1 rounded-full bg-neutral-500 p-1.5 px-3 text-xs'>Open <FiExternalLink className="text-lg" /></a>
+
+      <div className='mt-auto flex flex-row items-center space-x-4'>
+        {/* <Image
             className='row-start-1'
             src={project.image}
             width={64}
             height={64}
             alt='Picture of '
           /> */}
-          <div className='flex-auto text-white text-left'>
-            <p className="text-lg font-semibold">{project.title}</p>
-            <p className="text-sm font-normal">{project.description}</p>
-          </div>
-          <div className='text-right'>
-            <a className='inline-flex items-center gap-1 rounded-full bg-neutral-500 p-1.5 px-3 text-xs'>Open <FiExternalLink className="text-lg" /></a>
-          </div>
+        <div className='flex-auto text-white text-left'>
+          <p className="text-lg font-semibold">{project.title}</p>
+          <p className="text-sm font-normal">{project.description}</p>
         </div>
       </div>
-    </a>
+    </div>
   )
 }
 
@@ -79,3 +77,10 @@ interface Project {
   image: string,
   link: string | undefined
 }
+
+// interface Deployments {
+//   GitLab = "",
+//   GitHub = ""
+// }
+
+// type Deployed = string | 
