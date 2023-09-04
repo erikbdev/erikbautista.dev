@@ -116,7 +116,7 @@ const ProjectCard = (project: Project) => {
         <div className='flex-auto text-white text-left'>
           <div className='flex flex-row pb-1'>
             {project.tags.map(tag => {
-              return <p className='blur-view text-sm font-normal'>{tag}</p>
+              return <p key={tag} className='blur-view text-sm font-normal'>{tag}</p>
             })}
           </div>
           <p className="text-lg font-semibold">{project.title}</p>
