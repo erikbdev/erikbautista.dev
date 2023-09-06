@@ -3,46 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 18, 18, 18;
-  --background-end-rgb: 0, 0, 0;
+  --bg-initial-color: rgb(18, 18, 18);
+  --bg-ending-color: rgb(0, 0, 0);
+  --page-header: 146px; /* Dynamically generated */
+  --page-height-min: calc(100vh - var(--page-header));
+}
+
+@media(min-width: 768px) {
+  :root {
+    --page-header: 156px;
+  }
+}
+
+html {
+  background-color: var(--bg-initial-color);
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-::-webkit-scrollbar {
-  background-color: #00000000;
-  border-radius: px0;
-  border: 0px solid transparent;
-  background-clip: content-box;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #00000000;
-  border-radius: 0px;
-  border: 0px solid transparent;
-  background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #00000000;
-  border-radius: 0px;
-  border: 0px solid transparent;
-  background-clip: content-box;
+  color: rgb(255, 255, 255);
+  background: linear-gradient(var(--bg-initial-color), var(--bg-initial-color)) var(--bg-initial-color);
 }
 
 .scrollbar-padding {
   scrollbar-gutter: 8px;
 }
 
+.full-height {
+  min-height: var(--page-height-min)
+}
+
 .blur-view {
-  @apply px-2 py-0.5 rounded-full backdrop-blur-xl bg-neutral-500/50 border-neutral-200/25 border;
+  @apply px-2 py-0.5 rounded-full backdrop-blur-xl bg-neutral-500/50 border border-white/10;
 }

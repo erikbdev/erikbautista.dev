@@ -1,13 +1,7 @@
-
 export function Footer() {
     return (
-        <footer>
-            <div className="w-full h-0.5 bg-neutral-500/25"></div>
-            <div className="mx-auto px-24 py-8 grid grid-cols-3">
-                <p className="justify-self-center">Home</p>
-                <p className="justify-self-center">Projects</p>
-                <p className="">About</p>
-            </div>
+        <footer className="container text-center sm:text-start py-8">
+            <p className="border-t pt-8 border-white/10 text-xs text-neutral-400">© 2023 Erik Bautista Santibanez. All Rights Reserved.</p>
         </footer>
     )
 }

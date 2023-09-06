@@ -1,7 +1,4 @@
-import Image from 'next/image'
-import { type } from 'os';
-import { FiGithub, FiMail, FiExternalLink } from 'react-icons/fi';
-import { Conditional } from './utils/contitional';
+import { FiArrowUpRight } from 'react-icons/fi';
 
 enum Deployments {
   GitHub = "GitHub",
@@ -9,120 +6,89 @@ enum Deployments {
   BitBucket = "Bitbucket"
 }
 
-enum Frameworks {
-  iOS = "iOS",
+enum Languages {
   Swift = "Swift",
+  HTML = "HTML",
+  JS = "JavaScript",
+  Rust = "Rust"
+}
+
+enum Frameworks {
+  SwiftUI = "SwiftUI",
+  UIKit = "UIKit",
   NextJS = "NextJS"
 }
 
-namespace Frameworks {
-  function color(framework: Frameworks) {
-    switch (framework) {
-      case Frameworks.iOS:
-        break
-      case Frameworks.Swift:
-        break
-      case Frameworks.NextJS:
-        break
-    }
-  }
-}
-
-interface Tag {
-  name: string,
-  color: string
+enum Platforms {
+  iOS = "iOS",
+  macOS = "macOS",
+  Mobile = "Mobile",
+  Desktop = "Desktop"
 }
 
 interface Project {
   title: string,
   description: string,
-  image: string | undefined,
-  link: string | undefined,
+  logo: URL | string | undefined,
+  link: URL | undefined,
   deployment: Deployments,
-  tags: Frameworks[]
+  tags: (Languages | Frameworks | Platforms)[]
 }
-
-const projectButtons: Project[] = [
-  {
-    title: "Mochi",
-    description: "All-in-one multi media app!",
-    image: undefined,
-    link: "https://github.com/Mochi-Team/mochi",
-    deployment: Deployments.GitHub,
-    tags: [Frameworks.iOS]
-  },
-  {
-    title: "Anime Now!",
-    description: "",
-    image: undefined,
-    link: "https://github.com/AnimeNow-Team/AnimeNow",
-    deployment: Deployments.GitHub,
-    tags: [Frameworks.iOS]
-  },
-  {
-    title: "Safer Together",
-    description: "",
-    image: undefined,
-    link: undefined,
-    deployment: Deployments.BitBucket,
-    tags: [Frameworks.iOS]
-  }
-];
 
 export default function Home() {
   return (
-    <main className="h-[calc(100dvh)] w-full flex flex-col">
-      {/* Name & Title */}
-      <div className="p-8 flex-none">
-        <p className='font-semibold text-2xl'>Erik Bautista Santibanez</p>
-        <p className='text-md text-neutral-400 pb-4'>iOS Developer & Software Engineer</p>
-        <div className='flex flex-row text-neutral-200 space-x-3 text-2xl'>
-          <a href='mailto:erikbautista15@gmail.com'><FiMail /></a>
-          <a href='https://github.com/ErrorErrorError'><FiGithub /></a>
-        </div>
-      </div>
-
-      {/* Cards */}
-      <ul className="h-full w-full flex-auto overflow-y-hidden overflow-x-auto flex flex-nowrap items-center gap-4 md:gap-6 snap-x snap-mandatory scroll-px-8 scrollbar-padding">
-        {projectButtons.map(element => <li key={element.title} className="h-full flex-none snap-start first:ps-8 last:pe-8">{ProjectCard(element)}</li>)}
-      </ul>
-
-      {/* Footer */}
-      <div className="self-center md:self-start p-8">
-        <p className="text-xs text-neutral-400">© 2023 Erik Bautista Santibanez. All rights reserved.</p>
-      </div>
+    <main>
+      <section className={`full-height container grid sm:grid-cols-2 lg:grid-cols-3 md:items-center gap-4 md:gap-6`}>
+        <ProjectCard project={{
+          title: "Mochi",
+          description: "An open-source image, text, video viewer.",
+          logo: undefined,
+          link: new URL("https://github.com/Mochi-Team/mochi"),
+          deployment: Deployments.GitHub,
+          tags: [Platforms.iOS, Frameworks.SwiftUI]
+        }} />
+        <ProjectCard project={{
+          title: "Anime Now!",
+          description: "Track your favorite anime content!",
+          logo: undefined,
+          link: new URL("https://github.com/AnimeNow-Team/AnimeNow"),
+          deployment: Deployments.GitHub,
+          tags: [Platforms.iOS, Frameworks.SwiftUI]
+        }} />
+        <ProjectCard project={{
+          title: "Safer Together",
+          description: "Building a safer world one step at a time.",
+          logo: undefined,
+          link: undefined,
+          deployment: Deployments.BitBucket,
+          tags: [Platforms.iOS, Frameworks.UIKit]
+        }} />
+      </section>
     </main>
   )
 }
 
-const ProjectCard = (project: Project) => {
+const ProjectCard = ({ project }: { project: Project }) => {
   return (
-    <div className="h-full p-6 aspect-[5/8] flex flex-col rounded-3xl transition ease-in-out duration-300 bg-neutral-500/40 hover:bg-green-500">
-        <a href={project.link} className='blur-view !py-1 items-center self-end cursor-pointer flex flex-row text-xs space-x-1'>
-          <p className=''>{project.deployment}</p> 
-          <FiExternalLink className="text-[16px]" />
-        </a>
+    <button key={project.title} className="aspect-[6/8] p-6 flex flex-col rounded-3xl transition ease-in-out duration-300 bg-neutral-500/40 border border-white/10">
+      <a href={project.link?.href} className='blur-view !py-1 items-center self-end cursor-pointer flex flex-row text-xs space-x-1'>
+        <p>{project.deployment}</p>
+        <FiArrowUpRight className="text-[16px] text-neutral-300" />
+      </a>
 
-      <Conditional showWhen={project.image !== undefined}>
-        <Image
-          className='mt-auto'
-          src={project.image!}
-          width={64}
-          height={64}
-          alt={`Logo of ${project.title}`}
-        />
-      </Conditional>
-      <div className={`${project.image === undefined ? 'mt-auto' : ''} flex flex-row items-center space-x-4`}>
-        <div className='flex-auto text-white text-left'>
-          <div className='flex flex-row pb-1'>
-            {project.tags.map(tag => {
-              return <p key={tag} className='blur-view text-sm font-normal'>{tag}</p>
-            })}
-          </div>
-          <p className="text-lg font-semibold">{project.title}</p>
-          <p className="text-sm font-normal">{project.description}</p>
+      {/* <div className='m-auto text-center items-center'>
+        <div className='bg-red-50/10 w-44 h-44 mx-auto mb-4'></div>
+        <p className="text-3xl font-semibold">{project.title}</p>
+        <p className="text-md font-normal">{project.description}</p>
+      </div> */}
+
+      <div className='mt-auto text-white text-left'>
+        <div className='flex flex-row pb-1 gap-2 '>
+          {project.tags.map(tag => <p key={tag} className='blur-view text-sm font-normal'>{tag}</p>)}
         </div>
+        <p className="text-lg font-semibold">{project.title}</p>
+        <p className="text-sm font-normal">{project.description}</p>
       </div>
-    </div>
+    </button>
   )
 }

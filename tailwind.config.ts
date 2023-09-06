@@ -6,7 +6,18 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  theme: {},
-  plugins: [],
+  theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1.5rem',
+        lg: '4rem',
+        xl: '10rem',
+      },
+    },
+  },
+  corePlugins: {},
+  plugins: []
 }
+
 export default config
