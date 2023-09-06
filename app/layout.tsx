@@ -1,7 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { FiGithub, FiMail } from 'react-icons/fi'
 import { Footer } from './components/footer'
 import Header from './components/header'
 
@@ -19,9 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex flex-col antialiased`}>
+      <body className={`${inter.className} flex flex-col h-full antialiased`}>
         <Header />
-        {children}
+        <main className='flex-auto'>{children}</main>
         <Footer />
       </body>
     </html>
