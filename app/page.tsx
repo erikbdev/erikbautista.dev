@@ -44,8 +44,8 @@ interface Project {
 
 export default function Home() {
   return (
-    <section className={`h-full container`}>
-      <div className='grid sm:grid-cols-2 lg:grid-cols-3 md:items-center gap-6 md:gap-8'>
+    <section className={`h-full px-8`}>
+      <div className='grid sm:grid-cols-2 gap-4 screen-container'>
         <Reveal>
           <ProjectCard project={{
             title: "Mochi",
@@ -83,11 +83,11 @@ export default function Home() {
 
 const ProjectCard = ({ project }: { project: Project }) => {
   return (
-    <button key={project.title} className="w-full transition ease-in-out duration-300 hover:scale-105 aspect-[6/8] p-6 flex flex-col rounded-3xl bg-neutral-500/40 border border-white/10">
-      <a href={project.link?.href} target="_blank" rel="noopener noreferrer" className='blur-view !py-1 items-center self-end cursor-pointer flex flex-row text-xs space-x-1'>
+    <a href={project.link?.href} target="_blank" rel="noopener noreferrer" key={project.title} className="w-full transition ease-in-out duration-300 aspect-[6/8] p-6 flex flex-col rounded-3xl bg-neutral-500/40 border border-white/10">
+      <div className='blur-view !py-1 items-center self-end cursor-pointer flex flex-row text-xs space-x-1'>
         <p>{project.deployment}</p>
         <FiArrowUpRight className="text-[16px] text-neutral-300" />
-      </a>
+      </div>
 
       <Image
         className='my-auto w-[50%] self-center'
@@ -102,6 +102,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
         <p className="text-lg font-semibold">{project.title}</p>
         <p className="text-sm font-normal">{project.description}</p>
       </div>
-    </button>
+    </a>
   )
 }

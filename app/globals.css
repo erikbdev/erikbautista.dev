@@ -14,6 +14,10 @@ html, body {
   background-color: var(--bg-initial-color);
 }
 
+.screen-container {
+  @apply max-w-2xl mx-auto w-full
+}
+
 .blur-view {
   @apply px-2 py-0.5 rounded-full backdrop-blur-xl bg-neutral-500/50 border border-white/10;
 }

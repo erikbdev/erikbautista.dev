@@ -10,9 +10,9 @@ const config: Config = {
     container: {
       center: true,
       padding: {
-        DEFAULT: '1.5rem',
-        lg: '4rem',
-        xl: '10rem',
+        DEFAULT: '2rem',
+        // lg: '18rem',
+        // xl: '18rem',
       },
     },
   },
