@@ -6,16 +6,7 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  theme: {
-    container: {
-      center: true,
-      padding: {
-        DEFAULT: '2rem',
-        // lg: '18rem',
-        // xl: '18rem',
-      },
-    },
-  },
+  theme: {  },
   corePlugins: {},
   plugins: []
 }

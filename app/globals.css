@@ -5,17 +5,20 @@
 :root {
   --bg-initial-color: rgb(18, 18, 18);
   --bg-ending-color: rgb(0, 0, 0);
+  --page-padding: 2rem;
+  --page-header-height: 28px;
+  --page-h-screen: calc(100dvh - var(--page-padding) * 3 - var(--page-header-height));
 }
 
 html, body {
-  height: 100%;
+  /* height: 100%; */
   color: rgb(255, 255, 255);
   background: linear-gradient(var(--bg-initial-color), var(--bg-initial-color)) var(--bg-initial-color);
   background-color: var(--bg-initial-color);
 }
 
-.screen-container {
-  @apply max-w-2xl mx-auto w-full
+.page-screen {
+  min-height: var(--page-h-screen);
 }
 
 .blur-view {

@@ -18,10 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex flex-col min-h-screen antialiased`}>
-        <Header />
-        <main className='flex-auto'>{children}</main>
-        <Footer />
+      <body className={`${inter.className} min-h-screen p-8 antialiased`}>
+        <div className='h-full flex flex-col max-w-2xl mx-auto gap-8'>
+          <Header />
+          <main className='h-full flex-auto page-screen'>{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   )

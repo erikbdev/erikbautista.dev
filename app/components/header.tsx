@@ -1,16 +1,30 @@
-import { FiGithub, FiMail } from "react-icons/fi";
+'use client'
+
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+
+interface NavigationTab {
+    title: string,
+    href: string
+}
+
+const tabs: NavigationTab[] = [
+    { title: "home", href: "/" },
+    { title: "projects", href: "/projects" },
+    { title: "about", href: "/about" },
+]
 
 export default function Header() {
+    const pathname = usePathname()
+
     return (
-        <header className="on-reveal-blur flex-initial p-8">
-            <div className="screen-container ">
-                <p className='font-semibold text-2xl'>Erik Bautista Santibanez</p>
-                <p className='text-md text-neutral-400 pb-4'>iOS Developer & Software Engineer</p>
-                <div className='flex flex-row text-neutral-200 space-x-2 text-2xl'>
-                    <a href='mailto:erikbautista15@gmail.com'><FiMail /></a>
-                    <a href='https://github.com/ErrorErrorError'><FiGithub /></a>
+        <header>
+            <nav className="flex flex-row">
+                <a href="/" className="font-bold text-lg text-center shrink">{'<erik/>'}</a>
+                <div className="text-sm font-medium flex-shrink ml-auto self-center space-x-4 text-neutral-500">
+                    {tabs.map(tab => <Link className={pathname == tab.href ? 'text-white' : '' } href={tab.href}>{tab.title}</Link>)}
                 </div>
-            </div>
+            </nav>
         </header>
     )
 }

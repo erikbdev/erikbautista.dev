@@ -1,11 +1,12 @@
 import Image from 'next/image'
-import { FiArrowUpRight } from 'react-icons/fi';
+import { FiArrowUpRight, FiGithub, FiMail } from 'react-icons/fi';
 import { Conditional } from './utils/contitional';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 
 import MochiIcon from "../public/Mochi/logo.svg";
 import AnimeNowIcon from "../public/AnimeNow/logo.svg"
 import Reveal from './components/reveal';
+import { Fragment } from 'react';
 
 enum Deployments {
   GitHub = "GitHub",
@@ -17,7 +18,8 @@ enum Languages {
   Swift = "Swift",
   HTML = "HTML",
   JS = "JavaScript",
-  Rust = "Rust"
+  Rust = "Rust",
+  WebAssembly = "Web Assembly"
 }
 
 enum Frameworks {
@@ -42,42 +44,57 @@ interface Project {
   tags: (Languages | Frameworks | Platforms)[]
 }
 
+const projects: Project[] = [
+  {
+    title: "Mochi",
+    description: "An open-source image, text, video viewer.",
+    logo: MochiIcon,
+    link: new URL("https://github.com/Mochi-Team/mochi"),
+    deployment: Deployments.GitHub,
+    tags: [Platforms.iOS, Frameworks.SwiftUI, Languages.WebAssembly]
+  },
+  {
+    title: "Anime Now!",
+    description: "Track your favorite anime content!",
+    logo: AnimeNowIcon,
+    link: new URL("https://github.com/AnimeNow-Team/AnimeNow"),
+    deployment: Deployments.GitHub,
+    tags: [Platforms.iOS, Frameworks.SwiftUI]
+  },
+  {
+    title: "Safer Together",
+    description: "Building a safer world one step at a time.",
+    logo: "",
+    link: undefined,
+    deployment: Deployments.BitBucket,
+    tags: [Platforms.iOS, Frameworks.UIKit]
+  }
+]
+
 export default function Home() {
   return (
-    <section className={`h-full px-8`}>
-      <div className='grid sm:grid-cols-2 gap-4 screen-container'>
-        <Reveal>
-          <ProjectCard project={{
-            title: "Mochi",
-            description: "An open-source image, text, video viewer.",
-            logo: MochiIcon,
-            link: new URL("https://github.com/Mochi-Team/mochi"),
-            deployment: Deployments.GitHub,
-            tags: [Platforms.iOS, Frameworks.SwiftUI]
-          }} />
-        </Reveal>
-        <Reveal>
-          <ProjectCard project={{
-            title: "Anime Now!",
-            description: "Track your favorite anime content!",
-            logo: AnimeNowIcon,
-            link: new URL("https://github.com/AnimeNow-Team/AnimeNow"),
-            deployment: Deployments.GitHub,
-            tags: [Platforms.iOS, Frameworks.SwiftUI]
-          }} />
-        </Reveal>
-        <Reveal>
-          <ProjectCard project={{
-            title: "Safer Together",
-            description: "Building a safer world one step at a time.",
-            logo: "",
-            link: undefined,
-            deployment: Deployments.BitBucket,
-            tags: [Platforms.iOS, Frameworks.UIKit]
-          }} />
-        </Reveal>
+    <div className='flex flex-col gap-8'>
+      <div className="on-reveal-blur flex-initial">
+        <p className='font-semibold text-2xl'>Erik Bautista Santibanez</p>
+        <p className='text-md text-neutral-400 pb-4'>iOS Developer & Software Engineer</p>
+        <div className='flex flex-row text-neutral-200 space-x-2 text-2xl'>
+          <a href='mailto:erikbautista15@gmail.com'><FiMail /></a>
+          <a href='https://github.com/ErrorErrorError'><FiGithub /></a>
+        </div>
       </div>
-    </section>
+      <section className={`h-full`}>
+        {/* <h1 className='text-2xl font-semibold pb-3'>Projects</h1> */}
+        <div className='grid sm:grid-cols-2 gap-4'>
+          {
+            projects.map(project =>
+              <Reveal>
+                <ProjectCard project={project} />
+              </Reveal>
+            )
+          }
+        </div>
+      </section>
+    </div>
   )
 }
 
@@ -96,11 +113,11 @@ const ProjectCard = ({ project }: { project: Project }) => {
       />
 
       <div className='text-white text-left'>
-        <div className='flex flex-row pb-1 gap-2 '>
-          {project.tags.map(tag => <p key={tag} className='blur-view text-sm font-normal'>{tag}</p>)}
-        </div>
         <p className="text-lg font-semibold">{project.title}</p>
         <p className="text-sm font-normal">{project.description}</p>
+        <div className='flex flex-row flex-wrap pt-2 gap-1 '>
+          {project.tags.map(tag => <p key={tag} className='w-fit blur-view text-sm font-normal'>{tag}</p>)}
+        </div>
       </div>
     </a>
   )
