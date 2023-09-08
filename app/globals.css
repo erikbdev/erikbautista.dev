@@ -7,14 +7,18 @@
   --bg-ending-color: rgb(0, 0, 0);
   --page-padding: 2rem;
   --page-header-height: 28px;
+  --page-header-total-height: var(--page-padding) * 2 + var(--page-header-height);
   --page-h-screen: calc(100dvh - var(--page-padding) * 3 - var(--page-header-height));
 }
 
 html, body {
-  /* height: 100%; */
   color: rgb(255, 255, 255);
   background: linear-gradient(var(--bg-initial-color), var(--bg-initial-color)) var(--bg-initial-color);
   background-color: var(--bg-initial-color);
+}
+
+.bg-initial-color {
+  background: var(--bg-initial-color);
 }
 
 .page-screen {
@@ -35,4 +39,19 @@ html, body {
     opacity: 0;
     transform: translateY(4rem);
   }
+}
+
+@keyframes dismissBlurAnimation {
+  from {
+    filter: blur(0rem);
+    opacity: 1;
+  }
+  to {
+    filter: blur(6rem);
+    opacity: 0;
+  }
+}
+
+.on-dismiss-blur {
+  animation: 1s ease-in-out 0s 1 entranceBlurAnimation;
 }
