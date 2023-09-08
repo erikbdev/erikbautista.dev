@@ -87,7 +87,7 @@ export default function Home() {
         <div className='grid sm:grid-cols-2 gap-4'>
           {
             projects.map(project =>
-              <Reveal>
+              <Reveal key={project.title}>
                 <ProjectCard project={project} />
               </Reveal>
             )
