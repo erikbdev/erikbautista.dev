@@ -22,7 +22,7 @@ export default function Header() {
             <nav className="flex flex-row">
                 <a href="/" className="font-bold text-lg text-center shrink">{'<erik/>'}</a>
                 <div className="text-sm font-medium flex-shrink ml-auto self-center space-x-4 text-neutral-500">
-                    {tabs.map(tab => <Link className={pathname == tab.href ? 'text-white' : '' } href={tab.href}>{tab.title}</Link>)}
+                    {tabs.map(tab => <Link key={tab.title} className={pathname == tab.href ? 'text-white' : '' } href={tab.href}>{tab.title}</Link>)}
                 </div>
             </nav>
         </header>
