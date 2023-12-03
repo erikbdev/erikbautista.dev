@@ -3,10 +3,11 @@ import { FiArrowUpRight, FiGithub, FiMail } from 'react-icons/fi';
 import { Conditional } from './utils/contitional';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 
-import MochiIcon from "../public/Mochi/logo.svg";
+import MochiIcon from "../public/Mochi/logo.png";
 import AnimeNowIcon from "../public/AnimeNow/logo.svg"
 import Reveal from './components/reveal';
 import { Fragment } from 'react';
+import { getUserInfo } from './utils/userinfo';
 
 enum Deployments {
   GitHub = "GitHub",
@@ -51,7 +52,7 @@ const projects: Project[] = [
     logo: MochiIcon,
     link: new URL("https://github.com/Mochi-Team/mochi"),
     deployment: Deployments.GitHub,
-    tags: [Platforms.iOS, Frameworks.SwiftUI, Languages.WebAssembly]
+    tags: [Platforms.iOS, Frameworks.SwiftUI, Languages.JS]
   },
   {
     title: "Anime Now!",
@@ -71,14 +72,16 @@ const projects: Project[] = [
   }
 ]
 
-export default function Home() {
+export default async function Home() {
+  const info = await getUserInfo();
+
   return (
     <div className='flex flex-col gap-8'>
       <div className="on-reveal-blur flex-initial">
-        <p className='font-semibold text-2xl'>Erik Bautista Santibanez</p>
+        <p className='font-semibold text-2xl'>{info.name}</p>
         <p className='text-md text-neutral-400 pb-4'>iOS Developer & Software Engineer</p>
         <div className='flex flex-row text-neutral-200 space-x-2 text-2xl'>
-          <a href='mailto:erikbautista15@gmail.com'><FiMail /></a>
+          <a href={`mailto:${info.email}`}><FiMail /></a>
           <a href='https://github.com/ErrorErrorError'><FiGithub /></a>
         </div>
       </div>

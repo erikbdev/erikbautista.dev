@@ -39,6 +39,11 @@ html, body {
     opacity: 0;
     transform: translateY(4rem);
   }
+  to {
+    filter: blur(0rem);
+    opacity: 1.0;
+    transform: translateY(0rem);
+  }
 }
 
 @keyframes dismissBlurAnimation {
@@ -53,5 +58,22 @@ html, body {
 }
 
 .on-dismiss-blur {
-  animation: 1s ease-in-out 0s 1 entranceBlurAnimation;
+  animation: 500ms ease-in-out 0s 1 dismissBlurAnimation forwards;
+}
+
+.header-menu-reveal {
+  animation: 250ms ease-in 0s 1 headerRevealAnimation;
+}
+
+.header-menu-dismiss {
+  animation: 250ms ease-in 0s 1 dismissBlurAnimation;
+}
+
+@keyframes headerRevealAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
