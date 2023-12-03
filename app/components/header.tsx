@@ -32,7 +32,7 @@ export default function Header(
                         { showingMenu ? <FiX /> : <FiMenu />}
                     </button>
 
-                    <div className={`${showingMenu ? 'header-menu-reveal' : 'header-menu-dismiss opacity-0'} absolute top-[92px] left-0 w-full h-full`}>
+                    <div className={`${showingMenu ? 'header-menu-reveal' : 'header-menu-dismiss'} absolute top-[92px] left-0 w-full h-full`}>
                         <div className='header-reveal flex flex-col gap-2 p-8 bg-initial-color text-neutral-400 border-t-[0.15rem] border-neutral-500/20'>
                             {tabs.map(tab => <Link onClick={eventHandler} key={tab.title} className={`${pathname == tab.href ? 'bg-neutral-800/50 text-white' : ''} hover:text-white font-medium px-4 p-3 rounded-lg`} href={tab.href}>{tab.title}</Link>)}
                         </div>

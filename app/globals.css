@@ -66,7 +66,20 @@ html, body {
 }
 
 .header-menu-dismiss {
-  animation: 250ms ease-in 0s 1 dismissBlurAnimation;
+  animation: 250ms ease-in 0s 1 headerDismissAnimaton;
+  animation-fill-mode: forwards;
+}
+
+@keyframes headerDismissAnimaton {
+  from {
+    filter: blur(0rem);
+    opacity: 1;
+  }
+  to {
+    filter: blur(6rem);
+    opacity: 0;
+    display: none;
+  }
 }
 
 @keyframes headerRevealAnimation {
