@@ -4,8 +4,8 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Reveal from "./components/reveal";
 import { getUserInfo } from "./utils/userinfo";
 
-import MochiIcon from "../public/mochi/logo.png";
-import AnimeNowIcon from "../public/animenow/logo.svg";
+import MochiIcon from "@/public/mochi/logo.png";
+import AnimeNowIcon from "@/public/animenow/logo.svg";
 import Link from "next/link";
 
 enum Deployments {
