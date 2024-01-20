@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --bg-initial-color: rgb(18, 18, 18);
+  --bg-initial-color: rgb(28, 28, 28);
   --bg-ending-color: rgb(0, 0, 0);
   --page-padding: 2rem;
   --page-header-height: 28px;

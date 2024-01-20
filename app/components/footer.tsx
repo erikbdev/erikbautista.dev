@@ -1,15 +1,41 @@
 import { SiNextdotjs, SiTailwindcss } from 'react-icons/si';
+import { HiOutlineExternalLink } from 'react-icons/hi';
 import { Info } from '../utils/userinfo';
 
 export function Footer(
     { info }: { info: Info }
 ) {
-    return (
-        <footer className="flex-initial w-full text-sm">
-            <div className="border-t pt-8 border-white/10 text-center text-neutral-400 flex flex-col md:flex-row gap-4 items-center">
-                <p>© 2023 {info.name}. All Rights Reserved.</p>
-                <p className='font-bold gap-2 items-center flex md:ml-auto'>Made With ❤️ &nbsp;Using <SiNextdotjs /> and <SiTailwindcss /></p>
-            </div>
-        </footer>
-    )
+  return (
+    <footer className="max-w-center-layout mt-auto w-full flex-initial text-xs">
+      <div className="flex flex-col items-center gap-4 border-t border-neutral-500/20 pt-8 text-center font-semibold text-neutral-400 md:flex-row">
+        <p className="flex flex-wrap justify-center gap-1">
+          Designed and developed by
+          <a
+            className="flex items-center gap-1 md:ml-auto font-bold"
+            href="https://errorerrorerror.dev"
+          >
+            {info.name} <HiOutlineExternalLink />
+          </a>
+        </p>
+        <p className="flex flex-wrap items-center  justify-center gap-2 md:ml-auto">
+          Made With ❤️ &nbsp;Using{' '}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://nextjs.org/"
+          >
+            <SiNextdotjs />
+          </a>
+          and
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://tailwindcss.com/"
+          >
+            <SiTailwindcss />
+          </a>
+        </p>
+      </div>
+    </footer>
+  );
 }

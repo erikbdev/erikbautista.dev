@@ -14,7 +14,7 @@ export async function getUserInfo() {
     }
 
     const aliasInfo: Info = {
-        name: "ErrorErrorError",
+        name: "errorerrorerror",
         short: "error",
         email: "contact@errorerrorerror.dev"
     }
