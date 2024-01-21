@@ -1,8 +1,9 @@
-
 export default function ComingSoon() {
-    return (
-        <div className="page-screen flex m-auto text-center">
-            <p className="m-auto grid-center text-4xl md:text-6xl font-bold">Coming Soon</p>
-        </div>
-    )
+  return (
+    <div className="page-screen m-auto flex text-center">
+      <p className="grid-center m-auto text-4xl font-bold md:text-6xl">
+        Coming Soon
+      </p>
+    </div>
+  );
 }

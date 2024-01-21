@@ -1,12 +1,12 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export const Conditional = ({
-    showWhen,
-    children
+  showWhen,
+  children,
 }: {
-    showWhen: boolean,
-    children: ReactNode
+  showWhen: boolean;
+  children: ReactNode;
 }) => {
-    if (showWhen) return <>{children}</>
-    return <></>;
+  if (showWhen) return <>{children}</>;
+  return <></>;
 };

@@ -7,13 +7,18 @@
   --bg-ending-color: rgb(0, 0, 0);
   --page-padding: 2rem;
   --page-header-height: 28px;
-  --page-header-total-height: var(--page-padding) * 2 + var(--page-header-height);
-  --page-h-screen: calc(100dvh - var(--page-padding) * 3 - var(--page-header-height));
+  --page-header-total-height: var(--page-padding) * 2 +
+    var(--page-header-height);
+  --page-h-screen: calc(
+    100dvh - var(--page-padding) * 3 - var(--page-header-height)
+  );
 }
 
-html, body {
+html,
+body {
   color: rgb(255, 255, 255);
-  background: linear-gradient(var(--bg-initial-color), var(--bg-initial-color)) var(--bg-initial-color);
+  background: linear-gradient(var(--bg-initial-color), var(--bg-initial-color))
+    var(--bg-initial-color);
   background-color: var(--bg-initial-color);
 }
 
@@ -26,7 +31,7 @@ html, body {
 }
 
 .blur-view {
-  @apply px-2 py-0.5 rounded-full backdrop-blur-xl bg-neutral-500/50 border border-white/10;
+  @apply rounded-full border border-white/10 bg-neutral-500/50 px-2 py-0.5 backdrop-blur-xl;
 }
 
 .on-reveal-blur {
@@ -41,7 +46,7 @@ html, body {
   }
   to {
     filter: blur(0rem);
-    opacity: 1.0;
+    opacity: 1;
     transform: translateY(0rem);
   }
 }

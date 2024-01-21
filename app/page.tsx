@@ -1,104 +1,31 @@
-import Image from "next/image";
-import { FiArrowUpRight, FiGithub, FiMail } from "react-icons/fi";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import Reveal from "./components/reveal";
-import { getUserInfo } from "./utils/userinfo";
+import Image from 'next/image';
+import {
+  FiArrowUpRight,
+  FiChevronRight,
+  FiGithub,
+  FiMail,
+} from 'react-icons/fi';
+import Reveal from './components/reveal';
+import { getUserInfo } from './utils/userinfo';
 
-import MochiIcon from "@/public/mochi/logo.png";
-import AnimeNowIcon from "@/public/animenow/logo.svg";
-import Link from "next/link";
-
-enum Deployments {
-  GitHub = "GitHub",
-  TestFlight = "TestFlight",
-  BitBucket = "Bitbucket",
-  Projects = "Projects",
-}
-
-enum Languages {
-  Swift = "Swift",
-  HTML = "HTML",
-  JS = "JavaScript",
-  Rust = "Rust",
-  WebAssembly = "Web Assembly",
-}
-
-enum Frameworks {
-  SwiftUI = "SwiftUI",
-  UIKit = "UIKit",
-  AppKit = "AppKit",
-  NextJS = "NextJS",
-}
-
-enum Platforms {
-  iOS = "iOS",
-  macOS = "macOS",
-  Mobile = "Mobile",
-  Desktop = "Desktop",
-}
-
-type Project = {
-  title: string;
-  description: string;
-  logo: string | StaticImport | undefined;
-  link: string;
-  deployment: Deployments;
-  tags: (Languages | Frameworks | Platforms)[];
-  colors: string[];
-};
-
-const projects: Project[] = [
-  {
-    title: "Mochi",
-    description: "An open-source image, text, video viewer.",
-    logo: MochiIcon,
-    link: "https://github.com/Mochi-Team/mochi",
-    deployment: Deployments.GitHub,
-    tags: [Platforms.iOS, Platforms.macOS, Frameworks.SwiftUI, Languages.JS],
-    colors: [],
-  },
-  {
-    title: "Anime Now!",
-    description: "Track your favorite anime content!",
-    logo: AnimeNowIcon,
-    link: "https://github.com/AnimeNow-Team/AnimeNow",
-    deployment: Deployments.GitHub,
-    tags: [Platforms.iOS, Platforms.macOS, Frameworks.SwiftUI],
-    colors: [],
-  },
-  {
-    title: "Safer Together",
-    description: "Building a safer world one step at a time.",
-    logo: undefined,
-    link: "projects/safer-together",
-    deployment: Deployments.Projects,
-    tags: [Platforms.iOS, Frameworks.UIKit],
-    colors: [],
-  },
-  {
-    title: "PrismUI",
-    description: "Take control of your MSI RGB keyboard on macOS.",
-    logo: undefined,
-    link: "projects/prismui",
-    deployment: Deployments.Projects,
-    tags: [Platforms.macOS, Frameworks.AppKit, Frameworks.SwiftUI],
-    colors: [],
-  },
-];
+import Link from 'next/link';
+import { Project, allProjects } from './utils/allprojects';
+import { TagsComponent } from './components/taglist';
 
 export default async function Home() {
   const info = await getUserInfo();
+  const projects = await allProjects();
 
   return (
     <div className="flex flex-col gap-8">
       <div className="on-reveal-blur flex-initial">
         <div className="flex flex-row space-x-2">
-          <p className="font-semibold text-2xl">{info.name}</p>
+          <p className="text-2xl font-semibold">{info.name}</p>
         </div>
-        <p className="text-md text-neutral-400 pb-4">
+        <p className="text-md pb-4 text-neutral-400">
           iOS Developer & Software Engineer
         </p>
-        <div className="flex flex-row text-neutral-200 space-x-2 text-2xl">
+        <div className="flex flex-row space-x-2 text-2xl text-neutral-200">
           <a href={`mailto:${info.email}`}>
             <FiMail />
           </a>
@@ -108,7 +35,7 @@ export default async function Home() {
         </div>
       </div>
       <section className={`h-full`}>
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           {projects.map((project) => (
             <Reveal key={project.title}>
               <ProjectCard project={project} />
@@ -122,39 +49,58 @@ export default async function Home() {
 
 const ProjectCard = ({ project }: { project: Project }) => {
   return (
-    <Link
-      href={project.link}
-      // target="_blank"
-      // rel="noopener noreferrer"
-      key={project.title}
-      className="w-full transition ease-in-out duration-300 aspect-[6/8] p-6 flex flex-col rounded-3xl bg-neutral-500/25 border border-neutral-500/50"
+    <div
+      key={project.href}
+      className="flex aspect-[6/8] w-full flex-col gap-4 rounded-3xl border border-neutral-500/50 bg-neutral-500/25 p-6 transition duration-300 ease-in-out"
     >
-      <div className="blur-view !py-1 items-center self-end cursor-pointer flex flex-row text-xs space-x-1">
-        <p>{project.deployment}</p>
-        <FiArrowUpRight className="text-[16px] text-neutral-300" />
-      </div>
+      {/* Icon, title, and description  */}
+      <div className="flex flex-col gap-2 text-left text-white">
+        <div className="flex flex-row gap-2">
+          {project.logo ? (
+            <Image
+              className="self-center"
+              src={project.logo}
+              alt={`Logo of ${project.title}`}
+              width={38}
+              height={38}
+            />
+          ) : (
+            <></>
+          )}
+          <p className="flex-grow self-center text-lg font-semibold">
+            {project.title}
+          </p>
 
-      {project.logo ? (
-        <Image
-          className="my-auto w-[50%] self-center"
-          src={project.logo}
-          alt={`Logo of ${project.title}`}
-        />
-      ) : (
-        <div className="my-auto"></div>
-      )}
-
-      <div className="text-white text-left">
-        <p className="text-lg font-semibold">{project.title}</p>
-        <p className="text-sm font-normal">{project.description}</p>
-        <div className="flex flex-row flex-wrap pt-2 gap-1  text-xs">
-          {project.tags.map((tag) => (
-            <p key={tag} className="w-fit blur-view font-normal">
-              {tag}
-            </p>
-          ))}
+          {project.externalLink ? (
+            <Link
+              href={project.externalLink.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="blur-view self-center !py-1 text-xs"
+            >
+              <div className="flex flex-row items-center space-x-1">
+                <p>{project.externalLink.deployment}</p>
+                <FiArrowUpRight className="text-[16px] text-neutral-300" />
+              </div>
+            </Link>
+          ) : (
+            <></>
+          )}
         </div>
+        <p className="text-sm font-normal">{project.description}</p>
       </div>
-    </Link>
+
+      {/* Case study link */}
+      <Link
+        href={project.href}
+        className="flex flex-row items-center gap-1 self-start rounded-full bg-white px-3 py-1.5 text-xs text-neutral-900"
+      >
+        Learn More
+        <FiChevronRight />
+      </Link>
+
+      {/* Tags */}
+      <TagsComponent tags={project.tags} />
+    </div>
   );
 };

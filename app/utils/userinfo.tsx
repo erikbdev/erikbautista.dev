@@ -1,29 +1,29 @@
-import { headers } from "next/headers";
+import { headers } from 'next/headers';
 
 export type Info = {
-  name: string,
-  short: string,
-  email: string
-}
-  
-export async function getUserInfo() {  
-    const selfInfo: Info = {
-    name: "Erik Bautista Santibanez",
-    short: "erik",
-    email: "erikbautista15@gmail.com"
-    }
+  name: string;
+  short: string;
+  email: string;
+};
 
-    const aliasInfo: Info = {
-        name: "errorerrorerror",
-        short: "error",
-        email: "contact@errorerrorerror.dev"
-    }
+export async function getUserInfo() {
+  const selfInfo: Info = {
+    name: 'Erik Bautista Santibanez',
+    short: 'erik',
+    email: 'erikbautista15@gmail.com',
+  };
 
-    const headersList = headers();
+  const aliasInfo: Info = {
+    name: 'errorerrorerror',
+    short: 'error',
+    email: 'contact@errorerrorerror.dev',
+  };
 
-    if (headersList.get('host')?.includes("erik") ?? false) {
-      return selfInfo;
-    }  else {
-      return aliasInfo;
-    }  
+  const headersList = headers();
+
+  if (headersList.get('host')?.includes('erik') ?? false) {
+    return selfInfo;
+  } else {
+    return aliasInfo;
+  }
 }
