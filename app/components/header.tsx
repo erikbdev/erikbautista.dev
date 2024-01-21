@@ -78,6 +78,7 @@ export default function Header({
             <ul className={`bg-initial-color space-y-2 ${style['nav-mobile']}`}>
               {tabs.map((t) => (
                 <BuildTabLink
+                  key={t.title}
                   tab={t}
                   selected={tabSelected}
                   handleClick={eventHandler}
@@ -89,7 +90,7 @@ export default function Header({
 
         <ul className={style['nav-desktop']}>
           {tabs.map((t) => (
-            <BuildTabLink tab={t} selected={tabSelected} />
+            <BuildTabLink key={t.title} tab={t} selected={tabSelected} />
           ))}
         </ul>
       </nav>
@@ -129,7 +130,7 @@ const BuildTabLink = ({
         <TagTitle t={tab} />
         <ul className="space-y-2 sm:space-y-1">
           {tab.subtabs.map((t) => (
-            <BuildTabLink tab={t} selected={selected} handleClick={handleClick} />
+            <BuildTabLink key={t.title} tab={t} selected={selected} handleClick={handleClick} />
           ))}
         </ul>
       </li>
