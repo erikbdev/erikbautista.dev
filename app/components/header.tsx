@@ -130,7 +130,12 @@ const BuildTabLink = ({
         <TagTitle t={tab} />
         <ul className="space-y-2 sm:space-y-1">
           {tab.subtabs.map((t) => (
-            <BuildTabLink key={t.title} tab={t} selected={selected} handleClick={handleClick} />
+            <BuildTabLink
+              key={t.title}
+              tab={t}
+              selected={selected}
+              handleClick={handleClick}
+            />
           ))}
         </ul>
       </li>

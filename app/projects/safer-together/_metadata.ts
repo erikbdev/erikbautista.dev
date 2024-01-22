@@ -16,7 +16,18 @@ export default {
   description: 'Building a safer world one step at a time.',
   logo: undefined,
   tags: [Platforms.iOS, Frameworks.UIKit],
-  colors: [],
+  colors: [
+    {
+      r: 0,
+      g: 120,
+      b: 200,
+    },
+    {
+      r: 0,
+      g: 255,
+      b: 200,
+    },
+  ],
   screenshots: {
     images: [
       {
@@ -42,4 +53,5 @@ export default {
     ],
     orientation: ScreenshotOrientation.Portrait,
   },
+  released: new Date('25 Oct 2021'),
 } as ProjectMetadata;

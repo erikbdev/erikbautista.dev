@@ -14,7 +14,23 @@ export default {
   description: 'Take control of your MSI RGB keyboard on macOS.',
   logo: undefined,
   tags: [Platforms.macOS, Frameworks.AppKit, Frameworks.SwiftUI],
-  colors: [],
+  colors: [
+    {
+      r: 255,
+      g: 100,
+      b: 0,
+    },
+    {
+      r: 200,
+      g: 250,
+      b: 0,
+    },
+    {
+      r: 0,
+      g: 226,
+      b: 255,
+    },
+  ],
   screenshots: {
     images: [
       {
@@ -32,4 +48,5 @@ export default {
     ],
     orientation: ScreenshotOrientation.Landscape,
   },
+  released: new Date('08 Jul 2021'),
 } as ProjectMetadata;

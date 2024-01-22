@@ -1,6 +1,7 @@
 import { access, constants, readFile, readdir } from 'fs/promises';
 import { StaticImageData } from 'next/image';
 import path from 'path';
+import { RGB } from '../components/gradientanimation';
 
 export enum Deployments {
   GitHub = 'GitHub',
@@ -47,9 +48,9 @@ export type ProjectScreenshots = {
 };
 
 export type ExternalLink = {
-  link: string,
-  deployment: Deployments
-}
+  link: string;
+  deployment: Deployments;
+};
 
 export type Project = {
   title: string;
@@ -58,11 +59,12 @@ export type Project = {
   externalLink?: ExternalLink;
   href: string;
   tags: (Languages | Frameworks | Platforms)[];
-  colors: string[];
+  colors: RGB[];
   screenshots: ProjectScreenshots;
+  released: Date;
 };
 
-export type ProjectMetadata = Omit<Project, "href">;
+export type ProjectMetadata = Omit<Project, 'href'>;
 
 export async function allProjects(): Promise<Project[]> {
   const projectsPath = path.join(process.cwd(), 'app/projects');
@@ -74,8 +76,7 @@ export async function allProjects(): Promise<Project[]> {
     try {
       const manifest: Project = await import(
         `@/app/projects/${folder}/_metadata`
-      )
-      .then((v) => v.default);
+      ).then((v) => v.default);
       manifest.href = `/projects/${folder}`;
       projects.push(manifest);
     } catch (e) {
@@ -83,5 +84,5 @@ export async function allProjects(): Promise<Project[]> {
     }
   }
 
-  return projects;
+  return projects.sort((a, b) => b.released.getTime() - a.released.getTime());
 }
