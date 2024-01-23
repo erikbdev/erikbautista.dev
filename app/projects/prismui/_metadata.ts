@@ -11,7 +11,7 @@ import WaveEffectScreen from '@/public/prismui/prismui-wave-effect.png';
 
 export default {
   title: 'PrismUI',
-  description: 'Take control of your MSI RGB keyboard on macOS.',
+  shortDescription: 'Take control of your MSI RGB keyboard on macOS.',
   logo: undefined,
   tags: [Platforms.macOS, Frameworks.AppKit, Frameworks.SwiftUI],
   colors: [

@@ -10,12 +10,12 @@ import MochiIcon from '@/public/mochi/logo.png';
 
 export default {
   title: 'Mochi',
-  description:
+  shortDescription:
     'An open-source image, text, and video viewer for Apple devices.',
   logo: MochiIcon,
   externalLink: {
-    link: 'https://github.com/Mochi-Team/mochi',
-    deployment: Deployments.GitHub,
+    link: 'https://mochi.errorerrorerror.dev',
+    deployment: Deployments.Website,
   },
   tags: [Platforms.iOS, Platforms.macOS, Frameworks.SwiftUI, Languages.JS],
   colors: [

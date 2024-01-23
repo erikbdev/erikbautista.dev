@@ -8,6 +8,7 @@ export enum Deployments {
   TestFlight = 'TestFlight',
   BitBucket = 'Bitbucket',
   Projects = 'Projects',
+  Website = 'Website'
 }
 
 export enum Languages {
@@ -54,7 +55,8 @@ export type ExternalLink = {
 
 export type Project = {
   title: string;
-  description: string;
+  shortDescription: string;
+  description?: string;
   logo: string | StaticImageData | undefined;
   externalLink?: ExternalLink;
   href: string;

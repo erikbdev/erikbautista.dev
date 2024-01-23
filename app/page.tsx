@@ -82,7 +82,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
               <></>
             )}
           </div>
-          <p className="text-sm font-normal">{project.description}</p>
+          <p className="text-sm font-normal">{project.shortDescription}</p>
         </div>
 
         {/* Case study link */}

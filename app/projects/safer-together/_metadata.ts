@@ -13,7 +13,7 @@ import STInfectionType from '@/public/safertogether/st-infection-type.png';
 
 export default {
   title: 'Safer Together',
-  description: 'Building a safer world one step at a time.',
+  shortDescription: 'Building a safer world one step at a time.',
   logo: undefined,
   tags: [Platforms.iOS, Frameworks.UIKit],
   colors: [

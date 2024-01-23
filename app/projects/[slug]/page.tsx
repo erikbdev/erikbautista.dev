@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { ScreenshotOrientation, allProjects } from '@/app/utils/allprojects';
 import { notFound } from 'next/navigation';
 import { TagsComponent } from '@/app/components/taglist';
-import Link from 'next/link';
 import { ExternalLinkButton } from '@/app/components/externalmaterialbutton';
 
 export async function generateStaticParams() {
@@ -32,7 +31,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </div>
             <p className="pt-1 text-lg font-semibold">Case Study</p>
             <TagsComponent tags={project.tags} />
-            <p className="pt-4">{project.description}</p>
+            <p className="pt-4">{project.description ?? project.shortDescription}</p>
           </div>
         </div>
 
