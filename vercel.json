@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/**/*.swift": {
+      "runtime": "errorerrorerror/vercel-swift@0.0.1"
+    }
+  }
+}

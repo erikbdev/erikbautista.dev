@@ -23,6 +23,30 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       }
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "sourceLanguages": [
+        "swift"
+      ],
+      "args": [],
+      "cwd": "${workspaceFolder:porfolio}",
+      "name": "Debug App",
+      "program": "${workspaceFolder:porfolio}/.build/debug/App",
+      "preLaunchTask": "swift: Build Debug App"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "sourceLanguages": [
+        "swift"
+      ],
+      "args": [],
+      "cwd": "${workspaceFolder:porfolio}",
+      "name": "Release App",
+      "program": "${workspaceFolder:porfolio}/.build/release/App",
+      "preLaunchTask": "swift: Build Release App"
     }
   ]
 }
