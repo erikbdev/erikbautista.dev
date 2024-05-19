@@ -15,13 +15,14 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(url: "https://github.com/errorerrorerror/vercel-swift.git", branch: "main"),
+    // .package(name: "VercelRuntime", path: "../../vercel-swift")
+    .package(url: "https://github.com/errorerrorerror/swift-vercel-runtime.git", exact: "0.0.1"),
   ],
   targets: [
     .executableTarget(
       name: "App",
       dependencies: [
-        .product(name: "VercelRuntime", package: "vercel-swift")
+        .product(name: "VercelRuntime", package: "swift-vercel-runtime")
       ],
       path: "api"
     )

@@ -2,7 +2,7 @@ import VercelMacros
 import VercelRuntime
 
 @Route
-struct IndexRoute {
+struct FooRoute {
   func resolve(_ request: Request) async throws -> Response {
     .ok
   }

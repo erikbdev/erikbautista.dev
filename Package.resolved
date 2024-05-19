@@ -68,17 +68,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-system.git",
       "state" : {
-        "revision" : "025bcb1165deab2e20d4eaba79967ce73013f496",
-        "version" : "1.2.1"
+        "revision" : "f9266c85189c2751589a50ea5aec72799797e471",
+        "version" : "1.3.0"
       }
     },
     {
-      "identity" : "vercel-swift",
+      "identity" : "swift-vercel-runtime",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/errorerrorerror/vercel-swift.git",
+      "location" : "https://github.com/errorerrorerror/swift-vercel-runtime.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "11d5bf0312f215180e634789ac980bd24a7dc45f"
+        "revision" : "2538120967fddf08176f927c7dacc9a400e1bb6e",
+        "version" : "0.0.1"
       }
     }
   ],
