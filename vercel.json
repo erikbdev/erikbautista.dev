@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/main.swift": {
+    "api/app.swift": {
       "runtime": "swift-vercel-runtime@0.0.1"
     }
   }
