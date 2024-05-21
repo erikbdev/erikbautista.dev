@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "concurrently -k -p \"[{name}]\" -n \"Swift Server,Next.js\" -c \"#F05138.bold,cyan.bold\" \"pnpm dev:swift\" \"pnpm wait-on 'Running dev server' && pnpm dev:web\"",
+    "dev:swift": "swift package --disable-sandbox vercel dev",
+    "dev:web": "next dev",
+    "build": "pnpm build:web && pnpm build:swift",
+    "build:web": "next build",
+    "build:swift": "swift build && swift package --disable-sandbox vercel",
     "start": "next start",
-    "lint": "next lint",
-    "run": "concurrently -k -p \"[{name}]\" -n \"Next.js,Vercel CLI\" -c \"white.bold,cyan.bold\" \"next dev\" \"vercel dev --yes\""
+    "lint": "next lint"
   },
   "dependencies": {
     "@types/node": "20.5.7",
@@ -15,7 +18,7 @@
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
     "eslint-config-next": "13.4.19",
-    "next": "^13.4.19",
+    "next": "^13.5.6",
     "postcss": "8.4.28",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -32,6 +35,7 @@
     "eslint": "8.48.0",
     "prettier": "^3.2.4",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "vercel": "^34.2.0"
   }
 }

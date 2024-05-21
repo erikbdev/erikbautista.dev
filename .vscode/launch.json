@@ -5,19 +5,13 @@
       "name": "Next.js: debug server-side",
       "type": "node-terminal",
       "request": "launch",
-      "command": "npm run dev"
+      "command": "pnpm dev:swift"
     },
     {
       "name": "Next.js: debug client-side",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://localhost:3000"
-    },
-    {
-      "name": "Next.js: debug full stack",
       "type": "node-terminal",
       "request": "launch",
-      "command": "npm run dev",
+      "command": "pnpm dev:web",
       "serverReadyAction": {
         "pattern": "- Local:.+(https?://.+)",
         "uriFormat": "%s",
@@ -47,6 +41,13 @@
       "name": "Release App",
       "program": "${workspaceFolder:porfolio}/.build/release/App",
       "preLaunchTask": "swift: Build Release App"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Server/Client",
+      "configurations": ["Next.js: debug client-side", "Next.js: debug server-side"],
+      "stopAll": true    
     }
   ]
 }
