@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -k -p \"[{name}]\" -n \"Swift Server,Next.js\" -c \"#F05138.bold,cyan.bold\" \"pnpm dev:swift\" \"pnpm wait-on 'Running dev server' && pnpm dev:web\"",
-    "dev:swift": "swift package --disable-sandbox vercel dev",
+    "dev": "concurrently -k -n \"Swift Server,Next.js\" -c \"#F05138.bold,cyan.bold\" \"pnpm:dev:swift\" \"pnpm:dev:web\"",
+    "dev:swift": "bash scripts/swift-install.sh && swift package --disable-sandbox vercel dev",
     "dev:web": "next dev",
     "build": "pnpm build:web && pnpm build:swift",
     "build:web": "next build",
-    "build:swift": "swift build && swift package --disable-sandbox vercel",
+    "build:swift": "bash scripts/swift-install.sh && swift package --disable-sandbox vercel",
     "start": "next start",
     "lint": "next lint"
   },

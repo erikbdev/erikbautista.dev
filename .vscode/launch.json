@@ -1,53 +1,41 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Next.js: debug server-side",
-      "type": "node-terminal",
-      "request": "launch",
-      "command": "pnpm dev:swift"
-    },
-    {
-      "name": "Next.js: debug client-side",
-      "type": "node-terminal",
-      "request": "launch",
-      "command": "pnpm dev:web",
-      "serverReadyAction": {
-        "pattern": "- Local:.+(https?://.+)",
-        "uriFormat": "%s",
-        "action": "debugWithChrome"
-      }
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
-      "sourceLanguages": [
-        "swift"
-      ],
-      "args": [],
-      "cwd": "${workspaceFolder:porfolio}",
-      "name": "Debug App",
-      "program": "${workspaceFolder:porfolio}/.build/debug/App",
-      "preLaunchTask": "swift: Build Debug App"
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
-      "sourceLanguages": [
-        "swift"
-      ],
-      "args": [],
-      "cwd": "${workspaceFolder:porfolio}",
-      "name": "Release App",
-      "program": "${workspaceFolder:porfolio}/.build/release/App",
-      "preLaunchTask": "swift: Build Release App"
-    }
-  ],
-  "compounds": [
-    {
-      "name": "Server/Client",
-      "configurations": ["Next.js: debug client-side", "Next.js: debug server-side"],
-      "stopAll": true    
-    }
-  ]
+ "version": "0.2.0",
+ "configurations": [
+  {
+   "name": "Swift: debug proxy",
+   "type": "node-terminal",
+   "request": "launch",
+   "command": "pnpm dev:swift"
+  },
+  {
+   "name": "Next.js: debug client",
+   "type": "node-terminal",
+   "request": "launch",
+   "command": "pnpm dev:web",
+   "serverReadyAction": {
+    "pattern": "- Local:.+(https?://.+)",
+    "uriFormat": "%s",
+    "action": "debugWithChrome"
+   }
+  },
+  {
+   "type": "lldb",
+   "request": "attach",
+   "sourceLanguages": ["swift"],
+   "name": "Swift: debug server",
+   "program": "${workspaceFolder:porfolio}/.build/debug/App",
+   "waitFor": true
+  }
+ ],
+ "compounds": [
+  {
+   "name": "Full-stack dev",
+   "configurations": [
+    "Next.js: debug client",
+    "Swift: debug proxy",
+    "Swift: debug server"
+   ],
+   "stopAll": true
+  }
+ ]
 }
