@@ -1,5 +1,6 @@
 if swift --version &> /dev/null; then
-  echo "Swift is currently installed, skipping installation.";
+  echo "Swift is currently installed, skipping installation."
+  export SWIFT_BIN=$(which swift)
 else
   echo "warning: Swift is not installed, installing swiftly to install latest Swift toolchain.";
   curl -L https://swift-server.github.io/swiftly/swiftly-install.sh | bash -s -- -y
@@ -7,6 +8,5 @@ else
   swiftly install latest
   echo $PATH
   ls -la $HOME/.local/bin
-  ls -la $HOME/.local/share/swiftly/toolchains
-  export PATH=$HOME/.local/bin:$PATH
+  export SWIFT_BIN=$HOME/.local/bin/swift
 fi

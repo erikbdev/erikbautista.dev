@@ -8,7 +8,7 @@
     "dev:web": "next dev",
     "build": "pnpm build:web && pnpm build:swift",
     "build:web": "next build",
-    "build:swift": "bash scripts/swift-install.sh && swift package --disable-sandbox vercel",
+    "build:swift": "bash scripts/swift-install.sh && $SWIFT_BIN package --disable-sandbox vercel",
     "start": "next start",
     "lint": "next lint"
   },
