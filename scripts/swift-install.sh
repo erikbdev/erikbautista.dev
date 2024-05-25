@@ -6,7 +6,6 @@ else
   curl -L https://swift-server.github.io/swiftly/swiftly-install.sh | bash -s -- -y
   . $HOME/.local/share/swiftly/env.sh
   swiftly install latest
-  echo $PATH
-  ls -la $HOME/.local/bin
   export SWIFT_BIN=$HOME/.local/bin/swift
+  echo $SWIFT_BIN
 fi
