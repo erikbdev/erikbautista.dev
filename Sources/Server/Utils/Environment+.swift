@@ -4,7 +4,6 @@ import Hummingbird
 public enum AppEnv: String, Codable {
   case development
   case production
-  // case testing
 }
 
 private enum EnvKeys {

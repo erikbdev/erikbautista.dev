@@ -1,11 +1,11 @@
 import Dependencies
 
-extension SiteRoute.Router: DependencyKey {
-  public static let liveValue = Self()
+extension SiteRoute: DependencyKey {
+  public static let liveValue = SiteRoute.home
 }
 
-private enum CurrentRouteKey: DependencyKey {
-  static let liveValue = SiteRoute.home
+extension SiteRoute.Router: DependencyKey {
+  public static let liveValue = Self()
 }
 
 public extension DependencyValues {
@@ -15,7 +15,7 @@ public extension DependencyValues {
   }
 
   var currentRoute: SiteRoute {
-    get { self[CurrentRouteKey.self] }
-    set { self[CurrentRouteKey.self] = newValue }
+    get { self[SiteRoute.self] }
+    set { self[SiteRoute.self] = newValue }
   }
 }

@@ -1,7 +1,7 @@
 import Elementary
 import Hummingbird
 
-public protocol Page: Sendable, HTML, ResponseGenerator where Content: Sendable {
+public protocol Page: Sendable, HTML, ResponseGenerator {
   var chunkSize: Int { get }
   var headers: HTTPFields { get }
 }
@@ -15,7 +15,7 @@ extension Page {
   public consuming func response(
     from request: Request,
     context: some RequestContext
-  ) throws -> Response {
+  ) throws -> Response where Content: Sendable {
     Response(
       status: .ok,
       headers: self.headers,

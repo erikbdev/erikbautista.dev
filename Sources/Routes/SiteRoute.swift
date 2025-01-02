@@ -7,7 +7,7 @@ import URLRouting
 public enum SiteRoute: Sendable, Equatable {
   case home
   case robots
-  case projects(project: Project? = nil)
+  case api(APIRoute)
 
   public static let index = Self.home
 }
@@ -24,12 +24,9 @@ extension SiteRoute {
           Path { "robots.txt" }
         }
 
-        Route(.case(SiteRoute.projects)) {
-          Path { "projects" }
-
-          Optionally {
-            Path { Parse(.string.representing(Project.self)) }
-          }
+        Route(.case(SiteRoute.api)) {
+          Path { "api" }
+          APIRoute.Router()
         }
       }
     }

@@ -1,7 +1,10 @@
 # SPM
-.build/
-.swiftpm/
+.build
+.swiftpm
 
 # env
 .env
 .env.*
+
+# vscode
+.vscode

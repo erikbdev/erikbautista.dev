@@ -18,3 +18,10 @@ extension meta {
 }
 
 public typealias SendableHTML = HTML & Sendable
+
+// Aria-based attributes
+extension HTMLAttribute {
+  static func ariaLabel(_ value: String) -> Self {
+    HTMLAttribute(name: "aria-label", value: value)
+  }
+}

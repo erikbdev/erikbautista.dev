@@ -1,4 +1,4 @@
-public enum Project: String, Sendable {
+public enum Project: String, Sendable, CaseIterable {
   case animeNow = "anime-now"
   case mochi
   case prismUI = "prism-ui"
