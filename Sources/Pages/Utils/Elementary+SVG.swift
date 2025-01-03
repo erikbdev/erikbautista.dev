@@ -20,6 +20,14 @@ extension HTMLAttribute<HTMLTag.svg>  {
   static func stroke(_ value: String) -> Self {
     Self(name: "stroke", value: value)
   }
+
+  static func width(_ value: String) -> Self {
+    Self(name: "width", value: value)
+  }
+
+  static func height(_ value: String) -> Self {
+    Self(name: "width", value: value)
+  }
 }
 
 /// Path Tag
@@ -31,11 +39,11 @@ typealias path = HTMLElement<HTMLTag.path, EmptyHTML>
 
 extension HTMLAttribute<HTMLTag.path> {
   static func strokeLinecap(_ value: String) -> Self {
-    Self(name: "strokeLinecap", value: value)
+    Self(name: "stroke-linecap", value: value)
   }
 
   static func strokeLinejoin(_ value: String) -> Self {
-    Self(name: "strokeLinejoin", value: value)
+    Self(name: "stroke-linejoin", value: value)
   }
 
   static func d(_ value: String) -> Self {

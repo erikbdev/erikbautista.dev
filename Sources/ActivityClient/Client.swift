@@ -4,21 +4,36 @@ import Foundation
 
 @DependencyClient
 public struct ActivityClient: Sendable {
-  public var currentLocation: @Sendable () -> Location? = { nil }
-  public var setCurrentLocation: @Sendable (_ location: Location?) -> Void = { _ in }
+  public var location: @Sendable () -> Location? = { nil }
+  public var updateLocation: @Sendable (_ location: Location?) -> Void = { _ in }
   public var nowPlaying: @Sendable () -> NowPlaying? = { nil }
-  public var setNowPlaying: @Sendable (_ nowPlaying: NowPlaying?) -> Void = { _ in }
+  public var updateNowPlaying: @Sendable (_ nowPlaying: NowPlaying?) -> Void = { _ in }
 }
 
-public extension ActivityClient {
-  struct Location: Sendable, Equatable, Codable {
+extension ActivityClient {
+  public struct CurrentLocation: Sendable, Equatable, Codable {
+    public let currentLocation: Location?
+    public let residency: Location?
+  }
+
+  public struct Location: Sendable, Equatable, Codable {
     public let city: String?
     public let state: String?
     public let region: String?
     public let timestamp: Date
+
+    public let residency: Residency?
+
+    public struct Residency: Sendable, Equatable, Codable, CustomStringConvertible {
+      public let city: String
+      public let state: String
+      public var description: String { "\(city), \(state)" }
+
+      public static let `default` = Residency(city: "Irvine", state: "CA")
+    }
   }
 
-  struct NowPlaying: Sendable, Equatable, Codable {
+  public struct NowPlaying: Sendable, Equatable, Codable {
     public let name: String
     public let albumn: String?
     public let artist: String
@@ -35,12 +50,12 @@ extension ActivityClient: DependencyKey {
   public static var liveValue: ActivityClient {
     let state = LockIsolated((Location?.none, NowPlaying?.none))
     return ActivityClient(
-      currentLocation: { state.value.0 }, 
-      setCurrentLocation: { newLocation in
+      location: { state.value.0 }, 
+      updateLocation: { newLocation in
         state.withValue { $0.0 = newLocation }
       },
       nowPlaying: { state.value.1 },
-      setNowPlaying: { nowPlaying in 
+      updateNowPlaying: { nowPlaying in 
         state.withValue { $0.1 = nowPlaying} 
       }
     )

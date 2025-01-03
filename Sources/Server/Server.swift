@@ -7,7 +7,7 @@ import Routes
 
 @main
 struct Server {
-  let app = { @Sendable in
+  let app = {
     @Dependency(\.envVar) var envVar
 
     let logger = Logger(label: "server")

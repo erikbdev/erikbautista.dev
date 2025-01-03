@@ -26,10 +26,10 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
         case .home:
           return HomePage()
         case let .api(.location(location)):
-          activityClient.setCurrentLocation(location)
+          activityClient.updateLocation(location)
           return Response(status: .ok)
         case let .api(.nowPlaying(nowPlaying)):
-          activityClient.setNowPlaying(nowPlaying)
+          activityClient.updateNowPlaying(nowPlaying)
           return Response(status: .ok)
         }
       }
