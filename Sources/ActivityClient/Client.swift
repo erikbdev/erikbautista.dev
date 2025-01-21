@@ -11,9 +11,11 @@ public struct ActivityClient: Sendable {
 }
 
 extension ActivityClient {
-  public struct CurrentLocation: Sendable, Equatable, Codable {
-    public let currentLocation: Location?
-    public let residency: Location?
+  public func activity() -> Activity {
+    .init(
+      location: self.location(), 
+      nowPlaying: self.nowPlaying()
+    )
   }
 
   public struct Location: Sendable, Equatable, Codable {
@@ -43,6 +45,11 @@ extension ActivityClient {
       case appleMusic
       case spotify
     }
+  }
+
+  public struct Activity: Sendable, Equatable, Codable {
+    public let location: Location?
+    public let nowPlaying: NowPlaying?
   }
 }
 

@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "Server",
+  name: "portfolio",
   platforms: [
     .macOS(.v13),
   ],
@@ -14,15 +14,16 @@ let package = Package(
     .library(name: "Models", targets: ["Models"]),
     .library(name: "Routes", targets: ["Routes"]),
     .library(name: "Pages", targets: ["Pages"]),
-    .executable(name: "Server", targets: ["Server"]),
+    .executable(name: "App", targets: ["App"]),
   ],
   dependencies: [
+    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.4.0"),
     .package(url: "https://github.com/hummingbird-project/hummingbird.git", exact: "2.5.0"),
     .package(url: "https://github.com/sliemeobn/elementary.git", exact: "0.4.3"),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", exact: "0.6.2"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", exact: "1.6.2"),
     .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "600.0.1"),
-    .package(url: "https://github.com/tuist/SwiftyTailwind.git", revision: "30c78225d88029d20bd220fcc76ac4380c754eeb"),
+    .package(url: "https://github.com/errorerrorerror/swift-cascadia", revision: "7ecd4f55648087446d194aa07ba0cfbc5e7461a6")
   ],
   targets: [
     .target(
@@ -52,6 +53,7 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Elementary", package: "elementary"),
         .product(name: "Hummingbird", package: "hummingbird"),
+        .product(name: "Cascadia", package: "swift-cascadia")
       ]
     ),
 
@@ -77,7 +79,7 @@ let package = Package(
 
     /// Executable
     .executableTarget(
-      name: "Server",
+      name: "App",
       dependencies: [
         "Models",
         "Routes",
@@ -86,7 +88,7 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Hummingbird", package: "hummingbird"),
         .product(name: "HummingbirdRouter", package: "hummingbird"),
-        .product(name: "SwiftyTailwind", package: "SwiftyTailwind"),
+        .product(name: "ArgumentParser", package: "swift-argument-parser")
       ],
       resources: [.embedInCode("Resources")]
     ),

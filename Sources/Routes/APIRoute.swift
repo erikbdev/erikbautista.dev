@@ -1,11 +1,19 @@
+import ActivityClient
 import CasePaths
 import Foundation
 import URLRouting
-import ActivityClient
 
-extension SiteRoute {
+public extension SiteRoute {
   @CasePathable
-  public enum APIRoute: Sendable, Equatable {
+  enum APIRoute: Sendable, Equatable {
+    case activity(ActivityRoute)
+  }
+}
+
+public extension SiteRoute.APIRoute {
+  @CasePathable
+  enum ActivityRoute: Sendable, Equatable {
+    case all
     case location(ActivityClient.Location?)
     case nowPlaying(ActivityClient.NowPlaying?)
   }
@@ -15,16 +23,24 @@ extension SiteRoute.APIRoute {
   struct Router: Sendable, ParserPrinter {
     var body: some URLRouting.Router<SiteRoute.APIRoute> {
       OneOf {
-        Route(.case(SiteRoute.APIRoute.location)) {
-          Method.post
-          Path { "activity"; "location" }
-          Body(.json(ActivityClient.Location?.self))
-        }
+        Route(.case(SiteRoute.APIRoute.activity)) {
+          Path { "activity" }
 
-        Route(.case(SiteRoute.APIRoute.nowPlaying)) {
-          Method.post
-          Path { "activity"; "now-playing" }
-          Body(.json(ActivityClient.NowPlaying?.self))
+          OneOf {
+            Route(.case(SiteRoute.APIRoute.ActivityRoute.all))
+
+            Route(.case(SiteRoute.APIRoute.ActivityRoute.location)) {
+              Method.post
+              Path { "location" }
+              Body(.json(ActivityClient.Location?.self))
+            }
+
+            Route(.case(SiteRoute.APIRoute.ActivityRoute.nowPlaying)) {
+              Method.post
+              Path { "now-playing" }
+              Body(.json(ActivityClient.NowPlaying?.self))
+            }
+          }
         }
       }
     }

@@ -5,8 +5,8 @@ import URLRouting
 
 @CasePathable
 public enum SiteRoute: Sendable, Equatable {
-  case home
   case robots
+  case home
   case api(APIRoute)
 
   public static let index = Self.home

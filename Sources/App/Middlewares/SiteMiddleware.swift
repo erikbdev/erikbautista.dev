@@ -1,5 +1,6 @@
 import ActivityClient
 import Dependencies
+import class Foundation.JSONEncoder
 import Hummingbird
 import HummingbirdRouter
 import Pages
@@ -17,7 +18,7 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
     FileMiddleware("Public", searchForIndexHtml: false)
 
     URLRoutingMiddleware(self.siteRouter) { req, ctx, route in
-      withDependencies {
+      try withDependencies {
         $0.currentRoute = route
       } operation: {
         switch route {
@@ -25,11 +26,17 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
           return ""
         case .home:
           return HomePage()
-        case let .api(.location(location)):
-          activityClient.updateLocation(location)
+        case .api(.activity(.all)):
+          return try JSONEncoder().encode(self.activityClient.activity(), from: req, context: ctx)
+        case let .api(.activity(.location(location))):
+          guard let authorization = req.headers[.authorization] else {
+            throw HTTPError(.notFound)
+          }
+
+          self.activityClient.updateLocation(location)
           return Response(status: .ok)
-        case let .api(.nowPlaying(nowPlaying)):
-          activityClient.updateNowPlaying(nowPlaying)
+        case let .api(.activity(.nowPlaying(nowPlaying))):
+          self.activityClient.updateNowPlaying(nowPlaying)
           return Response(status: .ok)
         }
       }

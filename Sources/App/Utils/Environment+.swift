@@ -1,23 +1,19 @@
+import ArgumentParser
 import Dependencies
 import Hummingbird
 
-public enum AppEnv: String, Codable {
+public enum AppEnv: String, Codable, ExpressibleByArgument {
   case development
   case production
 }
 
 private enum EnvKeys {
-  static let appEnv = "APP_ENV"
-  static let port = "PORT"
+  static let appSecret = "APP_SECRET"
 }
 
 extension Environment {
-  var appEnv: AppEnv {
-    self.get(EnvKeys.appEnv).flatMap(AppEnv.init(rawValue:)) ?? .development
-  }
-
-  var port: Int {
-    self.get(EnvKeys.port, as: Int.self) ?? 8080
+  var appSecret: String {
+    self.get(EnvKeys.appSecret, as: String.self) ?? "deadbeefdeadbeefdeadbeefdeadbeef"
   }
 }
 

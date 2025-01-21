@@ -1,5 +1,5 @@
 {
-  "originHash" : "e874bdce6322d6642867cf3c269ff905bfaec5e05c14c28ab2c1d5ce541a82af",
+  "originHash" : "433538a2725022821ff42b20cef3de71cd66c29e78245fa4e05707fcee6aae5a",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -47,6 +47,15 @@
       }
     },
     {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser.git",
+      "state" : {
+        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
+        "version" : "1.5.0"
+      }
+    },
+    {
       "identity" : "swift-async-algorithms",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-async-algorithms.git",
@@ -62,6 +71,14 @@
       "state" : {
         "revision" : "cd142fd2f64be2100422d658e7411e39489da985",
         "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "swift-cascadia",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/errorerrorerror/swift-cascadia",
+      "state" : {
+        "revision" : "7ecd4f55648087446d194aa07ba0cfbc5e7461a6"
       }
     },
     {
@@ -245,29 +262,12 @@
       }
     },
     {
-      "identity" : "swift-tools-support-core",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-tools-support-core.git",
-      "state" : {
-        "revision" : "3b13e439a341bbbfe0f710c7d1be37221745ef1a",
-        "version" : "0.6.1"
-      }
-    },
-    {
       "identity" : "swift-url-routing",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-url-routing.git",
       "state" : {
         "revision" : "1cfd564259ecb1d324bb718a8f03e513dab738d2",
         "version" : "0.6.2"
-      }
-    },
-    {
-      "identity" : "swiftytailwind",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tuist/SwiftyTailwind.git",
-      "state" : {
-        "revision" : "30c78225d88029d20bd220fcc76ac4380c754eeb"
       }
     },
     {

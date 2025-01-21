@@ -1,22 +1,60 @@
 import ActivityClient
+import Cascadia
 import Dependencies
 import Elementary
 import Foundation
 import SyntaxHighlight
 
 public struct HomePage: Page {
+  struct Style: Sendable, StyleSheet {
+    let container = Class(module: "container")
+    let svgIcon = Class(module: "svgIcon")
+
+    var body: some Rule {
+      container => {
+        Display(.flex)
+        Background("#1c1c1c")
+        Color(.white)
+        // AnyProperty("justify-self", "center")
+      }
+
+      container > Class("main") => {
+        // Width(.full)
+        // Height(.full)
+
+        // Media(maxWidth: 2xl) => {
+        //   MaxWidth(.rem(20))
+        // }
+      }
+
+      // .svg-icon {
+      //   display: inline-block;
+      //   vertical-align: middle;
+      //   position: relative;
+      //   bottom: 0.125em;
+      //   height: 1em;
+      //   width: 1em;
+      // }
+      svgIcon => {
+        Display(.inlineBlock)
+      }
+    }
+  }
+
   @Dependency(\.activityClient) private var activityClient
 
   public init() {}
 
-  private static let dateFormatter = DateFormatter()
+  private static let yearDateFormatter = DateFormatter()
 
   var year: String {
-    Self.dateFormatter.locale = Locale(languageCode: .english, languageRegion: .unitedStates)
-    Self.dateFormatter.timeZone = TimeZone(abbreviation: "PST") ?? Self.dateFormatter.timeZone
-    Self.dateFormatter.dateFormat = "yyyy"
-    return Self.dateFormatter.string(from: Date.now)
+    Self.yearDateFormatter.locale = Locale(languageCode: .english, languageRegion: .unitedStates)
+    Self.yearDateFormatter.timeZone = TimeZone(abbreviation: "PST") ?? Self.yearDateFormatter.timeZone
+    Self.yearDateFormatter.dateFormat = "yyyy"
+    return Self.yearDateFormatter.string(from: Date.now)
   }
+
+  let styling = Style()
 
   public var content: some HTML {
     HTMLRaw("<!DOCTYPE html>")
@@ -25,11 +63,11 @@ public struct HomePage: Page {
         title { "Erik Bautista Santibanez" }
         meta(.charset(.utf8))
         meta(name: .viewport, content: "width=device-width, initial-scale=1.0")
-        link(.rel(.stylesheet), .href("/styles/app.generated.css"))
-        script(.src("https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"), .defer) {}
+        style(styling)
+        // script(.src("https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"), .defer) {}
       }
-      body(.class("bg-[#1c1c1c] text-white flex justify-center")) {
-        main(.class("max-w-xl w-full h-full")) {
+      body(.class(styling.container)) {
+        main(.class("max-w-2xl w-full h-full")) {
           section(.class("p-8 pb-8"), .ariaLabel("About")) {
             h1(.class("font-bold")) { "Erik Bautista Santibanez" }
             p(.class("opacity-70")) { "Swift & Web Developer" }
@@ -63,45 +101,39 @@ public struct HomePage: Page {
           }
 
           section(.class("px-8 pb-8"), .ariaLabel("Experience")) {
-            h2(.class("font-bold")) { "Experience" }
+            h1(.class("font-bold")) { "Experience" }
           }
 
           section(.class("px-8 pb-8"), .ariaLabel("Projects")) {
-            h2(.class("font-bold")) { "Projects" }
+            h1(.class("font-bold")) { "Projects" }
+          }
+
+          section(.class("px-8 pb-8"), .ariaLabel("Education")) {
+            h1(.class("font-bold")) { "Education" }
+            div(.class("flex flex-col md:flex-row")) {
+              div(.class("flex-1")) {
+                h2(.class("font-medium")) {
+                  a(.href("https://stedwards.edu/")) { 
+                    "St. Edward's University" 
+                  }
+                }
+                p(.class("opacity-80")) { "Bachelor of Science in Computer Science" }
+              }
+
+              p(.class("md:self-baseline opacity-80")) { "2018-2023" }
+            }
           }
 
           footer(.class("px-8 pb-16 text-xs opacity-70"), .ariaLabel("Credits")) {
             hr(.class("pb-6 border-top border-neutral-600"))
-            p(.class("px-6 text-center")) { "Copyright ©\(self.year) Erik Bautista Santibanez." }
-            p(.class("pt-2 px-6 text-center")) { "Made with \u{2764} using Swift + Hummingbird" }
-          }
-        }
-      }
-    }
-  }
-}
-
-private struct Footer: HTML {
-  var content: some HTML {
-    footer(.class("max-w-center-layout mt-auto w-full flex-initial text-xs")) {
-      div(
-        .class(
-          "flex flex-col items-center gap-4 border-t border-neutral-500/20 pt-8 text-center font-semibold text-neutral-400 md:flex-row"
-        )
-      ) {
-        p(.class("flex flex-wrap justify-center gap-1")) {
-          "Designed and developed by"
-          a(
-            .class("flex items-center gap-1 font-bold md:ml-auto"),
-            .href("https://erikbautista.dev")
-          ) {
-            "[redacted]"
-          }
-        }
-        p(.class("flex flex-wrap justify-center items-center gap-2 md:ml-auto")) {
-          "Made with \u{2764} using"
-          a(.target(.blank), .rel("noopener noreferrer"), .href("https://swift.org")) {
-            "Swift"
+            p(.class("px-6 text-center")) {  "©\(self.year) Erik Bautista Santibanez." }
+            p(.class("pt-2 px-6 text-center")) { 
+              "Made with \u{2764} using "
+              a(.target(.blank), .rel("noopener noreferrer"), .href("https://swift.org")) { "Swift" }
+              " + "
+              a(.target(.blank), .rel("noopener noreferrer"), .href("https://hummingbird.codes")) { "Hummingbird" }
+              "."
+            }
           }
         }
       }
@@ -111,7 +143,7 @@ private struct Footer: HTML {
 
 // private enum PackageTheme: Theme {
 //   static var className: String? { "swift-package-code-block" }
-
+// 
 //   static func style(for tokenSyntax: TokenSyntax) -> [Token] {
 //     switch tokenSyntax.tokenKind {
 //     case .keyword: [Token("\(tokenSyntax)", className: "text-blue-400")]
