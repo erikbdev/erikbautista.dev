@@ -6,10 +6,12 @@ import Logging
 import Pages
 import Routes
 
+private let logger = Logger(label: "portfolio-server")
+
 @main
 struct Portfolio: AsyncParsableCommand {
   @Option(name: .long)
-  var env: AppEnv = .development
+  var env = AppEnv.development
 
   @Option(name: .shortAndLong)
   var hostname = "127.0.0.1"
@@ -18,18 +20,18 @@ struct Portfolio: AsyncParsableCommand {
   var port = 8080
 
   func run() async throws {
-    try await withDependencies { _ in
-      // TODO: add other dependencies if needed
+    try await withDependencies { deps in
+      #if DEBUG
+        deps.envVar = try await .dotEnv()
+      #endif
     } operation: {
-      let logger = Logger(label: "server")
-      logger.info("Running server in '\(env)' mode")
-
-      let app = self.buildApp(logger)
+      let app = self.buildApp()
+      logger.info("Running server in '\(env.rawValue)' mode")
       try await app.runService()
     }
   }
 
-  func buildApp(_ logger: Logger = Logger(label: "portfolio")) -> some ApplicationProtocol {
+  func buildApp() -> some ApplicationProtocol {
     @Dependency(\.envVar) var envVar
 
     let router = Router()
