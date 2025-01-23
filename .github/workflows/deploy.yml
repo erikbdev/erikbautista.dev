@@ -17,9 +17,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Docker meta
+      - name: Base metadata
+        run: |
+          REPO=${{ github.repository }} && echo "REPO=${REPO,,}" >> ${GITHUB_ENV}
+
+      - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
+        with:
+          images: |
+            $REPO
+            ghcr.io/$REPO
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -27,7 +43,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
+
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v3
 
@@ -36,5 +52,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
-          labeld: ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/$REPO:latest
+          labels: ghcr.io/$REPO:latest
