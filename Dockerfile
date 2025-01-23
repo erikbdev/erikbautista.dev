@@ -47,7 +47,7 @@ RUN [ -d /build/Public ] && { mv /build/Public ./Public && chmod -R a-w ./Public
 # ================================
 # Run image
 # ================================
-FROM debian:bookworm-slim AS dokploy
+FROM debian:bookworm-slim AS deploy
 
 # Make sure all system packages are up to date, and install only essential packages.
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
