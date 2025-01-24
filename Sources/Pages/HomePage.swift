@@ -63,11 +63,12 @@ public struct HomePage: Page {
         title { "Erik Bautista Santibanez" }
         meta(.charset(.utf8))
         meta(name: .viewport, content: "width=device-width, initial-scale=1.0")
-        style(styling)
+        link(.rel(.stylesheet), .href("https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"))
+        // style(styling)
         // script(.src("https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"), .defer) {}
       }
-      body(.class(styling.container)) {
-        main(.class("max-w-2xl w-full h-full")) {
+      body {
+        main(.class("container")) {
           section(.class("p-8 pb-8"), .ariaLabel("About")) {
             h1(.class("font-bold")) { "Erik Bautista Santibanez" }
             p(.class("opacity-70")) { "Swift & Web Developer" }
@@ -113,7 +114,7 @@ public struct HomePage: Page {
             div(.class("flex flex-col md:flex-row")) {
               div(.class("flex-1")) {
                 h2(.class("font-medium")) {
-                  a(.href("https://stedwards.edu/")) { 
+                  a(.target(.blank), .rel("noopener noreferrer"), .href("https://stedwards.edu/")) { 
                     "St. Edward's University" 
                   }
                 }
@@ -126,7 +127,7 @@ public struct HomePage: Page {
 
           footer(.class("px-8 pb-16 text-xs opacity-70"), .ariaLabel("Credits")) {
             hr(.class("pb-6 border-top border-neutral-600"))
-            p(.class("px-6 text-center")) {  "©\(self.year) Erik Bautista Santibanez." }
+            p(.class("px-6 text-center")) {  "©\(self.year) Erik Bautista Santibanez" }
             p(.class("pt-2 px-6 text-center")) { 
               "Made with \u{2764} using "
               a(.target(.blank), .rel("noopener noreferrer"), .href("https://swift.org")) { "Swift" }
