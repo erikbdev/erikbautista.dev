@@ -72,7 +72,7 @@ COPY --from=build --chown=deploy:deploy /staging /app
 # Provide configuration needed by the built-in crash reporter and some sensible default behaviors.
 ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no,swift-backtrace=./swift-backtrace-static
 
-# Ensure all further commands run as the vapor user
+# Ensure all further commands run as the deploy user
 USER deploy:deploy
 
 # Let Docker bind to port 8080
