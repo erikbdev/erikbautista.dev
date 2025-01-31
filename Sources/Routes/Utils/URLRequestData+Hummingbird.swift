@@ -44,8 +44,8 @@ public extension URLRequestData {
   }
 }
 
-private extension HTTPFields {
-  var basicAuthorization: (String, String)? {
+extension HTTPFields {
+  public var basicAuthorization: (String, String)? {
     if let string = self[.authorization] {
       let headerParts = string
         .split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)

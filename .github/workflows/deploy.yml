@@ -61,4 +61,4 @@ jobs:
 
       - name: Push To Production
         run: |
-          curl --request GET '${{ secrets.DEPLOYMENT_WEBHOOK_URL }}' --header 'Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}'
+          curl --request POST '${{ secrets.DEPLOYMENT_WEBHOOK_URL }}' --header 'Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}'

@@ -23,7 +23,7 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", exact: "0.6.2"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", exact: "1.6.2"),
     .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "600.0.1"),
-    .package(url: "https://github.com/errorerrorerror/swift-cascadia", revision: "7ecd4f55648087446d194aa07ba0cfbc5e7461a6")
+    .package(url: "https://github.com/errorerrorerror/swift-cascadia", revision: "a13dfd0a3818c8f9368bbd4aeb3c6607f68838bd")
   ],
   targets: [
     .target(
