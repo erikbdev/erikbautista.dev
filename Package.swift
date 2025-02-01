@@ -9,7 +9,6 @@ let package = Package(
   ],
   products: [
     .library(name: "ActivityClient", targets: ["ActivityClient"]),
-    .library(name: "Reactive", targets: ["Reactive"]),
     .library(name: "SyntaxHighlight", targets: ["SyntaxHighlight"]),
     .library(name: "Models", targets: ["Models"]),
     .library(name: "Routes", targets: ["Routes"]),
@@ -46,7 +45,6 @@ let package = Package(
     .target(
       name: "Pages",
       dependencies: [
-        "Reactive",
         "Models",
         "SyntaxHighlight",
         "ActivityClient",
@@ -75,7 +73,6 @@ let package = Package(
         .product(name: "SwiftParser", package: "swift-syntax"),
       ]
     ),
-    .target(name: "Reactive"),
 
     /// Executable
     .executableTarget(
