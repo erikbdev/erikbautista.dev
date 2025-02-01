@@ -3,6 +3,7 @@ import struct Hummingbird.Request
 import struct HTTPTypes.HTTPFields
 import struct Foundation.Data
 import struct NIO.ByteBuffer
+import Parsing
 
 public extension URLRequestData {
   init(request: Hummingbird.Request) async {
@@ -16,11 +17,13 @@ public extension URLRequestData {
       body = nil
     }
 
+    let authorization = request.headers.basicAuthorization
+
     self.init(
       method: request.method.rawValue,
       scheme: request.uri.scheme?.rawValue,
-      user: request.headers.basicAuthorization?.0,
-      password: request.headers.basicAuthorization?.1,
+      user: authorization?.0,
+      password: authorization?.1,
       host: request.uri.host,
       port: request.uri.port,
       path: request.uri.path,
@@ -46,27 +49,83 @@ public extension URLRequestData {
 
 extension HTTPFields {
   public var basicAuthorization: (String, String)? {
-    if let string = self[.authorization] {
-      let headerParts = string
-        .split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
-
-      guard headerParts.count == 2 else {
-        return nil
-      }
-      guard headerParts[0].lowercased() == "basic" else {
-        return nil
-      }
-      guard let decodedToken = Data(base64Encoded: String(headerParts[1])) else {
-        return nil
-      }
-      let parts = String(decoding: decodedToken, as: UTF8.self)
-        .split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
-      guard parts.count == 2 else {
-        return nil
-      }
-      return (String(parts[0]), String(parts[1]))
+    if case let .basic(username, password) = self.authorization {
+      return (username, password)
     } else {
       return nil
     }
+  }
+
+  public var authorization: Authorization? {
+    if let string = self[.authorization] {
+      try? Authorization.parser.parse(string)
+    } else {
+      nil
+    }
+  }
+
+  public enum Authorization: Sendable, Equatable {
+    /// Token
+    case bearer(String)
+
+    /// base64-encoded credentials
+    case basic(String, String)
+
+    /// sha256-algorithm
+    case digest(String)
+
+    static var parser: some Parser<Substring, Self> {
+      OneOf {
+        Parse(.case(Self.bearer)) {
+          OneOf { 
+            "Bearer"
+            "bearer"
+          }
+          " "
+          Rest().map(.string)
+        }
+
+        Parse(.case(Self.basic)) {
+          OneOf {
+            "Basic"
+            "basic"
+          }
+          " "
+
+          Rest().map(Base64EncodedSubstringToSubstring()).pipe {
+            Prefix { $0 != ":" }.map(.string)
+            ":"
+            Rest().map(.string)
+          }
+        }
+
+        Parse(.case(Self.digest)) {
+          OneOf {
+            "Digest"
+            "digest"
+          }
+          " "
+          Rest().map(.string)
+        }
+      }
+    }
+  }
+}
+
+private struct Base64EncodedSubstringToSubstring: Conversion {
+  @usableFromInline
+  init() {}
+
+  @inlinable
+  func apply(_ input: Substring) -> Substring {
+    Data(base64Encoded: String(input)).flatMap {
+      String(decoding: $0, as: UTF8.self)[...]
+    } ?? ""
+  }
+
+  @inlinable
+  func unapply(_ output: Substring) -> Substring {
+    output.data(using: .utf8)?
+      .base64EncodedString()[...] ?? ""
   }
 }

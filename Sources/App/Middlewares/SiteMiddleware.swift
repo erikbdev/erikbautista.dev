@@ -29,14 +29,14 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
         case .api(.activity(.all)):
           return try JSONEncoder().encode(self.activityClient.activity(), from: req, context: ctx)
         case let .api(.activity(.location(location))):
-          guard let auth = req.headers[.authorization].flatMap({ try? Auth.parser.parse($0) }) else {
+          guard let auth = req.headers.authorization else {
             throw HTTPError(.notFound)
           }
           try auth.validate()
           self.activityClient.updateLocation(location)
           return Response(status: .ok)
         case let .api(.activity(.nowPlaying(nowPlaying))):
-          guard let auth = req.headers[.authorization].flatMap({ try? Auth.parser.parse($0) }) else {
+          guard let auth = req.headers.authorization else {
             throw HTTPError(.notFound)
           }
           try auth.validate()

@@ -31,7 +31,11 @@ public struct URLRoutingMiddleware<
         return try await next(request, context)
       } catch {
         context.logger.info("\(routingError)")
+        #if DEBUG
+        throw HTTPError(.notFound, message: "Routing \(routingError)")
+        #else
         throw error
+        #endif
       }
     }
     return try await self.respond(request, context, route).response(from: request, context: context)
