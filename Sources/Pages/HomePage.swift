@@ -32,9 +32,9 @@ public struct HomePage: Page {
         AnyProperty("scale", "calc(100% * -1) 100%")
       }
 
-      self.location > Element(.span) => {
-        Color("#fff")
-      }
+      // self.location > Element(.b) => {
+      //   Color("#fff")
+      // }
 
       self.educationItem => {
         Display(.flex)
@@ -65,7 +65,7 @@ public struct HomePage: Page {
         title { "Erik Bautista Santibanez" }
         meta(.charset(.utf8))
         meta(name: .viewport, content: "width=device-width, initial-scale=1.0")
-        link(.rel(.stylesheet), .href("https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"))
+        // link(.rel(.stylesheet), .href("https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"))
         style(styling)
         // script(.src("https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"), .defer) {}
       }
@@ -99,19 +99,29 @@ public struct HomePage: Page {
 
                   "Currently in "
 
-                  span {
-                    strong {
+                  // span {
+                    b {
                       [location.city, location.state, location.region == "United States" ? nil : location.region]
                         .compactMap(\.self)
                         .joined(separator: ", ")
                     }
-                  }
+                  // }
                 }
               }
             }
           }
         }
         main {
+          article {
+            // header {
+            //   a(.target(.blank), .rel("noopener noreferrer"), .href("https://stedwards.edu/")) {
+            //     "St. Edward's University"
+            //   }
+            // }
+            // p { "Bachelor of Science in Computer Science" }
+            h6 { "Graduation" }
+            p  { "I graduated from St. Edward's University with a Bachelor of Science in Computer Science." }
+          }
           // TODO: Do a timeline with filters
           // section(.ariaLabel("Experience")) {
           //   h5 { "Experience" }
@@ -119,19 +129,21 @@ public struct HomePage: Page {
           // section(.ariaLabel("Projects")) {
           //   h5 { "Projects" }
           // }
-          section(.ariaLabel("Education")) {
-            h5 { "Education" }
-            div(.class(styling.educationItem)) {
-              div {
-                a(.target(.blank), .rel("noopener noreferrer"), .href("https://stedwards.edu/")) {
-                  "St. Edward's University"
-                }
-                p { "Bachelor of Science in Computer Science" }
-              }
+          // section(.ariaLabel("Education")) {
+          //   h5 { "Education" }
+          //   div(.class(styling.educationItem)) {
+          //     div {
+          //       a(.target(.blank), .rel("noopener noreferrer"), .href("https://stedwards.edu/")) {
+          //         "St. Edward's University"
+          //       }
+          //       p { 
+          //         i { "Bachelor of Science in Computer Science" }
+          //       }
+          //     }
 
-              p { "2018-2023" }
-            }
-          }
+          //     p { "2018-2023" }
+          //   }
+          // }
         }
         footer(.ariaLabel("Credits")) {
           hr()
@@ -166,3 +178,8 @@ public struct HomePage: Page {
 //     }
 //   }
 // }
+
+struct Event {
+  let date: Date
+  let title: String
+}

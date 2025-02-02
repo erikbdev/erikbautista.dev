@@ -27,7 +27,11 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
         case .home:
           return HomePage()
         case .api(.activity(.all)):
+        do {
           return try JSONEncoder().encode(self.activityClient.activity(), from: req, context: ctx)
+        } catch {
+          throw HTTPError(.forbidden)
+        }
         case let .api(.activity(.location(location))):
           guard let auth = req.headers.authorization else {
             throw HTTPError(.notFound)
