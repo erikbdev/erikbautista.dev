@@ -33,6 +33,12 @@ extension HTMLElement where Tag == HTMLTag.style, Content == HTMLRaw {
       HTMLRaw(stylesheet.render())
     }
   }
+
+  init<S: Rule>(@CSSBuilder _ body: () -> S) {
+    self.init {
+      HTMLRaw(stylesheet(content: body))
+    }
+  }
 }
 
 extension HTMLAttribute where Tag: HTMLTrait.Attributes.Global {

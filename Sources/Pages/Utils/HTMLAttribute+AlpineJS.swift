@@ -24,8 +24,8 @@ public extension HTMLAttribute.x {
   }
 
   /// `x-bind` allows you to set HTML attributes on elements based on the result of JavaScript expressions.
-  static func bind(_ script: String) -> HTMLAttribute {
-    directive(script)
+  static func bind(_ attribute: String, _ script: String) -> HTMLAttribute {
+    directive(name: "bind:\(attribute)", script)
   }
 
   /// `x-on` allows you to easily run code on dispatched DOM events.

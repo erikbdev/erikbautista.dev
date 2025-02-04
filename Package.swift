@@ -9,7 +9,6 @@ let package = Package(
   ],
   products: [
     .library(name: "ActivityClient", targets: ["ActivityClient"]),
-    .library(name: "SyntaxHighlight", targets: ["SyntaxHighlight"]),
     .library(name: "Models", targets: ["Models"]),
     .library(name: "Routes", targets: ["Routes"]),
     .library(name: "Pages", targets: ["Pages"]),
@@ -21,8 +20,8 @@ let package = Package(
     .package(url: "https://github.com/sliemeobn/elementary.git", exact: "0.4.3"),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", exact: "0.6.2"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", exact: "1.6.2"),
-    .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "600.0.1"),
-    .package(url: "https://github.com/errorerrorerror/swift-cascadia", revision: "a13dfd0a3818c8f9368bbd4aeb3c6607f68838bd")
+    .package(url: "https://github.com/errorerrorerror/swift-cascadia", revision: "a13dfd0a3818c8f9368bbd4aeb3c6607f68838bd"),
+    .package(url: "https://github.com/swiftlang/swift-markdown.git", revision: "e62a44fd1f2764ba8807db3b6f257627449bbb8c")
   ],
   targets: [
     .target(
@@ -46,12 +45,12 @@ let package = Package(
       name: "Pages",
       dependencies: [
         "Models",
-        "SyntaxHighlight",
         "ActivityClient",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Elementary", package: "elementary"),
         .product(name: "Hummingbird", package: "hummingbird"),
-        .product(name: "Cascadia", package: "swift-cascadia")
+        .product(name: "Cascadia", package: "swift-cascadia"),
+        .product(name: "Markdown", package: "swift-markdown")
       ]
     ),
 
@@ -61,16 +60,6 @@ let package = Package(
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
-      ]
-    ),
-
-    /// Misc
-    .target(
-      name: "SyntaxHighlight",
-      dependencies: [
-        .product(name: "Elementary", package: "elementary"),
-        .product(name: "SwiftSyntax", package: "swift-syntax"),
-        .product(name: "SwiftParser", package: "swift-syntax"),
       ]
     ),
 
