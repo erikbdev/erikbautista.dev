@@ -119,7 +119,7 @@ private struct HTMLMarkdownConverter: MarkupVisitor {
   mutating func visitImage(_ image: Image) -> AnyHTML {
     if let source = image.source {
       a(.href(source), .target(.blank), .rel("noopener noreferrer")) {
-        img(.src(source), .ariaLabel(image.title ?? ""))
+        img(.src(source), .aria.label(image.title ?? ""))
       }
     }
   }
@@ -148,7 +148,7 @@ private struct HTMLMarkdownConverter: MarkupVisitor {
     let attributes: [HTMLAttribute<HTMLTag.a>] = [
       .href(href),
       link.title.flatMap { .title($0) },
-      link.title.flatMap { .ariaLabel($0) },
+      link.title.flatMap { .aria.label($0) },
       isLocalLink ? nil : .target(.blank),
       isLocalLink ? nil : .rel("noopener noreferrer")
     ]
