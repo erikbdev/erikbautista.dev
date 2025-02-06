@@ -68,7 +68,7 @@ public extension HTMLAttribute.x {
     directive(script)
   }
 
-  static func directive(name: String = #function, _ script: String) -> HTMLAttribute {
+  private static func directive(name: String = #function, _ script: String) -> HTMLAttribute {
     .init(name: "x-\(name.components(separatedBy: "(").first ?? name)", value: script)
   }
 }

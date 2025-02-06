@@ -24,4 +24,12 @@ extension HTMLAttribute {
   static func ariaLabel(_ value: String) -> Self {
     HTMLAttribute(name: "aria-label", value: value)
   }
+
+  static func ariaCurrent(_ value: String) -> Self {
+    HTMLAttribute(name: "aria-current", value: value)
+  }
+
+  static func ariaSelected(_ value: Bool?) -> Self {
+    HTMLAttribute(name: "aria-selected", value: value?.description)
+  }
 }

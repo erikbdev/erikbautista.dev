@@ -5,21 +5,28 @@ import Elementary
 import Foundation
 
 public struct HomePage: Page {
-  struct Style: Sendable, StyleSheet {
+  struct Style: @unchecked Sendable, StyleSheet {
     var body: some Rule {
       // TODO: Add Work-Sans font?
 
+      // General
       Pseudo(class: .root) => {
         BackgroundColor("#1c1c1c")
         Color("#fafafa")
-        AnyProperty("font-family", "ui-sans-serif, -apple-system, Helvetica Neue, Helvetica, Arial, sans-serif")
         AnyProperty("font-optical-sizing", "auto")
         AnyProperty("font-style", "normal")
       }
 
-      // General
-
       Element(.body) => {
+        // AnyProperty("border-top", "1px solid #404040")
+        // AnyProperty("border-bottom", "1px solid #404040")
+        AnyProperty("margin-top", "2rem")
+        AnyProperty("margin-bottom", "3rem")
+      }
+
+      Element(.body) > All() => {
+        // AnyProperty("border-left", "1px solid #404040")
+        // AnyProperty("border-right", "1px solid #404040")
         AnyProperty("max-width", "40rem")
         AnyProperty("margin-right", "auto")
         AnyProperty("margin-left", "auto")
@@ -41,9 +48,13 @@ public struct HomePage: Page {
         AnyProperty("scale", "calc(100% * -1) 100%")
       }
 
-      /// Main
+      /// Hero header
 
-      Element(.header) * Element(.p) => {
+      Class("hero") => {
+        AnyProperty("padding-bottom", "1.5rem")
+      }
+
+      Class("hero") * Element(.p) => {
         Color(.hex("#D0D0D0"))
       }
 
@@ -58,23 +69,31 @@ public struct HomePage: Page {
 
       Class("post-tabs") > Element(.li) => {
         AnyProperty("float", "left")
+        AnyProperty("margin-right", "0.25rem")
       }
 
       Class("post-tabs") * Element(.button) => {
-        AnyProperty("border-radius", "9999px")
-        AnyProperty("background-color", "#2c2c2c")
+        BackgroundColor("#3c3c3c")
         AnyProperty("color", "white")
-        AnyProperty("padding", "0.25rem 0.75rem")
-        AnyProperty("border-width", "1px")
+        AnyProperty("border-color", "#505050")
+        AnyProperty("border-radius", "9999px")
         AnyProperty("border-style", "solid")
-        AnyProperty("border-color", "#606060")
+        AnyProperty("border-width", "1.25px")
+        AnyProperty("padding", "0.25rem 0.75rem")
       }
 
-      /// Post
+      Class("post-tabs") * Element(.button) <> .attr("aria-selected", match: .exact, value: "true") => {
+        AnyProperty("background-color", "#F0F0F0")
+        AnyProperty("color", "#101010")
+        AnyProperty("border-color", "#A0A0A0")
+      }
+
+      /// Posts
 
       Class("post") => {
         AnyProperty("margin-top", "0.75rem")
         AnyProperty("margin-bottom", "1.5rem")
+        // AnyProperty("border-bottom", "1px dotted #404040")
       }
 
       Class("post") > Element(.header) => {
@@ -83,19 +102,23 @@ public struct HomePage: Page {
         AnyProperty("font-weight", "600")
       }
 
-      Class("post") > Class("post-title") => {
+      Class("post-title") => {
         AnyProperty("margin-top", "0.5rem")
       }
 
-      Class("post") > Class("post-content") * All() => {
+      Class("post-content") * All() => {
         AnyProperty("margin", "revert")
       }
 
       /// Code blocks
-      Element(.pre) => {
+      Class("post") * Element(.pre) => {
         AnyProperty("padding", "1rem")
-        Background("#2F2F2F")
+        Background("#242424")
+        AnyProperty("border-color", "#3A3A3A")
+        AnyProperty("border-style", "solid")
+        AnyProperty("border-width", "1.5px")
         AnyProperty("border-radius", "0.75rem")
+        AnyProperty("overflow-x", "auto")
       }
     }
   }
@@ -144,21 +167,21 @@ public struct HomePage: Page {
           )
         }
         style(self.styling)
-        script(.src("https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"))
         script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"))
         script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"))
         script { HTMLRaw("hljs.highlightAll();") }
+        VueScript()
       }
       body {
-        header(.ariaLabel("About")) {
+        header(.class("hero"), .ariaLabel("About")) {
           hgroup {
-            h1 { "Erik Bautista Santibanez" }
-            p { "Swift & Web Developer" }
+            h1(.class("hero-title")) {  "Erik Bautista Santibanez" }
+            p(.class("hero-subtitle")) { "Swift & Web Developer" }
 
             let location = self.activityClient.location()
             let residency = location?.residency ?? .default
 
-            p {
+            p(.class("hero-location")) {
               span(.ariaLabel("Residency")) {
                 svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .class("svg-icon"), .ariaLabel("Map pin icon")) {
                   path(
@@ -189,29 +212,37 @@ public struct HomePage: Page {
             }
           }
         }
-        main(.x.data("{ selection: undefined }")) {
+        main(.v.scope("{ selection: undefined }")) {
           header {
-            ul(.class("post-tabs")) {
-              for kind in Post.Kind?.allCases {
-                let value = if let kind {
-                  "'\(kind.rawValue)'"
-                } else {
-                  "undefined"
-                }
-                li {
-                  button(
-                    .x.on(.click, "selection = \(value)"), 
-                    .x.bind("aria-current", "selection == \(value) && 'tab'")
-                  ) { 
-                    kind?.tabTitle ?? "All"
+            hgroup {
+              h2 { "Posts" }
+              ul(.class("post-tabs")) {
+                for kind in Post.Kind?.allCases {
+                  let value = if let kind {
+                    "'\(kind.rawValue)'"
+                  } else {
+                    "undefined"
+                  }
+                  li {
+                    button(
+                      .v.on(.click, "selection = \(value)"),
+                      .v.bind("aria-selected", "selection == \(value)"),
+                      .ariaSelected(kind == nil)
+                    ) { 
+                      kind?.tabTitle ?? "All"
+                    }
                   }
                 }
               }
             }
+            // p { "Selected {{ selection }}" }
           }
           section {
             for post in Post.allCases {
-              article(.class("post"), .x.show("!selection || selection == '\(post.kind.rawValue)'")) {
+              article(
+                .class("post"),
+                .v.show("!selection || selection == '\(post.kind.rawValue)'")
+              ) {
                 header { post.dateFormatted }
                 h3(.class("post-title")) { post.title }
                 div(.class("post-content")) {
@@ -234,95 +265,5 @@ public struct HomePage: Page {
         }
       }
     }
-  }
-}
-
-struct Post {
-  let slug: String
-  var hero: Hero?
-  let title: String
-  let content: HTMLMarkdown
-  let date: Date
-  let kind: Kind
-  var actionButtons: [LinkButton]?
-
-  private static let dateCreatedFormatter = {
-    let formatter = DateFormatter()
-    formatter.locale = Locale(languageCode: .english, languageRegion: .unitedStates)
-    formatter.timeZone = TimeZone(abbreviation: "PST") ?? formatter.timeZone
-    formatter.dateFormat = "MMM, d yyyy"
-    return formatter
-  }()
-
-  var dateFormatted: String {
-    Self.dateCreatedFormatter.string(from: self.date).uppercased()
-  }
-
-  enum Hero {
-    case link(URL)
-    case image(String)
-    case video(String)
-    case code(HTMLMarkdown)
-  }
-
-  struct LinkButton {
-    let title: String
-    let link: String
-  }
-
-  enum Kind: String, Hashable, CaseIterable {
-    case project
-    case education
-    case experience
-    
-    var tabTitle: String {
-      switch self {
-        case .project: "Projects"
-        case .education: "Education"
-        case .experience: "Experiences"
-      }
-    }
-  }
-}
-
-extension Post: CaseIterable {
-  static var allCases: [Self] {
-    [
-      Self(
-        slug: "swift-cascadia",
-        title: "A Swift DSL for type-safe CSS",
-        content: """
-        Since I started building this website using Swift, I used [elementary](https://github.com/sliemeobn/elementary "link to Swift library") to build \
-        HTML pages.
-
-        ```swift
-        func test() -> Int {
-          print("Hey, there!")
-          return 0
-        }
-        ```
-        """,
-        date: Date(timeIntervalSince1970: 1_738_483_200), // Feb 2, 2025
-        kind: .project
-      ),
-      Self(
-        slug: "anime-now",
-        title: "Anime Now! \u{2014} An iOS and macOS App",
-        content: """
-        TBD
-        """,
-        date: Date(timeIntervalSince1970: 1_663_225_200), // Sep 15, 2025
-        kind: .project
-      ),
-      Self(
-        slug: "prism-ui",
-        title: "PrismUI \u{2014} Controlling MSI RGB Keyboard on mac",
-        content: """
-        TBD
-        """,
-        date: Date(timeIntervalSince1970: 1_663_225_200),
-        kind: .project
-      ),
-    ]
   }
 }

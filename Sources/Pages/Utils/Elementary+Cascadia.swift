@@ -1,4 +1,4 @@
-import Cascadia
+@_spi(Core) @_spi(Renderer) import Cascadia
 import Elementary
 
 struct ScopedClass: Selector {
@@ -48,5 +48,26 @@ extension HTMLAttribute where Tag: HTMLTrait.Attributes.Global {
 
   static func `class`(_ value: ScopedClass) -> Self {
     HTMLAttribute(name: "class", value: value.name, mergedBy: .appending(separatedBy: " "))
+  }
+}
+
+extension String: @retroactive Selector {
+  public typealias Body = Never
+
+  @_spi(Core)
+  @inlinable @inline(__always)
+  public var body: Never {
+    neverBody(Self.self)
+  }
+
+  @_spi(Renderer)
+  @inlinable @inline(__always)
+  public static func _render<Writer: CSSStreamWriter>(
+    _ value: consuming Self,
+    into renderer: inout Renderer<Writer>
+  ) {
+    renderer.selector { selector in
+      selector.write(contentsOf: value.utf8)
+    }
   }
 }
