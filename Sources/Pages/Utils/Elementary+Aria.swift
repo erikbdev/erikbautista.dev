@@ -16,7 +16,7 @@ extension HTMLAttribute.aria {
   }
 
   static func selected(_ value: Bool?) -> HTMLAttribute {
-    aria(value?.description)
+    aria(value.flatMap(String.init))
   }
 
   private static func aria(

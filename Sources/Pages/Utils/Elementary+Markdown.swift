@@ -25,8 +25,6 @@ private struct HTMLMarkdownConverter: MarkupVisitor {
   mutating func visitBlockQuote(_ blockQuote: BlockQuote) -> AnyHTML {
     let aside = Aside(blockQuote)
     blockquote {
-      strong { aside.kind.displayName }
-
       for child in aside.content {
         visit(child)
       }

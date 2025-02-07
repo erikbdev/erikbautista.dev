@@ -9,6 +9,17 @@ extension Post: CaseIterable {
         content: """
         Since I started building this website using Swift, I used [elementary](https://github.com/sliemeobn/elementary "link to Swift library") to build \
         HTML pages.
+
+        ```swift
+        struct CustomSheet: StyleSheet {
+          var body: some Rule {
+            Class("books") => {
+              Color(.red)
+              BackgroundColor(.red)
+            }
+          }
+        }
+        ```
         """,
         date: Date(timeIntervalSince1970: 1_738_483_200), // Feb 2, 2025
         kind: .project
@@ -17,7 +28,7 @@ extension Post: CaseIterable {
         slug: "mochi-released",
         title: "Mochi \u{2014} Content Viewer for iOS and macOS",
         content: """
-        TBD
+        > TBD
         """,
         date: Date(timeIntervalSince1970: 1_663_225_200), // Sep 15, 2025
         kind: .project
@@ -26,7 +37,7 @@ extension Post: CaseIterable {
         slug: "anime-now-released",
         title: "Anime Now! \u{2014} An iOS and macOS App",
         content: """
-        TBD
+        > TBD
         """,
         date: Date(timeIntervalSince1970: 1_663_225_200), // Sep 15, 2025
         kind: .project
@@ -35,7 +46,7 @@ extension Post: CaseIterable {
         slug: "prism-ui-released",
         title: "PrismUI \u{2014} Controlling MSI RGB Keyboard on mac",
         content: """
-        TBD
+        > TBD
         """,
         date: Date(timeIntervalSince1970: 1_663_225_200),
         kind: .project

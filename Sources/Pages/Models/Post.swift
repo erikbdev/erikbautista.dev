@@ -2,7 +2,7 @@ import Foundation
 
 struct Post {
   let slug: String
-  var hero: Hero?
+  var header: Header?
   let title: String
   let content: HTMLMarkdown
   let date: Date
@@ -21,7 +21,7 @@ struct Post {
     Self.dateCreatedFormatter.string(from: self.date).uppercased()
   }
 
-  enum Hero {
+  enum Header {
     case link(String)
     case image(String)
     case video(String)

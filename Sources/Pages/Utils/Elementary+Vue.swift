@@ -18,6 +18,7 @@ struct VueScript: HTML {
         const roots = [...document.documentElement.querySelectorAll(`[v-scope]`)]
           .filter((root) => !root.matches(`[v-scope] [v-scope]`));
 
+        // Similar to how `v-scope` works in `petite-vue`
         for (const root of roots) {
           const expr = root.getAttribute('v-scope');
           root.removeAttribute('v-scope');

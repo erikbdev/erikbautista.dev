@@ -36,6 +36,7 @@ public struct HomePage: Page {
       body {
         header(.class("hero"), .aria.label("About")) {
           hgroup {
+            p(.class("file-name")) { "User.swift" }
             h1(.class("hero-title")) { "Erik Bautista Santibanez" }
             p(.class("hero-subtitle")) { "Swift & Web Developer" }
 
@@ -75,6 +76,7 @@ public struct HomePage: Page {
         }
         main(.v.scope("{ selection: undefined }")) {
           header {
+            p(.class("file-name")) { "Posts.swift" }
             hgroup {
               h2 { "Posts" }
               ul(.class("post-tabs")) {
@@ -86,6 +88,7 @@ public struct HomePage: Page {
                   }
                   li {
                     button(
+                      .class("post-tab"),
                       .v.on(.click, "selection = \(value)"),
                       .v.bind("aria-selected", "selection == \(value)"),
                       .aria.selected(kind == nil)
@@ -103,7 +106,7 @@ public struct HomePage: Page {
                 .class("post"),
                 .v.show("!selection || selection == '\(post.kind.rawValue)'")
               ) {
-                header { post.dateFormatted }
+                header(.class("post-date")) { post.dateFormatted }
                 h3(.class("post-title")) { post.title }
                 div(.class("post-content")) { post.content }
               }
@@ -129,10 +132,16 @@ public struct HomePage: Page {
 extension HomePage {
   struct Style: @unchecked Sendable, StyleSheet {
     var body: some Rule {
-      // TODO: Add Work-Sans font?
+      resetStyles()
+      generalStyles()
+      heroStyles()
+      postTabsStyles()
+      postStyles()
+    }
 
-      // Reset components
-      ":root" => {
+    /// MARK: - Reset components
+    @CSSBuilder func resetStyles() -> some Rule {
+      Pseudo(class: .root) => {
         AnyProperty("line-height", "1.5")
       }
 
@@ -149,8 +158,21 @@ extension HomePage {
         AnyProperty("display", "block")
         AnyProperty("max-inline-size", "100%")
       }
+    }
 
-      // General
+    @CSSBuilder func generalStyles() -> some Rule {
+      // TODO: Add Work-Sans font?
+
+      /// MARK: - General
+
+      "@font-face" => {
+        AnyProperty("font-family", "\"CommitMono\"")
+        AnyProperty("font-src", "url(\"https://github.com/eigilnikolajsen/commit-mono/raw/ecd81cdbd7f7eb2acaaa2f2f7e1a585676f9beff/src/fonts/fontlab/CommitMonoV143-VF.woff2\")")
+        AnyProperty("font-style", "normal")
+        AnyProperty("font-weight", "400")
+        AnyProperty("font-display", "swap")
+      }
+
       Pseudo(class: .root) => {
         BackgroundColor("#1c1c1c")
         Color("#fafafa")
@@ -189,18 +211,32 @@ extension HomePage {
         AnyProperty("scale", "calc(100% * -1) 100%")
       }
 
-      /// Hero header
+      Class("file-name") => {
+        Color("#777")
+        AnyProperty("text-align", "end")
+        AnyProperty("font-size", "0.85em")
+        AnyProperty("font-weight", "600")
+        AnyProperty("font-family", "\"CommitMono\", monospace")
+      }
+
+      Element(.pre) => {
+        AnyProperty("font-family", "\"CommitMono\", monospace")
+      }
+    }
+
+    @CSSBuilder func heroStyles() -> some Rule {
+      /// MARK: - Hero header
 
       Class("hero") => {
         AnyProperty("padding-bottom", "1.5rem")
       }
 
-      Class("hero") * Element(.p) => {
+      Class("hero-location") => {
         Color(.hex("#D0D0D0"))
       }
+    }
 
-      /// Post tabs
-
+    @CSSBuilder func postTabsStyles() -> some Rule {      
       Class("post-tabs") => {
         AnyProperty("list-style-type", "none")
         AnyProperty("margin", "0")
@@ -213,7 +249,7 @@ extension HomePage {
         AnyProperty("margin-right", "0.25rem")
       }
 
-      Class("post-tabs") * Element(.button) => {
+      Class("post-tab") => {
         BackgroundColor("#3c3c3c")
         AnyProperty("color", "white")
         AnyProperty("border-color", "#505050")
@@ -223,13 +259,15 @@ extension HomePage {
         AnyProperty("padding", "0.25rem 0.75rem")
       }
 
-      Class("post-tabs") * Element(.button) <> .attr("aria-selected", match: .exact, value: "true") => {
+      Class("post-tab") <> .attr("aria-selected", match: .exact, value: "true") => {
         AnyProperty("background-color", "#F0F0F0")
         AnyProperty("color", "#101010")
         AnyProperty("border-color", "#A0A0A0")
       }
+    }
 
-      /// Posts
+    @CSSBuilder func postStyles() -> some Rule {
+      /// MARK: - Posts
 
       Class("post") => {
         AnyProperty("margin-top", "0.75rem")
@@ -237,8 +275,8 @@ extension HomePage {
         // AnyProperty("border-bottom", "1px dotted #404040")
       }
 
-      Class("post") > Element(.header) => {
-        Color(.gray)
+      Class("post-date") => {
+        Color("#9A9A9A")
         AnyProperty("font-size", "0.75em")
         AnyProperty("font-weight", "600")
       }
@@ -251,7 +289,6 @@ extension HomePage {
         AnyProperty("margin", "revert")
       }
 
-      /// Code blocks
       Class("post") * Element(.pre) => {
         AnyProperty("padding", "1rem")
         Background("#242424")
@@ -260,6 +297,7 @@ extension HomePage {
         AnyProperty("border-width", "1.5px")
         AnyProperty("border-radius", "0.75rem")
         AnyProperty("overflow-x", "auto")
+        AnyProperty("font-size", "0.85em")
       }
     }
   }
