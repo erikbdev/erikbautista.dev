@@ -33,7 +33,7 @@ public struct HomePage: Page {
         VueScript()
       }
       body {
-        // TODO: Add header to switch between posts and something else?
+        // TODO: Add header to switch between posts and swich from cod?
         main {
           UserHero()
           PostsSection()
@@ -61,6 +61,7 @@ public struct HomePage: Page {
         hgroup(.class("container-content")) {
           // h1(.class("hero-title")) { "Erik Bautista Santibanez" }
           // p(.class("hero-subtitle")) { "Mobile & Web Developer" }
+          // p { residency }
           // p { location }
 
           pre {
@@ -73,27 +74,39 @@ public struct HomePage: Page {
               span(.class("hljs-title class_")) { "User" }
               ": "
               span(.class("hljs-title class_")) { "Portfolio" }
-              " {\n"
-              span(.class("hljs-keyword")) { HTMLRaw("&nbsp;&nbsp;var") }
+              " {\n  "
+              span(.class("hljs-keyword")) { "var" }
               " body: "
               span(.class("hljs-keyword")) { "some" }
               " "
               span(.class("hljs-type")) { "Description" }
-              " { \n"
-              span(.class("hljs-type")) { HTMLRaw("&nbsp;&nbsp;&nbsp;&nbsp;Name") }
+              " { \n    "
+              span(.class("hljs-type")) { "Name" }
               "("
-              span(.class("hero-title hljs-string")) { "\"Erik Bautista Santibanez\"" }
-              ")\n"
-              span(.class("hljs-type")) { HTMLRaw("&nbsp;&nbsp;&nbsp;&nbsp;Role") }
+              span(.class("hljs-string")) {
+                "\""
+                span(.class("hero-title")) { "Erik Bautista Santibanez" }
+                "\""
+              }
+              ")\n    "
+              span(.class("hljs-type")) { "Role" }
               "("
-              span(.class("hero-subtitle hljs-string")) { "\"Mobile & Web Developer\"" }
-              ")\n"
-              span(.class("hljs-type")) { HTMLRaw("&nbsp;&nbsp;&nbsp;&nbsp;Home") }
+              span(.class("hljs-string")) {
+                "\""
+                span(.class("hero-subtitle")) { "Mobile & Web Developer" }
+                "\""
+              }
+              ")\n    "
+              span(.class("hljs-type")) { "Home" }
               "("
-              span(.class("hero-location hljs-string")) { "\""; self.residency; "\"" }
+              span(.class("hljs-string")) { 
+                "\""
+                span(.class("hero-location")) { self.residency }
+                "\""
+              }
               ")\n"
               location
-              HTMLRaw("&nbsp;&nbsp;}\n")
+              HTMLRaw("  }\n")
               "}"
             }
           }
@@ -120,23 +133,28 @@ public struct HomePage: Page {
       let residency = location?.residency ?? .default
 
       if let location, location.city != residency.city || location.state != residency.state {
-        span(.class("hljs-type")) { HTMLRaw("&nbsp;&nbsp;&nbsp;&nbsp;Location") }
-        "(\""
-        span(.class("hero-location"), .aria.label("Location")) {
-          svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .class("svg-icon reversed"), .aria.label("Navigation icon")) {
-            path(.d("M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"))
-            path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
-          }
+        "    "
+        span(.class("hljs-type")) { "Location" }
+        "("
+        span(.class("hljs-string")) { 
+          "\""
+          span(.class("hero-location"), .aria.label("Location")) {
+            svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .class("svg-icon reversed"), .aria.label("Navigation icon")) {
+              path(.d("M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"))
+              path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
+            }
 
-          "Currently in "
+            "Currently in "
 
-          b {
-            [location.city, location.state, location.region == "United States" ? nil : location.region]
-              .compactMap(\.self)
-              .joined(separator: ", ")
+            b {
+              [location.city, location.state, location.region == "United States" ? nil : location.region]
+                .compactMap(\.self)
+                .joined(separator: ", ")
+            }
           }
+          "\""
         }
-        "\")\n"
+        ")\n"
       } else {
         EmptyHTML()
       }
