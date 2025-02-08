@@ -228,7 +228,7 @@ extension HomePage {
 
       "@font-face" => {
         AnyProperty("font-family", "\"CommitMono\"")
-        AnyProperty("font-src", "url(\"https://github.com/eigilnikolajsen/commit-mono/raw/ecd81cdbd7f7eb2acaaa2f2f7e1a585676f9beff/src/fonts/fontlab/CommitMonoV143-VF.woff2\")")
+        AnyProperty("src", "url(\"https://raw.githubusercontent.com/eigilnikolajsen/commit-mono/ecd81cdbd7f7eb2acaaa2f2f7e1a585676f9beff/src/fonts/fontlab/CommitMonoV143-VF.woff2\")")
         AnyProperty("font-style", "normal")
         AnyProperty("font-weight", "400")
         AnyProperty("font-display", "swap")
@@ -267,8 +267,8 @@ extension HomePage {
       Class("file-name") => {
         Color("#777")
         AnyProperty("text-align", "end")
-        AnyProperty("font-size", "0.85em")
-        AnyProperty("font-weight", "600")
+        AnyProperty("font-size", "0.75em")
+        AnyProperty("font-weight", "500")
         AnyProperty("font-family", "\"CommitMono\", monospace")
         AnyProperty("padding", "0.5rem 1.5rem 0.5rem 1.5rem")
       }
@@ -289,6 +289,8 @@ extension HomePage {
 
       Element(.code) => {
         AnyProperty("font-family", "\"CommitMono\", monospace")
+        AnyProperty("font-feature-settings", "\"ss03\", \"ss04\", \"ss05\"")
+        AnyProperty("line-height", "1")
       }
     }
 
@@ -297,12 +299,15 @@ extension HomePage {
 
       Class("hero") => {
         AnyProperty("padding-bottom", "1.5rem")
+        AnyProperty("font-size", "0.9em")
       }
 
-      Class("hero-title") => {
-        AnyProperty("all", "revert")
-        AnyProperty("display", "inline")
-      }
+      // ".hero-title, .hero-subtitle, .hero-location" => {
+      //   // AnyProperty("all", "revert")
+      //   AnyProperty("display", "inline")
+      //   AnyProperty("font-family", "system-ui, 'Seggoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'")
+      // }
+      
 
       Class("hero-location") => {
         Color(.hex("#D0D0D0"))
