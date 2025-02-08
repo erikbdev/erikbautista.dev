@@ -293,6 +293,10 @@ struct HTMLMarkdown: HTML, ExpressibleByStringLiteral {
     self.content = converter.visit(Document(parsing: markdown))
   }
 
+  init(_ markdown: () -> String) {
+    self.init(markdown())
+  }
+
   init(stringLiteral value: StringLiteralType) {
     self.init(value)
   }
