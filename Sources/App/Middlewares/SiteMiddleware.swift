@@ -15,7 +15,11 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
       ReloadBrowserMiddleware()
     #endif
 
-    FileMiddleware("Public", searchForIndexHtml: false)
+    FileMiddleware(
+      "Public", 
+      urlBasePath: "/assets", 
+      searchForIndexHtml: false
+    )
 
     URLRoutingMiddleware(self.siteRouter) { req, ctx, route in
       try withDependencies {

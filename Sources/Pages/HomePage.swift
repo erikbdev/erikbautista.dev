@@ -15,7 +15,7 @@ public struct HomePage: Page {
     return formatter
   }()
 
-  let styling = Style()
+  let styling: HomePage.Style = Style()
 
   public var content: some HTML {
     HTMLRaw("<!DOCTYPE html>")
@@ -32,9 +32,9 @@ public struct HomePage: Page {
         script { HTMLRaw("hljs.highlightAll();") }
         VueScript()
       }
-      body(.v.scope("{ showCode: true }")) {
+      body(.v.scope("{ showCode: true, selection: undefined }")) {
         header(.class("wrapped")) {
-          // TODO: Allow changing from swift-syntax based language to regular
+          // TODO: Allow changing from swift-syntax based language to plain text, and other languages?
           div(.class("container"), .style("height: 3rem")) {}
         }
         main {
@@ -123,7 +123,7 @@ public struct HomePage: Page {
           .d("M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z")
         )
       }
-      "\(residency)"
+      " \(residency)"
     }
 
     @HTMLBuilder
@@ -143,7 +143,7 @@ public struct HomePage: Page {
               path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
             }
 
-            "Currently in "
+            " Currently in "
 
             b {
               [location.city, location.state, location.region == "United States" ? nil : location.region]
@@ -161,7 +161,7 @@ public struct HomePage: Page {
 
   private struct PostsSection: HTML {
     var content: some HTML {
-      section(.id("posts"), .class("wrapped"), .v.scope("{ selection: undefined }")) {
+      section(.id("posts"), .class("wrapped")) {
         div(.class("container")) {
           code(.class("code-tag")) { "Posts.swift" }
 
@@ -196,24 +196,82 @@ public struct HomePage: Page {
             // }
           }
 
-          for (idx, post) in Post.allCases.enumerated() {
+          for (idx, post) in Post.allCases.reversed().enumerated() {
             article(
               .class("post"),
               .v.show("!selection || selection == '\(post.kind.rawValue)'")
             ) {
               header {
-                div(.style("display: flex")) {
+                section(.style("display: flex; align-items: baseline;")) {
                   span(.class("post__date"), .style("flex-grow: 1")) { post.dateFormatted }
 
-                  pre { 
+                  pre {
                     code(.class("hljs language-swift"), .style("font-size: 0.75em; color: #777; font-weight: 500")) {
                       "post[\(idx)]"
-                    } 
+                    }
+                  }
+                }
+
+                if let postHeader = post.header {
+                  section {
+                    switch postHeader {
+                    case let .link(link):
+                      EmptyHTML()
+                    case let .image(src, label):
+                      img(.src(src), .class("post__header"), .custom(name: "alt", value: label), .aria.label(label))
+                    case let .video(src):
+                      video(
+                        .class("post__header"),
+                        .custom(name: "autoplay", value: ""),
+                        .custom(name: "playsinline", value: ""),
+                        .custom(name: "muted", value: ""),
+                        .custom(name: "controls", value: ""),
+                        .custom(name: "loop", value: "")
+                      ) {
+                        source(.src(src))
+                        "Your browser does not support playing this video"
+                      }
+                    case let .code(rawCode, lang):
+                      pre(.class("post__header")) {
+                        code(.class("hljs language-\(lang.rawValue)")) {
+                          HTMLRaw(rawCode)
+                        }
+                      }
+                    }
                   }
                 }
               }
-              h3(.class("post__time")) { post.title }
+              h3(.class("post__title")) { post.title }
               section(.class("post__content")) { post.content }
+
+              if !post.links.isEmpty {
+                section(.class("post__links")) {
+                  for link in post.links {
+                    a(
+                      .href(link.href),
+                      .target(.blank),
+                      .rel("noopener noreferrer"),
+                      .class("post__link-\(link.role.rawValue)")
+                    ) {
+                      HTMLText(link.title)
+                      " "
+                      if link.isExternal {
+                        svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .class("svg-icon"), .aria.label("external link icon")) {
+                          path(
+                            .d("M228,104a12,12,0,0,1-24,0V69l-59.51,59.51a12,12,0,0,1-17-17L187,52H152a12,12,0,0,1,0-24h64a12,12,0,0,1,12,12Zm-44,24a12,12,0,0,0-12,12v64H52V84h64a12,12,0,0,0,0-24H48A20,20,0,0,0,28,80V208a20,20,0,0,0,20,20H176a20,20,0,0,0,20-20V140A12,12,0,0,0,184,128Z")
+                          )
+                        }
+                      } else {
+                        svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .class("svg-icon"), .aria.label("external link icon")) {
+                          path(
+                            .d("M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z")
+                          )
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -300,7 +358,7 @@ extension HomePage {
       }
 
       Class("container") => {
-        AnyProperty("max-width", "46rem")
+        AnyProperty("max-width", "40rem")
         AnyProperty("margin-right", "auto")
         AnyProperty("margin-left", "auto")
         AnyProperty("border-left", "1px solid #303030")
@@ -334,7 +392,6 @@ extension HomePage {
         AnyProperty("bottom", "0.125em")
         AnyProperty("width", "1em")
         AnyProperty("height", "1em")
-        AnyProperty("margin-right", "0.25rem")
       }
 
       Class("reversed") => {
@@ -415,7 +472,7 @@ extension HomePage {
         AnyProperty("font-weight", "600")
       }
 
-      Class("post__time") => {
+      Class("post__title") => {
         AnyProperty("margin-top", "0.5rem")
       }
 
@@ -423,7 +480,63 @@ extension HomePage {
         AnyProperty("margin", "revert")
       }
 
-      Class("post__content") * Element(.pre) => {
+      Class("post__content") * Element(.blockquote) => {
+        // AnyProperty("all", "unset")
+        AnyProperty("display", "block")
+        AnyProperty("background", "#2A2A2A")
+        AnyProperty("border", "1.5px solid #4A4A4A")
+        AnyProperty("padding", "0.125rem 1rem")
+        AnyProperty("margin-right", "0")
+        AnyProperty("margin-left", "0")
+        AnyProperty("border-radius", "0.5rem")
+      }
+
+      Class("post__header") => {
+        AnyProperty("width", "100%")
+        AnyProperty("margin-top", "1.25rem")
+        AnyProperty("margin-bottom", "1.25rem")
+        AnyProperty("border-color", "#3A3A3A")
+        AnyProperty("border-style", "solid")
+        AnyProperty("border-width", "1.5px")
+        AnyProperty("border-radius", "0.5rem")
+      }
+
+      Class("post__links") => {
+        AnyProperty("display", "flex")
+        AnyProperty("gap", "0.75rem")
+        AnyProperty("margin-top", "1.5rem")
+      }
+
+      ".post__link-primary, .post__link-secondary, .post__link-tertiary" => {
+        AnyProperty("all", "unset")
+        AnyProperty("font-size", "0.85em")
+        AnyProperty("font-weight", "550")
+        AnyProperty("align-content", "center")
+        AnyProperty("min-height", "1.5rem")
+        AnyProperty("min-width", "2rem")
+        AnyProperty("padding", "0.375rem 0.75rem")
+        AnyProperty("cursor", "pointer")
+        AnyProperty("border-radius", "0.5rem")
+      }
+
+      Class("post__link-primary") => {
+        Color(.white)
+        AnyProperty("background", "linear-gradient(to bottom, hsla(0, 0%, 24%, 1), hsla(0, 0%, 16%, 1))")
+        AnyProperty("box-shadow", "inset 0 1px 1px rgba(255, 255, 255, 0.12)")
+      }
+
+      Class("post__link-secondary") => {
+        Color(.black)
+        AnyProperty("box-shadow", "inset 0px -1px 2px 0px hsl(0 0% 50% / 0.5)")
+        AnyProperty("background", "linear-gradient(to bottom, hsl(0deg 0% 100%), hsl(0deg 0% 92.91%))")
+      }
+
+      Class("post__link-tertiary") => {
+        Color(.white)
+        AnyProperty("background", "hsla(0, 0%, 50%, 0.25)")
+      }
+
+      ".post__content pre, .post__header pre" => {
         AnyProperty("padding", "0.75rem")
         Background("#242424")
         AnyProperty("border-color", "#3A3A3A")

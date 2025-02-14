@@ -31,6 +31,13 @@ let package = Package(
       ]
     ),
     .target(
+      name: "ActivityClient",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "DependenciesMacros", package: "swift-dependencies"),
+      ]
+    ),
+    .target(
       name: "Routes",
       dependencies: [
         "Models",
@@ -51,15 +58,6 @@ let package = Package(
         .product(name: "Hummingbird", package: "hummingbird"),
         .product(name: "Cascadia", package: "swift-cascadia"),
         .product(name: "Markdown", package: "swift-markdown")
-      ]
-    ),
-
-    /// Clients
-    .target(
-      name: "ActivityClient",
-      dependencies: [
-        .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "DependenciesMacros", package: "swift-dependencies"),
       ]
     ),
 
