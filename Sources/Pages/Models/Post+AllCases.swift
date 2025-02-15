@@ -1,8 +1,11 @@
 import Foundation
+import Dependencies
 
 extension Post: CaseIterable {
   static var allCases: [Self] {
-    [
+    @Dependency(\.publicAssets) var assets
+
+    return [
       Self(
         id: 1,
         title: "PrismUI \u{2014} Controlling MSI RGB Keyboard on mac",
@@ -14,7 +17,7 @@ extension Post: CaseIterable {
       ),
       Self(
         id: 2,
-        header: .image("/assets/projects/anime-now/an-discover.png", label: "Anime Now! discover image"),
+        header: .image(assets.projects.animeNow.anDiscover.path, label: "Anime Now! discover image"),
         title: "Anime Now! \u{2014} An iOS and macOS App",
         content: """
         > TBD

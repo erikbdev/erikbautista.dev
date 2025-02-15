@@ -9,6 +9,7 @@ import Routes
 struct SiteMiddleware<Context: RequestContext>: RouterController {
   @Dependency(\.siteRouter) private var siteRouter
   @Dependency(\.activityClient) private var activityClient
+  @Dependency(\.publicAssets) private var publicAssets
 
   var body: some RouterMiddleware<Context> {
     #if DEBUG
@@ -17,7 +18,7 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
 
     FileMiddleware(
       "Public", 
-      urlBasePath: "/assets", 
+      urlBasePath: publicAssets.basePath, 
       searchForIndexHtml: false
     )
 

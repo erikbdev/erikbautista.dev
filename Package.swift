@@ -1,4 +1,4 @@
-// swift-tools-version:6.0
+// swift-tools-version:6.0.3
 
 import PackageDescription
 
@@ -6,13 +6,6 @@ let package = Package(
   name: "portfolio",
   platforms: [
     .macOS(.v13),
-  ],
-  products: [
-    .library(name: "ActivityClient", targets: ["ActivityClient"]),
-    .library(name: "Models", targets: ["Models"]),
-    .library(name: "Routes", targets: ["Routes"]),
-    .library(name: "Pages", targets: ["Pages"]),
-    .executable(name: "App", targets: ["App"]),
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.4.0"),
@@ -24,6 +17,19 @@ let package = Package(
     .package(url: "https://github.com/swiftlang/swift-markdown.git", revision: "e62a44fd1f2764ba8807db3b6f257627449bbb8c")
   ],
   targets: [
+    .executableTarget(
+      name: "AssetGenCLI",
+      dependencies: [
+        .product(name: "ArgumentParser", package: "swift-argument-parser")
+      ]
+    ),
+    .plugin(
+      name: "AssetGenPlugin", 
+      capability: .buildTool(),
+      dependencies: [
+        .target(name: "AssetGenCLI")
+      ]
+    ),
     .target(
       name: "Models",
       dependencies: [
@@ -58,7 +64,8 @@ let package = Package(
         .product(name: "Hummingbird", package: "hummingbird"),
         .product(name: "Cascadia", package: "swift-cascadia"),
         .product(name: "Markdown", package: "swift-markdown")
-      ]
+      ],
+      plugins: ["AssetGenPlugin"]
     ),
 
     /// Executable
@@ -81,7 +88,7 @@ let package = Package(
 )
 
 package.targets
-  .filter { $0.type != .binary }
+  .filter { $0.type != .binary && $0.type != .plugin }
   .forEach {
     $0.swiftSettings = [
       .unsafeFlags([

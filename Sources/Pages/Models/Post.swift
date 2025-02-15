@@ -22,7 +22,7 @@ struct Post {
   }
 
   var slug: String {
-    "\(id)-\(self.title.slug())"
+    "\(id)-\(self.title.split { !$0.isLetter && !$0.isNumber }.joined(separator: "-").lowercased())"
   }
 
   enum Header {
@@ -30,6 +30,10 @@ struct Post {
     case image(String, label: String)
     case video(String)
     case code(String, lang: CodeLang)
+
+    func test() {
+      let assets = PublicAssets()
+    }
 
     enum CodeLang: String {
       case swift
@@ -67,11 +71,5 @@ struct Post {
         case .experience: "Experiences"
       }
     }
-  }
-}
-
-private extension String {
-  func slug() -> String {
-    split { !$0.isLetter && !$0.isNumber }.joined(separator: "-").lowercased()
   }
 }
