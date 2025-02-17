@@ -3,6 +3,7 @@ import Dependencies
 import class Foundation.JSONEncoder
 import Hummingbird
 import HummingbirdRouter
+import MiddlewareUtils
 import Pages
 import PublicAssets
 import Routes

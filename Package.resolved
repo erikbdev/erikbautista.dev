@@ -1,5 +1,5 @@
 {
-  "originHash" : "32a7d56dee450f2cd4b40dacaebc24c2cf1b0a44af031bae4f1f537c8769e747",
+  "originHash" : "1a4612f0d7852675bd333608343b41fa94cf1d9a9c61006368a26e865b0c1d47",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-clocks",
       "state" : {
-        "revision" : "b9b24b69e2adda099a1fa381cda1eeec272d5b53",
-        "version" : "1.0.5"
+        "revision" : "cc46202b53476d64e824e0b6612da09d84ffde8e",
+        "version" : "1.0.6"
       }
     },
     {
@@ -285,6 +285,15 @@
       "state" : {
         "revision" : "1cfd564259ecb1d324bb718a8f03e513dab738d2",
         "version" : "0.6.2"
+      }
+    },
+    {
+      "identity" : "swift-web",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/errorerrorerror/swift-web.git",
+      "state" : {
+        "revision" : "a09d4c78dc2b929261513db3dd207e39456f192b",
+        "version" : "0.0.3"
       }
     },
     {

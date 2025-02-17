@@ -13,23 +13,11 @@ let package = Package(
     .package(url: "https://github.com/sliemeobn/elementary.git", exact: "0.4.3"),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", exact: "0.6.2"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", exact: "1.6.2"),
+    .package(url: "https://github.com/swiftlang/swift-markdown.git", revision: "e62a44fd1f2764ba8807db3b6f257627449bbb8c"),
     .package(url: "https://github.com/errorerrorerror/swift-cascadia", revision: "a13dfd0a3818c8f9368bbd4aeb3c6607f68838bd"),
-    .package(url: "https://github.com/swiftlang/swift-markdown.git", revision: "e62a44fd1f2764ba8807db3b6f257627449bbb8c")
+    .package(url: "https://github.com/errorerrorerror/swift-web.git", exact: "0.0.3")
   ],
   targets: [
-    .executableTarget(
-      name: "AssetGenCLI",
-      dependencies: [
-        .product(name: "ArgumentParser", package: "swift-argument-parser")
-      ]
-    ),
-    .plugin(
-      name: "AssetGenPlugin", 
-      capability: .buildTool(),
-      dependencies: [
-        .target(name: "AssetGenCLI")
-      ]
-    ),
     .target(
       name: "PublicAssets",
       dependencies: [
@@ -37,7 +25,7 @@ let package = Package(
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
       ],
       resources: [.copy("assets")],
-      plugins: ["AssetGenPlugin"]
+      plugins: [.plugin(name: "TypedAssetsPlugin", package: "swift-web")]
     ),
     .target(
       name: "Models",
@@ -58,9 +46,10 @@ let package = Package(
         "Models",
         "ActivityClient",
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "URLRouting", package: "swift-url-routing"),
         .product(name: "Hummingbird", package: "hummingbird"),
         .product(name: "HummingbirdRouter", package: "hummingbird"),
+        .product(name: "URLRouting", package: "swift-url-routing"),
+        .product(name: "HummingbirdURLRouting", package: "swift-web")
       ]
     ),
     .target(
@@ -89,9 +78,9 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Hummingbird", package: "hummingbird"),
         .product(name: "HummingbirdRouter", package: "hummingbird"),
-        .product(name: "ArgumentParser", package: "swift-argument-parser")
-      ],
-      resources: [.embedInCode("Resources")]
+        .product(name: "ArgumentParser", package: "swift-argument-parser"),
+        .product(name: "MiddlewareUtils", package: "swift-web")
+      ]
     ),
   ],
   swiftLanguageModes: [.v6]

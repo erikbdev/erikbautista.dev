@@ -2,6 +2,7 @@ import Hummingbird
 import Foundation
 import Dependencies
 import Parsing
+import HummingbirdURLRouting
 
 extension HTTPFields.Authorization {
   func validate() throws {
