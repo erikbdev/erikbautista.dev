@@ -27,33 +27,46 @@ public struct HomePage: Page {
         link(.rel(.stylesheet), .href("https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css"))
         style { HTMLRaw(".xml .hljs-meta{color:#6C7986}.hljs-comment,.hljs-quote{color:#6C7986}.hljs-tag,.hljs-attribute,.hljs-keyword,.hljs-selector-tag,.hljs-literal,.hljs-name{color:#FC5FA3}.hljs-variable,.hljs-template-variable{color:#FC5FA3}.hljs-code,.hljs-string,.hljs-meta-string{color:#FC6A5D}.hljs-regexp,.hljs-link{color:#5482FF}.hljs-title,.hljs-symbol,.hljs-bullet,.hljs-number{color:#41A1C0}.hljs-section,.hljs-meta{color:#FC5FA3}.hljs-class .hljs-title,.hljs-type,.hljs-built_in,.hljs-builtin-name,.hljs-params{color:#D0A8FF}.hljs-attr{color:#BF8555}.hljs-subst{color:#FFF}.hljs-formula{font-style:italic}.hljs-selector-id,.hljs-selector-class{color:#9b703f}.hljs-doctag,.hljs-strong{font-weight:bold}.hljs-emphasis{font-style:italic}") }
         style(self.styling)
-        script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"))
-        script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"))
-        script { HTMLRaw("hljs.highlightAll();") }
-        VueScript()
+        script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"), .defer)
+        script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"), .defer)
+        script(.type(.module)) { HTMLRaw("hljs.highlightAll();") }
       }
-      body(.v.scope("{ showCode: true, selection: undefined }")) {
-        header(.class("wrapped")) {
-          // TODO: Allow changing from swift-syntax based language to plain text, and other languages?
-          div(.class("container"), .style("height: 3rem")) {}
-        }
-        main {
-          UserHero()
-          // ExperienceSection()
-          PostsSection()
-        }
-        footer(.aria.label("Credits"), .class("wrapped"), .style("text-align: center;")) {
-          div(.id("end-footer"), .class("container")) {
-            p { "©\(Self.copyrightDateFormatter.string(from: Date.now)) Erik Bautista Santibanez" }
-            p {
-              "Made with \u{2764} using "
-              a(.target(.blank), .rel("noopener noreferrer"), .href("https://swift.org")) { "Swift" }
-              " + "
-              a(.target(.blank), .rel("noopener noreferrer"), .href("https://hummingbird.codes")) { "Hummingbird" }
-              "."
+      body {
+        div(.v.scope("{ showCode: true, selection: undefined }")) {
+          // header(.class("wrapped")) {
+          //   // TODO: Allow changing from swift-syntax based language to plain text, and other languages?
+          //   div(.class("container spacer")) {}
+          // }
+          Spacer()
+          main {
+            UserHero()
+            Spacer()
+            // ExperienceSection()
+            PostsSection()
+          }
+          Spacer()
+          footer(.aria.label("Credits"), .class("wrapped"), .style("text-align: center;")) {
+            div(.id("end-footer"), .class("container")) {
+              p { "©\(Self.copyrightDateFormatter.string(from: Date.now)) Erik Bautista Santibanez" }
+              p {
+                "Made with \u{2764} using "
+                a(.target(.blank), .rel("noopener noreferrer"), .href("https://swift.org")) { "Swift" }
+                " + "
+                a(.target(.blank), .rel("noopener noreferrer"), .href("https://hummingbird.codes")) { "Hummingbird" }
+                "."
+              }
             }
           }
         }
+        VueScript()
+      }
+    }
+  }
+
+  private struct Spacer: HTML {
+    var content: some HTML {
+      div(.class("wrapped")) { 
+        div(.class("container spacer")) {}
       }
     }
   }
@@ -409,6 +422,12 @@ extension HomePage {
         AnyProperty("padding-left", "1.5rem")
         AnyProperty("padding-right", "1.5rem")
         AnyProperty("padding-bottom", "1rem")
+      }
+
+      Class("spacer") => {
+        AnyProperty("height", "1.25rem")
+        AnyProperty("background", "repeating-linear-gradient(45deg, transparent 0% 35%, #333 35% 50%, transparent 50% 85%, #333 85% 100%)")
+        AnyProperty("background-size", "5px 5px")
       }
     }
 
