@@ -9,13 +9,14 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.4.0"),
-    .package(url: "https://github.com/hummingbird-project/hummingbird.git", exact: "2.5.0"),
-    .package(url: "https://github.com/sliemeobn/elementary.git", exact: "0.4.3"),
-    .package(url: "https://github.com/pointfreeco/swift-url-routing.git", exact: "0.6.2"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", exact: "1.6.2"),
-    .package(url: "https://github.com/swiftlang/swift-markdown.git", revision: "e62a44fd1f2764ba8807db3b6f257627449bbb8c"),
     .package(url: "https://github.com/errorerrorerror/swift-cascadia", revision: "a13dfd0a3818c8f9368bbd4aeb3c6607f68838bd"),
-    .package(url: "https://github.com/errorerrorerror/swift-web.git", exact: "0.0.4")
+    .package(url: "https://github.com/errorerrorerror/swift-web.git", exact: "0.0.4"),
+    .package(url: "https://github.com/hummingbird-project/hummingbird.git", exact: "2.5.0"),
+    .package(url: "https://github.com/pointfreeco/swift-case-paths.git", from: "1.0.0"),
+    .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.6.2"),
+    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.6.2"),
+    .package(url: "https://github.com/sliemeobn/elementary.git", exact: "0.4.3"),
+    .package(url: "https://github.com/swiftlang/swift-markdown.git", revision: "e62a44fd1f2764ba8807db3b6f257627449bbb8c")
   ],
   targets: [
     .target(
@@ -49,7 +50,8 @@ let package = Package(
         .product(name: "Hummingbird", package: "hummingbird"),
         .product(name: "HummingbirdRouter", package: "hummingbird"),
         .product(name: "URLRouting", package: "swift-url-routing"),
-        .product(name: "HummingbirdURLRouting", package: "swift-web")
+        .product(name: "HummingbirdURLRouting", package: "swift-web"),
+        .product(name: "CasePaths", package: "swift-case-paths")
       ]
     ),
     .target(
