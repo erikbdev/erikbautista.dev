@@ -1,5 +1,5 @@
 {
-  "originHash" : "1a4612f0d7852675bd333608343b41fa94cf1d9a9c61006368a26e865b0c1d47",
+  "originHash" : "9ff9849c74921158118b372b65fe27f8467be942673392904b21a63d64bc68f7",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -292,8 +292,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/errorerrorerror/swift-web.git",
       "state" : {
-        "revision" : "a09d4c78dc2b929261513db3dd207e39456f192b",
-        "version" : "0.0.3"
+        "revision" : "82cf0c370a3fc3c96de60a8de249ab91fd5c5012",
+        "version" : "0.0.4"
       }
     },
     {

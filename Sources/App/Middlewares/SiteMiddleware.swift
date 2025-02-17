@@ -3,6 +3,7 @@ import Dependencies
 import class Foundation.JSONEncoder
 import Hummingbird
 import HummingbirdRouter
+import HummingbirdURLRouting
 import MiddlewareUtils
 import Pages
 import PublicAssets
@@ -15,7 +16,7 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
 
   var body: some RouterMiddleware<Context> {
     #if DEBUG
-      ReloadBrowserMiddleware()
+      LiveReloadMiddleware()
     #endif
 
     if publicAssets.baseURL.isFileURL {

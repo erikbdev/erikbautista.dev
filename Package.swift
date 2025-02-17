@@ -15,7 +15,7 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", exact: "1.6.2"),
     .package(url: "https://github.com/swiftlang/swift-markdown.git", revision: "e62a44fd1f2764ba8807db3b6f257627449bbb8c"),
     .package(url: "https://github.com/errorerrorerror/swift-cascadia", revision: "a13dfd0a3818c8f9368bbd4aeb3c6607f68838bd"),
-    .package(url: "https://github.com/errorerrorerror/swift-web.git", exact: "0.0.3")
+    .package(url: "https://github.com/errorerrorerror/swift-web.git", exact: "0.0.4")
   ],
   targets: [
     .target(
