@@ -3,15 +3,26 @@ import PackagePlugin
 @main
 struct AssetGenPlugin: BuildToolPlugin {
   func createBuildCommands(context: PluginContext, target: Target) throws -> [Command] {
-    print("Running build tool [AssetGenPlugin]")
-    let inputPath = context.package.directoryURL.appending(component: "Public")
-    let outputPath = context.pluginWorkDirectoryURL.appending(component: "PublicAssets.swift", directoryHint: .notDirectory)
+    Diagnostics.remark("Running build tool [\(Self.self)]")
+    guard let sourceModule = target.sourceModule else {
+      Diagnostics.error("Not a source module")
+      return []
+    }
+
+    let resources = sourceModule.sourceFiles.filter({ $0.type == .resource })
+    guard !resources.isEmpty else {
+      Diagnostics.warning("No resources found")
+      return []
+    }
+
+    let resourcesInput = resources.flatMap { ["--input", $0.url.path()] }
+
+    let outputPath = context.pluginWorkDirectoryURL.appending(component: "Generated\(target.name).swift", directoryHint: .notDirectory)
     return try [
       .prebuildCommand(
-        displayName: "Static Asset Gen",
+        displayName: "Running Static Asset Gen",
         executable: context.tool(named: "AssetGenCLI").url,
-        arguments: [
-          "--directory", inputPath.path(),
+        arguments: resourcesInput + [
           "--output", outputPath.path(),
         ],
         outputFilesDirectory: context.pluginWorkDirectoryURL

@@ -4,6 +4,7 @@ import class Foundation.JSONEncoder
 import Hummingbird
 import HummingbirdRouter
 import Pages
+import PublicAssets
 import Routes
 
 struct SiteMiddleware<Context: RequestContext>: RouterController {
@@ -16,11 +17,12 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
       ReloadBrowserMiddleware()
     #endif
 
-    FileMiddleware(
-      "Public", 
-      urlBasePath: publicAssets.basePath, 
-      searchForIndexHtml: false
-    )
+    if publicAssets.baseURL.isFileURL {
+      FileMiddleware(
+        publicAssets.baseURL.path(), 
+        searchForIndexHtml: false
+      )
+    }
 
     URLRoutingMiddleware(self.siteRouter) { req, ctx, route in
       try withDependencies {

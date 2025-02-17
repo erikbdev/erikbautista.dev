@@ -217,9 +217,9 @@ public struct HomePage: Page {
                     switch postHeader {
                     case let .link(link):
                       EmptyHTML()
-                    case let .image(src, label):
-                      img(.src(src), .class("post__header"), .custom(name: "alt", value: label), .aria.label(label))
-                    case let .video(src):
+                    case let .image(asset, label):
+                      img(.src(asset.url.assetString), .class("post__header"), .custom(name: "alt", value: label), .aria.label(label))
+                    case let .video(asset):
                       video(
                         .class("post__header"),
                         .custom(name: "autoplay", value: ""),
@@ -228,7 +228,7 @@ public struct HomePage: Page {
                         .custom(name: "controls", value: ""),
                         .custom(name: "loop", value: "")
                       ) {
-                        source(.src(src))
+                        source(.src(asset.url.assetString), .custom(name: "type", value: asset.mime))
                         "Your browser does not support playing this video"
                       }
                     case let .code(rawCode, lang):

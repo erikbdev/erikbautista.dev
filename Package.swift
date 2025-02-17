@@ -31,6 +31,15 @@ let package = Package(
       ]
     ),
     .target(
+      name: "PublicAssets",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "DependenciesMacros", package: "swift-dependencies"),
+      ],
+      resources: [.copy("assets")],
+      plugins: ["AssetGenPlugin"]
+    ),
+    .target(
       name: "Models",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
@@ -59,13 +68,13 @@ let package = Package(
       dependencies: [
         "Models",
         "ActivityClient",
+        "PublicAssets",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Elementary", package: "elementary"),
         .product(name: "Hummingbird", package: "hummingbird"),
         .product(name: "Cascadia", package: "swift-cascadia"),
         .product(name: "Markdown", package: "swift-markdown")
-      ],
-      plugins: ["AssetGenPlugin"]
+      ]
     ),
 
     /// Executable
@@ -76,6 +85,7 @@ let package = Package(
         "Routes",
         "Pages",
         "ActivityClient",
+        "PublicAssets",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Hummingbird", package: "hummingbird"),
         .product(name: "HummingbirdRouter", package: "hummingbird"),

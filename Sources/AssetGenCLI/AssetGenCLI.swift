@@ -3,14 +3,13 @@ import Foundation
 
 @main
 struct AssetGenCLI: ParsableCommand {
-  @Option(help: "Directory containing all files it should generate static")
-  var directory: String
+  @Option(name: [.customLong("input")], help: "Directory containing all files it should generate static")
+  var inputs: [String]
 
   @Option(help: "The path where the generated output will be created")
   var output: String
 
   func run() throws {
-    let dir = URL(filePath: directory, directoryHint: .isDirectory)
     let outFile = URL(filePath: output, directoryHint: .notDirectory)
 
     let fileName = outFile.deletingPathExtension().lastPathComponent
@@ -20,99 +19,155 @@ struct AssetGenCLI: ParsableCommand {
       throw Error.swiftExtensionNotInOutfile
     }
 
-    let items = Self.recursive(dir)
+    let items = inputs.map { Self.recursive(URL(filePath: $0, directoryHint: .checkFileSystem)) }
 
     try """
+    import Foundation
     public struct \(fileName.pascalCase()): Swift.Sendable {
-      public let basePath: String
-      public init(_ basePath: String = "/") {
-        self.basePath = basePath
+      public let baseURL: URL
+      public init() {
+        self.baseURL = Bundle.module.bundleURL
       }
-    \(items.map { $0.code() }.joined(separator: "\n"))
+      public init(_ baseURL: URL) {
+        self.baseURL = baseURL
+      }
+      \(items.map { $0.code(isFirstLevel: true) }.joined(separator: "\n"), indent: 2)
+      public protocol File {
+        var name: String { get }
+        var ext: String? { get }
+        var url: URL { get }
+      }
       public struct AnyFile: Swift.Sendable {
         public let name: String
-        public let ext: String
-        public let path: String
+        public let ext: String?
+        public let url: URL
       }
       public struct ImageFile: Swift.Sendable {
         public let name: String
-        public let ext: String
-        public let path: String
-        public let mimeType = ""
+        public let ext: String?
+        public let url: URL
+        public let width: Int?
+        public let height: Int?
       }
       public struct VideoFile: Swift.Sendable {
         public let name: String
-        public let ext: String
-        public let path: String
-        public let width: Int = 0
-        public let height: Int = 0
-        public let format: String = ""
-        public let mimeType = ""
+        public let ext: String?
+        public let url: URL
+        public let width: Int?
+        public let height: Int?
+        public let mime: String
       }
     }
     """
     .write(to: outFile, atomically: true, encoding: .utf8)
 
-    print("Successfully parsed '\(dir)' and wrote to '\(outFile)'")
+    print("Successfully parsed '\(inputs)' directory and generated to '\(output)'")
   }
 
   private enum Error: Swift.Error {
     case swiftExtensionNotInOutfile
   }
 
-  private static func recursive(_ dir: URL) -> [FileOrDir] {
-    guard let enumerator = try? FileManager.default.contentsOfDirectory(
-      at: dir, 
-      includingPropertiesForKeys: [.nameKey, .isDirectoryKey], 
-      options: [.skipsHiddenFiles]
-    ) else {
-      return []
-    }
+  private static func recursive(_ url: URL) -> FileOrDir {
+    var isDirectory = false
+    _ = FileManager.default.fileExists(atPath: url.path(), isDirectory: &isDirectory)
 
-    return enumerator.compactMap { url in
-      let resourceValues = try? url.resourceValues(forKeys: [.isDirectoryKey])
-      let isDirectory = resourceValues?.isDirectory ?? false
-
-      if isDirectory {
-        return .dir(
-          canonical: url.lastPathComponent, 
-          recursive(url)
-        )
-      } else {
-        return .file(
-          canonical: url.deletingPathExtension().lastPathComponent, 
-          ext: url.pathExtension
-        )
+    if isDirectory {
+      guard let enumerator = try? FileManager.default.contentsOfDirectory(
+        at: url, 
+        includingPropertiesForKeys: [.isDirectoryKey, .fileSizeKey], 
+        options: [.skipsHiddenFiles]
+      ) else {
+        return .dir(canonical: url.lastPathComponent, [])
       }
+
+      return .dir(
+        canonical: url.lastPathComponent, 
+        enumerator.compactMap(Self.recursive)
+      )
+    } else {
+      return .file(
+        canonical: url.deletingPathExtension().lastPathComponent, 
+        ext: url.pathExtension.isEmpty ? nil : url.pathExtension,
+        type: .from(ext: url.pathExtension)
+      )
     }
   }
 
   private enum FileOrDir {
     case dir(canonical: String, [Self])
-    case file(canonical: String, ext: String)
+    case file(canonical: String, ext: String?, type: FileType)
 
-    func code(_ indent: Int = 2, path: [String] = []) -> String {
+    func code(path: [String] = [], isFirstLevel: Bool = false) -> String {
       switch self {
         case let .dir(canonical, items):
           """
-          \(String(repeating: " ", count: indent))public var `\(canonical.camelCase())`: \(canonical.pascalCase()) {
-          \(String(repeating: " ", count: indent))  \(canonical.pascalCase())(basePath: self.basePath)
-          \(String(repeating: " ", count: indent))}
-          \(String(repeating: " ", count: indent))public struct \(canonical.pascalCase()): Swift.Sendable {
-          \(String(repeating: " ", count: indent))  fileprivate let basePath: String
-          \(items.map { $0.code(indent + 2, path: path + [canonical]) }.joined(separator: "\n"))
-          \(String(repeating: " ", count: indent))}
+          public var `\(canonical.camelCase())`: \(canonical.pascalCase()) {
+            \(canonical.pascalCase())(baseURL: \(isFirstLevel ? "URL(filePath: \"\(canonical)\", directoryHint: .isDirectory, relativeTo: self.baseURL)" : "self.baseURL.appending(path: \"\(canonical)\", directoryHint: .isDirectory)"))
+          }
+          public struct \(canonical.pascalCase()): Swift.Sendable {
+            public let baseURL: URL
+            \(items.map { $0.code(path: path + [canonical]) }.joined(separator: "\n"), indent: 2)
+          }
           """
-        case let .file(canonical, ext):
+        case let .file(canonical, ext, type):
+        switch type {
+          case .unknown:
           """
-          \(String(repeating: " ", count: indent))public var `\(canonical.camelCase())`: AnyFile {
-          \(String(repeating: " ", count: indent))  AnyFile(
-          \(String(repeating: " ", count: indent))    name: "\(canonical)", 
-          \(String(repeating: " ", count: indent))    ext: "\(ext)",
-          \(String(repeating: " ", count: indent))    path: "\\(self.basePath)/\((path + ["\(canonical).\(ext)"]).joined(separator: "/"))"
-          \(String(repeating: " ", count: indent))  )
-          \(String(repeating: " ", count: indent))}
+          public var `\(canonical.camelCase())`: AnyFile {
+            .init(
+              name: "\(canonical)", 
+              ext: \(ext.flatMap { "\"\($0)\"" } ?? "nil"),
+              url: self.baseURL.appending(path: "\(canonical)", directoryHint: .notDirectory)\(ext.flatMap { ".appendingPathExtension(\"\($0)\")" } ?? "")
+            )
+          }
           """
+          case .image(let width, let height):
+          """
+          public var `\(canonical.camelCase())`: ImageFile {
+            .init(
+              name: "\(canonical)", 
+              ext: \(ext.flatMap { "\"\($0)\"" } ?? "nil"),
+              url: self.baseURL.appending(path: "\(canonical)", directoryHint: .notDirectory)\(ext.flatMap { ".appendingPathExtension(\"\($0)\")" } ?? ""),
+              width: \(width.flatMap(String.init) ?? "nil"),
+              height: \(height.flatMap(String.init) ?? "nil")
+            )
+          }
+          """
+          case let .video(width, height, mime):
+          """
+          public var `\(canonical.camelCase())`: VideoFile {
+            .init(
+              name: "\(canonical)", 
+              ext: \(ext.flatMap { "\"\($0)\"" } ?? "nil"),
+              url: self.baseURL.appending(path: "\(canonical)", directoryHint: .notDirectory)\(ext.flatMap { ".appendingPathExtension(\"\($0)\")" } ?? ""),
+              width: \(width.flatMap(String.init) ?? "nil"),
+              height: \(height.flatMap(String.init) ?? "nil"),
+              mime: "\(mime)"
+            )
+          }
+          """
+        }
+      }
+    }
+
+    enum FileType {
+      case image(width: Int?, height: Int?)
+      case video(width: Int?, height: Int?, mime: String)
+      case unknown
+
+      static func from(ext: String) -> Self {
+        switch ext.trimmingCharacters(in: .whitespacesAndNewlines) {
+          case "gif": .image(width: nil, height: nil)
+          case "jpeg", "jpg": .image(width: nil, height: nil)
+          case "svg": .image(width: nil, height: nil)
+          case "webp": .image(width: nil, height: nil)
+          case "png": .image(width: nil, height: nil)
+          case "mp4": .video(width: nil, height: nil, mime: "video/mp4")
+          case "mov": .video(width: nil, height: nil, mime: "video/quicktime")
+          case "webm": .video(width: nil, height: nil, mime: "video/webm")
+          default: .unknown
+        }
       }
     }
   }
@@ -149,5 +204,11 @@ private extension String {
         }
       }
       .joined()
+  }
+}
+
+private extension String.StringInterpolation {
+  mutating func appendInterpolation<S: StringProtocol>(_ value: S, indent: Int) {
+    appendInterpolation(value.components(separatedBy: "\n").joined(separator: "\n\(String(repeating: " ", count: indent))"))
   }
 }

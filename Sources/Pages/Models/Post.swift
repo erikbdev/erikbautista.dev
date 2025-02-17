@@ -1,4 +1,5 @@
 import Foundation
+import PublicAssets
 
 struct Post {
   let id: Int
@@ -27,13 +28,9 @@ struct Post {
 
   enum Header {
     case link(String)
-    case image(String, label: String)
-    case video(String)
+    case image(GeneratedPublicAssets.ImageFile, label: String)
+    case video(GeneratedPublicAssets.VideoFile)
     case code(String, lang: CodeLang)
-
-    func test() {
-      let assets = PublicAssets()
-    }
 
     enum CodeLang: String {
       case swift

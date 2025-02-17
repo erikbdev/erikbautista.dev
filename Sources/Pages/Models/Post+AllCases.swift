@@ -1,5 +1,6 @@
 import Foundation
 import Dependencies
+import PublicAssets
 
 extension Post: CaseIterable {
   static var allCases: [Self] {
@@ -17,7 +18,7 @@ extension Post: CaseIterable {
       ),
       Self(
         id: 2,
-        header: .image(assets.projects.animeNow.anDiscover.path, label: "Anime Now! discover image"),
+        header: .image(assets.assets.projects.animeNow.anDiscover, label: "Anime Now! discover image"),
         title: "Anime Now! \u{2014} An iOS and macOS App",
         content: """
         > TBD
