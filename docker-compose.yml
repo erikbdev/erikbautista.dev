@@ -1,6 +1,6 @@
 version: '3'
 services:
   web:
-    image: 'ghcr.io/errorerrorerror/erikbautista.dev:main'
+    image: 'ghcr.io/errorerrorerror/erikbautista.dev:${COOLIFY_BRANCH:-latest}'
     ports: 
       - '8080:8080'
