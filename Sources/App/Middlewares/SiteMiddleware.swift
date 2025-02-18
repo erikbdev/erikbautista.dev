@@ -19,9 +19,9 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
       LiveReloadMiddleware()
     #endif
 
-    if publicAssets.baseURL.isFileURL {
+    if self.publicAssets.baseURL.isFileURL {
       FileMiddleware(
-        publicAssets.baseURL.path(), 
+        self.publicAssets.baseURL.path(),
         searchForIndexHtml: false
       )
     }
@@ -36,11 +36,11 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
         case .home:
           return HomePage()
         case .api(.activity(.all)):
-        do {
-          return try JSONEncoder().encode(self.activityClient.activity(), from: req, context: ctx)
-        } catch {
-          throw HTTPError(.forbidden)
-        }
+          do {
+            return try JSONEncoder().encode(self.activityClient.activity(), from: req, context: ctx)
+          } catch {
+            throw HTTPError(.forbidden)
+          }
         case let .api(.activity(.location(location))):
           guard let auth = req.headers.authorization else {
             throw HTTPError(.notFound)

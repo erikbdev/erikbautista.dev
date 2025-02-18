@@ -10,9 +10,6 @@ private let logger = Logger(label: "portfolio-server")
 
 @main
 struct Portfolio: AsyncParsableCommand {
-  @Option(name: .long)
-  var env = AppEnv.development
-
   @Option(name: .shortAndLong)
   var hostname = "127.0.0.1"
 
@@ -26,7 +23,12 @@ struct Portfolio: AsyncParsableCommand {
       #endif
     } operation: {
       let app = self.buildApp()
-      logger.info("Running server in '\(env.rawValue)' mode")
+      #if DEBUG
+      let buildMode = "development"
+      #else
+      let buildMode = "release"
+      #endif
+      logger.info("Running server in '\(buildMode)' mode")
       try await app.runService()
     }
   }
