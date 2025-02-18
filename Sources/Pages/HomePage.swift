@@ -425,7 +425,7 @@ extension HomePage {
       }
 
       Class("spacer") => {
-        AnyProperty("height", "1.25rem")
+        AnyProperty("height", "0.85rem")
         AnyProperty("background", "repeating-linear-gradient(45deg, transparent 0% 35%, #333 35% 50%, transparent 50% 85%, #333 85% 100%)")
         AnyProperty("background-size", "5px 5px")
       }
