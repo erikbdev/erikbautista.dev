@@ -80,4 +80,4 @@ EXPOSE 8080
 
 # Start the service when the image is run, default to listening on 8080 in production environment
 ENTRYPOINT ["./App"]
-CMD ["--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
+CMD ["--hostname", "0.0.0.0", "--port", "8080"]
