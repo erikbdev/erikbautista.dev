@@ -2,11 +2,6 @@ import ArgumentParser
 import Dependencies
 import Hummingbird
 
-public enum AppEnv: String, Codable, ExpressibleByArgument {
-  case development
-  case production
-}
-
 private enum EnvKeys {
   static let appSecret = "APP_SECRET"
   static let basicAuthUsername = "BASIC_AUTH_USER"
