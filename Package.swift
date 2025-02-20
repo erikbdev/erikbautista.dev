@@ -96,7 +96,7 @@ package.targets
         "-Xfrontend",
         "-warn-long-function-bodies=100",
         "-Xfrontend",
-        "-warn-long-expression-type-checking=100"
+        "-warn-long-expression-type-checking=1000"
       ])
     ]
   }

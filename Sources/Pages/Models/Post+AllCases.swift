@@ -8,41 +8,46 @@ extension Post: CaseIterable {
 
     return [
       Self(
-        id: 1,
+        header: .video(assets.assets.posts.wledAppDemo),
+        title: "A WLED Client for iOS", 
+        content: """
+        I built a native iOS app for [WLED](https://github.com/wled/WLED), an open-source LED controller for ESP32, to control my RGB LED strips.
+        """, 
+        date: Date(month: 8, day: 4, year: 2022), 
+        kind: .project
+      ),
+      Self(
         title: "PrismUI \u{2014} Controlling MSI RGB Keyboard on mac",
         content: """
         > TBD
         """,
-        date: Date(timeIntervalSince1970: 1_663_225_200),
+        date: Date(month: 9, day: 15, year: 2024),
         kind: .project
       ),
       Self(
-        id: 2,
         header: .image(assets.assets.projects.animeNow.anDiscover, label: "Anime Now! discover image"),
         title: "Anime Now! \u{2014} An iOS and macOS App",
         content: """
         > TBD
         """,
-        date: Date(timeIntervalSince1970: 1_663_225_200), // Sep 15, 2025
+        date: Date(month: 9, day: 15, year: 2024),
         kind: .project
       ),
       Self(
-        id: 3,
         title: "Mochi \u{2014} Content Viewer for iOS and macOS",
         content: """
         > TBD
         """,
-        date: Date(timeIntervalSince1970: 1_663_225_200), // Sep 15, 2025
+        date: Date(month: 9, day: 15, year: 2024),
         kind: .project
       ),
       Self(
-        id: 4,
-        title: "Website Redesign!",
+        title: "Website Redesign",
         content: """
         I finally decided to redesign my website. \
         To expand my skills with Swift, I decided to rebuild my portfolio in Swift.
         """,
-        date: Date(timeIntervalSince1970: 1_738_483_200), // Feb 2, 2025
+        date: Date(month: 2, day: 2, year: 2025),
         kind: .blog,
         links: [
           Post.Link(
@@ -53,5 +58,6 @@ extension Post: CaseIterable {
         ]
       ),
     ]
+    .sorted { $0.date < $1.date }
   }
 }

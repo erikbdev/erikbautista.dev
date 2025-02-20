@@ -1,14 +1,18 @@
 import Elementary
 
-struct AnyHTML: HTML, ExpressibleByStringLiteral {
-  var base: any HTML
+struct AnyHTML: HTML, Sendable, ExpressibleByStringLiteral {
+  var base: _SendableAnyHTMLBox
 
-  init(_ base: any HTML) {
-    self.base = base
+  init(_ base: any HTML & Sendable) {
+    self.base = _SendableAnyHTMLBox(base)
+  }
+
+  init(_ base: sending any HTML) {
+    self.base = _SendableAnyHTMLBox(base)
   }
 
   init(stringLiteral value: StringLiteralType) {
-    self.base = HTMLText(value)
+    self.base = _SendableAnyHTMLBox(HTMLText(value))
   }
 
   static func _render(
@@ -20,7 +24,11 @@ struct AnyHTML: HTML, ExpressibleByStringLiteral {
       try await T._render(html, into: &renderer, with: context)
     }
 
-    try await render(html.base, with: context)
+    guard let html = html.base.tryTake() else {
+      return
+    }
+
+    try await render(html, with: context)
   }
 
   static func _render(
@@ -32,6 +40,10 @@ struct AnyHTML: HTML, ExpressibleByStringLiteral {
       T._render(html, into: &renderer, with: context)
     }
 
-    render(html.base, with: context)
+    guard let html = html.base.tryTake() else {
+      return
+    }
+
+    render(html, with: context)
   }
 }

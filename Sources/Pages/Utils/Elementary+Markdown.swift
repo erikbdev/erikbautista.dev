@@ -283,7 +283,7 @@ private struct HTMLMarkdownConverter: MarkupVisitor {
   }
 }
 
-struct HTMLMarkdown: HTML, ExpressibleByStringLiteral {
+struct HTMLMarkdown: HTML, ExpressibleByStringLiteral, Sendable {
   let markdown: String
   let content: AnyHTML
 
@@ -304,12 +304,12 @@ struct HTMLMarkdown: HTML, ExpressibleByStringLiteral {
 
 private extension HTMLBuilder {
   @_disfavoredOverload
-  static func buildExpression(_ expression: any HTML) -> AnyHTML {
+  static func buildExpression(_ expression: sending any HTML) -> AnyHTML {
     AnyHTML(expression)
   }
 
   @_disfavoredOverload
-  static func buildFinalResult(_ component: some HTML) -> AnyHTML {
+  static func buildFinalResult(_ component: sending some HTML) -> AnyHTML {
     AnyHTML(component)
   }
 }

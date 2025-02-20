@@ -1,8 +1,7 @@
 import Foundation
 import PublicAssets
 
-struct Post {
-  let id: Int
+struct Post: Sendable {
   var header: Header?
   let title: String
   let content: HTMLMarkdown
@@ -18,12 +17,20 @@ struct Post {
     return formatter
   }()
 
-  var dateFormatted: String {
-    Self.dateCreatedFormatter.string(from: self.date).uppercased()
+  var datePosted: String {
+    Self.dateCreatedFormatter.string(from: self.date)
   }
 
+  private static let timestampFormatter = {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    formatter.dateFormat = "yyyyMMdd"
+    return formatter
+  }()
+
   var slug: String {
-    "\(id)-\(self.title.split { !$0.isLetter && !$0.isNumber }.joined(separator: "-").lowercased())"
+    "\(Self.timestampFormatter.string(from: self.date))-\(self.title.split { !$0.isLetter && !$0.isNumber }.joined(separator: "-").lowercased())"
   }
 
   enum Header {
@@ -44,9 +51,7 @@ struct Post {
     let href: String
     let role: Role
 
-    var isExternal: Bool {
-      self.href.hasPrefix("http")
-    }
+    var isExternal: Bool { !self.href.hasPrefix("/") }
 
     enum Role: String, CaseIterable {
       case primary

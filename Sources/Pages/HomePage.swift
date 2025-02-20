@@ -45,7 +45,7 @@ public struct HomePage: Page {
             PostsSection()
           }
           Spacer()
-          footer(.aria.label("Credits"), .class("wrapped"), .style("text-align: center;")) {
+          footer(.aria.label("Credits"), .class("wrapped")) {
             div(.id("end-footer"), .class("container")) {
               p { "©\(Self.copyrightDateFormatter.string(from: Date.now)) Erik Bautista Santibanez" }
               p {
@@ -57,6 +57,7 @@ public struct HomePage: Page {
               }
             }
           }
+          .inlineStyle("text-align", value: "center")
         }
         VueScript()
       }
@@ -75,9 +76,13 @@ public struct HomePage: Page {
     @Dependency(\.activityClient) private var activityClient
 
     var content: some HTML {
-      section(.id("hero"), .class("wrapped"), .aria.label("About")) {
+      section(.id("user"), .class("wrapped"), .aria.label("About")) {
         div(.class("container")) {
-          code(.class("code-tag")) { "User.swift" }
+          pre {
+            a(.href("#user")) {
+              code(.class("code-tag")) { "User.swift" }
+            }
+          }
 
           header(.class("code-header")) {
             pre {
@@ -174,17 +179,21 @@ public struct HomePage: Page {
 
   private struct PostsSection: HTML {
     var content: some HTML {
-      section(.id("posts"), .class("wrapped")) {
+      section(.id("dev-logs"), .class("wrapped")) {
         div(.class("container")) {
-          code(.class("code-tag")) { "Posts.swift" }
+          pre {
+            a(.href("#dev-logs")) {
+              code(.class("code-tag")) { "DevLogs.swift" }
+            }
+          }
 
           header(.class("code-header")) {
             pre(.class("hljs language-swift")) {
               code {
                 """
-                /// Posts.swift
+                /// DevLogs.swift
                 /// Portfolio
-                var posts: [Post]
+                var logs: [DevLog] = await fetch(.all)
                 """
               }
             }
@@ -212,24 +221,42 @@ public struct HomePage: Page {
           for (idx, post) in Post.allCases.reversed().enumerated() {
             article(
               .class("post"),
+              .id(post.slug),
               .v.show("!selection || selection == '\(post.kind.rawValue)'")
             ) {
               header {
-                section(.style("display: flex; align-items: baseline;")) {
-                  span(.class("post__date"), .style("flex-grow: 1")) { post.dateFormatted }
+                section {
+                  span(.class("post__date")) { post.datePosted.uppercased() }
+                    .inlineStyle("flex-grow", value: "1")
 
                   pre {
-                    code(.class("hljs language-swift"), .style("font-size: 0.75em; color: #777; font-weight: 500")) {
-                      "post[\(idx)]"
+                    a(.href("#\(post.slug)")) {
+                      code(.class("hljs language-swift")) {
+                        "logs[\(idx)]"
+                      }
+                      .inlineStyle("font-size", value: "0.75em")
+                      .inlineStyle("color", value: "#777")
+                      .inlineStyle("font-weight", value: "500")
                     }
                   }
                 }
+                .inlineStyle("display", value: "flex")
+                .inlineStyle("align-items", value: "baseline")
 
                 if let postHeader = post.header {
                   section {
                     switch postHeader {
                     case let .link(link):
-                      EmptyHTML()
+                      a(
+                        .href(link),
+                        .target(.blank),
+                        .rel("noopener noreferrer"),
+                        .class("post__header")
+                      ) {
+                        figure {
+                          // TODO: add OpenGraph link
+                        }
+                      }
                     case let .image(asset, label):
                       img(.src(asset.url.assetString), .class("post__header"), .custom(name: "alt", value: label), .aria.label(label))
                     case let .video(asset):
@@ -332,6 +359,10 @@ extension HomePage {
         AnyProperty("line-height", "1.5")
       }
 
+      "pre a" => {
+        AnyProperty("text-decoration", "none")
+      }
+
       "h1, h2, h3, h4, h5, figure, p, ol, ul, pre" => {
         AnyProperty("margin", "0")
       }
@@ -432,18 +463,12 @@ extension HomePage {
     }
 
     @CSSBuilder func heroStyles() -> some Rule {
-      // MARK: - Hero header
-
-      ID("hero") => {}
-
       Class("hero__location") => {
         Color(.hex("#D0D0D0"))
       }
     }
 
     @CSSBuilder func postTabsStyles() -> some Rule {
-      ID("posts") => {}
-
       Class("posts__tab") => {
         AnyProperty("list-style-type", "none")
         AnyProperty("margin", "0")
@@ -517,7 +542,7 @@ extension HomePage {
         AnyProperty("border-color", "#3A3A3A")
         AnyProperty("border-style", "solid")
         AnyProperty("border-width", "1.5px")
-        AnyProperty("border-radius", "0.5rem")
+        AnyProperty("border-radius", "0.85rem")
       }
 
       Class("post__links") => {
