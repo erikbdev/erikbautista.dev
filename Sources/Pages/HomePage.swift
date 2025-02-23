@@ -37,6 +37,8 @@ public struct HomePage: Page {
     .inlineStyle("color", "#fafafa")
     .inlineStyle("font-optical-sizing", "auto")
     .inlineStyle("font-size", "0.9em")
+    .inlineStyle("font-size", "0.8em", media: .maxWidth(480))
+    .inlineStyle("font-size", "0.7em", media: .maxWidth(380))
 
     VueScript()
   }
