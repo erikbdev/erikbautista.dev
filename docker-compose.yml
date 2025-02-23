@@ -1,6 +1,6 @@
 version: '3'
 services:
   web:
-    image: 'ghcr.io/errorerrorerror/erikbautista.dev:${COOLIFY_BRANCH:-latest}'
+    image: 'ghcr.io/errorerrorerror/erikbautista.dev:sha-${SOURCE_COMMIT:?error}'
     expose:
       - 8080

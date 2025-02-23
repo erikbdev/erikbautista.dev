@@ -35,7 +35,7 @@ jobs:
             ghcr.io/${{ steps.base-meta.outputs.REPO }}
           tags: |
             type=ref,event=branch
-            type=sha
+            type=sha,format=long
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Login to GitHub Container Registry
@@ -59,4 +59,5 @@ jobs:
 
       - name: Push To Production
         run: |
-          curl --request GET '${{ secrets.DEPLOYMENT_WEBHOOK_URL }}' --header 'Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}'
+          curl '${{ secrets.DEPLOYMENT_WEBHOOK_URL }}' \
+            --header 'Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}'
