@@ -9,7 +9,6 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.4.0"),
-    .package(url: "https://github.com/errorerrorerror/swift-cascadia", revision: "a13dfd0a3818c8f9368bbd4aeb3c6607f68838bd"),
     .package(url: "https://github.com/errorerrorerror/swift-web.git", exact: "0.0.4"),
     .package(url: "https://github.com/hummingbird-project/hummingbird.git", exact: "2.5.0"),
     .package(url: "https://github.com/pointfreeco/swift-case-paths.git", from: "1.0.0"),
@@ -63,7 +62,6 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Elementary", package: "elementary"),
         .product(name: "Hummingbird", package: "hummingbird"),
-        .product(name: "Cascadia", package: "swift-cascadia"),
         .product(name: "Markdown", package: "swift-markdown")
       ]
     ),
@@ -94,9 +92,9 @@ package.targets
     $0.swiftSettings = [
       .unsafeFlags([
         "-Xfrontend",
-        "-warn-long-function-bodies=100",
+        "-warn-long-function-bodies=500",
         "-Xfrontend",
-        "-warn-long-expression-type-checking=1000"
+        "-warn-long-expression-type-checking=250"
       ])
     ]
   }

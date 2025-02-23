@@ -1,26 +1,92 @@
 import Elementary
 import Hummingbird
+import Dependencies
 
-public protocol Page: Sendable, HTML, ResponseGenerator {
+public protocol Page: Sendable, HTMLDocument, ResponseGenerator {
   var chunkSize: Int { get }
   var headers: HTTPFields { get }
 }
 
-extension Page {
-  public var chunkSize: Int { 1024 }
-  public var headers: HTTPFields { [.contentType: "text/html; charset=utf-8"] }
+public extension Page {
+  var chunkSize: Int { 1024 }
+  var headers: HTTPFields { [.contentType: "text/html; charset=utf-8"] }
+
+  static func _render(
+    _ html: consuming Self,
+    into renderer: inout some _AsyncHTMLRendering,
+    with context: consuming _RenderingContext
+  ) async throws {
+    try await withDependencies {
+      $0[StylesheetGenerator.self] = .liveValue
+    } operation: { [context] in
+      let body = try await html.body.renderAsync()
+
+      try await Document._render(
+        Document(
+          title: html.title, 
+          lang: html.lang, 
+          head: html.head, 
+          body: HTMLRaw(body)
+        ), 
+        into: &renderer, 
+        with: context
+      )
+    }
+  }
+
+  static func _render(
+    _ html: consuming Self,
+    into renderer: inout some _HTMLRendering,
+    with context: consuming _RenderingContext
+  ) {
+    withDependencies {
+      $0[StylesheetGenerator.self] = .liveValue
+    } operation: { [context] in
+      let body = html.body.render()
+
+      Document._render(
+        Document(title: html.title, lang: html.lang, head: html.head, body: HTMLRaw(body)), 
+        into: &renderer, 
+        with: context
+      )
+    }
+  }
 }
 
-extension Page {
-  public consuming func response(
+private struct Document<HTMLHead: HTML>: HTMLDocument {
+  var title: String
+  var lang: String
+  var head: HTMLHead
+  var body: HTMLRaw
+
+  @Dependency(StylesheetGenerator.self) var generator
+
+  @HTMLBuilder var content: some HTML {
+    HTMLRaw("<!DOCTYPE html>")
+    html {
+      Elementary.head {
+        meta(.charset(.utf8))
+        Elementary.title { self.title }
+        self.head
+        style { HTMLRaw(generator.stylesheet()) }
+      }
+      Elementary.body { self.body }
+    }
+    .attributes(.lang(lang))
+    .attributes(.dir(dir))
+  }
+}
+
+public extension Page {
+  consuming func response(
     from request: Request,
     context: some RequestContext
   ) throws -> Response where Content: Sendable {
     Response(
       status: .ok,
       headers: self.headers,
-      body: ResponseBody { [content, chunkSize] writer in
-        try await writer.write(content, chunkSize: chunkSize)
+      body: ResponseBody { [self] writer in
+        try await writer.write(self, chunkSize: self.chunkSize)
         try await writer.finish(nil)
       }
     )
@@ -36,8 +102,8 @@ private struct HTMLWriter<Writer: ResponseBodyWriter>: HTMLStreamWriter {
   }
 }
 
-extension ResponseBodyWriter {
-  fileprivate mutating func write(_ html: consuming some HTML, chunkSize: Int = 1024) async throws {
+private extension ResponseBodyWriter {
+  mutating func write(_ html: consuming some HTML, chunkSize: Int = 1024) async throws {
     try await html.render(
       into: HTMLWriter(writer: self),
       chunkSize: chunkSize

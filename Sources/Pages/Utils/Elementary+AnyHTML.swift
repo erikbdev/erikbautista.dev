@@ -3,6 +3,8 @@ import Elementary
 struct AnyHTML: HTML, Sendable, ExpressibleByStringLiteral {
   var base: _SendableAnyHTMLBox
 
+  var content: EmptyHTML = EmptyHTML()
+
   init(_ base: any HTML & Sendable) {
     self.base = _SendableAnyHTMLBox(base)
   }

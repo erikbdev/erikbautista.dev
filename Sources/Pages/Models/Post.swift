@@ -6,6 +6,7 @@ struct Post: Sendable {
   let title: String
   let content: HTMLMarkdown
   let date: Date
+  var lastUpdated: Date?
   let kind: Kind
   var links: [Link] = []
 

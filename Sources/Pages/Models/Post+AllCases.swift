@@ -42,6 +42,16 @@ extension Post: CaseIterable {
         kind: .project
       ),
       Self(
+        header: .code(
+          """
+          struct Portfolio {
+            var body: some HTML {
+              HomePage()
+            }
+          }
+          """,
+          lang: .swift
+        ),
         title: "Website Redesign",
         content: """
         I finally decided to redesign my website. \

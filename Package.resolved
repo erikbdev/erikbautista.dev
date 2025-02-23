@@ -1,5 +1,5 @@
 {
-  "originHash" : "9ff9849c74921158118b372b65fe27f8467be942673392904b21a63d64bc68f7",
+  "originHash" : "7d5e18234e05487c69d3da0fb49943fdd7311cd7ba7a2c2f940e432984a38e7a",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -71,14 +71,6 @@
       "state" : {
         "revision" : "cd142fd2f64be2100422d658e7411e39489da985",
         "version" : "1.2.0"
-      }
-    },
-    {
-      "identity" : "swift-cascadia",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/errorerrorerror/swift-cascadia",
-      "state" : {
-        "revision" : "a13dfd0a3818c8f9368bbd4aeb3c6607f68838bd"
       }
     },
     {
