@@ -10,14 +10,7 @@ public struct HomePage: Page {
   public init() {}
 
   public var head: some HTML {
-    /// Xcode Styling
-    style { HTMLRaw(".xml .hljs-meta{color:#6C7986}.hljs-comment,.hljs-quote{color:#6C7986}.hljs-tag,.hljs-attribute,.hljs-keyword,.hljs-selector-tag,.hljs-literal,.hljs-name{color:#FC5FA3}.hljs-variable,.hljs-template-variable{color:#FC5FA3}.hljs-code,.hljs-string,.hljs-meta-string{color:#FC6A5D}.hljs-regexp,.hljs-link{color:#5482FF}.hljs-title,.hljs-symbol,.hljs-bullet,.hljs-number{color:#41A1C0}.hljs-section,.hljs-meta{color:#FC5FA3}.hljs-class .hljs-title,.hljs-type,.hljs-built_in,.hljs-builtin-name,.hljs-params{color:#D0A8FF}.hljs-attr{color:#BF8555}.hljs-subst{color:#FFF}.hljs-formula{font-style:italic}.hljs-selector-id,.hljs-selector-class{color:#9b703f}.hljs-doctag,.hljs-strong{font-weight:bold}.hljs-emphasis{font-style:italic}") }
-    script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"), .defer)
-    script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"), .defer)
-    script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"), .defer)
-    script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"), .defer)
-    script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"), .defer)
-    script(.type(.module)) { HTMLRaw("hljs.highlightAll();") }
+    EmptyHTML()
   }
 
   public var body: some HTML {
@@ -33,12 +26,6 @@ public struct HomePage: Page {
       FooterView()
     }
     .inlineStyle("overflow-x", "hidden")
-    .inlineStyle("background-color", "#1c1c1c")
-    .inlineStyle("color", "#fafafa")
-    .inlineStyle("font-optical-sizing", "auto")
-    .inlineStyle("font-size", "0.7em")
-    .inlineStyle("font-size", "0.8em", media: .minWidth(390))
-    .inlineStyle("font-size", "0.9em", media: .minWidth(480))
   }
 
   struct HeaderView: HTML {

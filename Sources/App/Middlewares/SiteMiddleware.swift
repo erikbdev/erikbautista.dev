@@ -19,6 +19,8 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
       LiveReloadMiddleware()
     #endif
 
+    NotFoundMiddleware()
+
     if self.publicAssets.baseURL.isFileURL {
       FileMiddleware(
         self.publicAssets.baseURL.path(),
@@ -57,6 +59,24 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
           return Response(status: .ok)
         }
       }
+    }
+  }
+}
+
+private struct NotFoundMiddleware<Context: RequestContext>: RouterMiddleware {
+  func handle(
+    _ input: Request,
+    context: Context,
+    next: (Request, Context) async throws -> Response
+  ) async throws -> Response {
+    do {
+      return try await next(input, context)
+    } catch let error as HTTPError {
+      guard error.status == .notFound else {
+        throw error
+      }
+      return try NotFoundPage()
+        .response(from: input, context: context)
     }
   }
 }

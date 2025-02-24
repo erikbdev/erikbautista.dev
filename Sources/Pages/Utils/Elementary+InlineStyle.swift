@@ -1,7 +1,7 @@
-import Elementary
-import OrderedCollections
 import ConcurrencyExtras
 import Dependencies
+import Elementary
+import OrderedCollections
 
 struct _HTMLInlineStyle<Content: HTML>: HTML where Content.Tag: HTMLTrait.Attributes.Global {
   typealias Tag = Content.Tag
@@ -22,14 +22,14 @@ struct _HTMLInlineStyle<Content: HTML>: HTML where Content.Tag: HTMLTrait.Attrib
     self.styles = value.flatMap {
       [
         InlineStyle(
-          property: property, 
+          property: property,
           value: $0,
           media: media,
           pre: pre,
           pseudo: pseudo,
           post: post
-        )
-      ] 
+        ),
+      ]
     } ?? []
   }
 
@@ -45,7 +45,7 @@ struct _HTMLInlineStyle<Content: HTML>: HTML where Content.Tag: HTMLTrait.Attrib
     if let value {
       copy.styles.append(
         InlineStyle(
-          property: property, 
+          property: property,
           value: value,
           media: mediaQuery,
           pre: pre,
@@ -57,59 +57,59 @@ struct _HTMLInlineStyle<Content: HTML>: HTML where Content.Tag: HTMLTrait.Attrib
     return copy
   }
 
-  static func _render<Renderer: _AsyncHTMLRendering>(
-    _ html: consuming Self, 
-    into renderer: inout Renderer, 
+  static func _render(
+    _ html: consuming Self,
+    into renderer: inout some _AsyncHTMLRendering,
     with context: consuming _RenderingContext
   ) async throws {
-    @Dependency(StylesheetGenerator.self) var generator
+    @Dependency(\.styleSheetGenerator) var generator
 
     var classes = OrderedSet<String>()
 
     for style in html.styles {
-      let className = generator.generate(style)
+      let className = generator.generateClassName(style)
       classes.append(className)
     }
 
     if classes.isEmpty {
       try await Content._render(
-        html.wrappedContent, 
-        into: &renderer, 
+        html.wrappedContent,
+        into: &renderer,
         with: context
       )
     } else {
       try await _AttributedElement<Content>._render(
-        html.wrappedContent.attributes(contentsOf: classes.map { .class($0) }), 
-        into: &renderer, 
+        html.wrappedContent.attributes(contentsOf: classes.map { .class($0) }),
+        into: &renderer,
         with: context
       )
     }
   }
 
-  static func _render<Renderer: _HTMLRendering>(
-    _ html: consuming Self, 
-    into renderer: inout Renderer, 
+  static func _render(
+    _ html: consuming Self,
+    into renderer: inout some _HTMLRendering,
     with context: consuming _RenderingContext
   ) {
-    @Dependency(StylesheetGenerator.self) var generator
+    @Dependency(\.styleSheetGenerator) var generator
 
     var classes = OrderedSet<String>()
 
     for style in html.styles {
-      let className = generator.generate(style)
+      let className = generator.generateClassName(style)
       classes.append(className)
     }
 
     if classes.isEmpty {
       Content._render(
-        html.wrappedContent, 
-        into: &renderer, 
+        html.wrappedContent,
+        into: &renderer,
         with: context
       )
     } else {
       _AttributedElement<Content>._render(
-        html.wrappedContent.attributes(contentsOf: classes.map { .class($0) }), 
-        into: &renderer, 
+        html.wrappedContent.attributes(contentsOf: classes.map { .class($0) }),
+        into: &renderer,
         with: context
       )
     }
@@ -118,7 +118,7 @@ struct _HTMLInlineStyle<Content: HTML>: HTML where Content.Tag: HTMLTrait.Attrib
 
 extension HTML where Tag: HTMLTrait.Attributes.Global {
   func inlineStyle(
-    _ property: String, 
+    _ property: String,
     _ value: String?,
     media mediaQuery: InlineStyle.MediaQuery? = nil,
     pre: String? = nil,
@@ -126,8 +126,8 @@ extension HTML where Tag: HTMLTrait.Attributes.Global {
     post: String? = nil
   ) -> _HTMLInlineStyle<Self> {
     _HTMLInlineStyle(
-      self, 
-      property: property, 
+      self,
+      property: property,
       value: value,
       media: mediaQuery,
       pre: pre,
@@ -137,55 +137,85 @@ extension HTML where Tag: HTMLTrait.Attributes.Global {
   }
 }
 
-struct StylesheetGenerator: DependencyKey, @unchecked Sendable {
+struct StyleSheetGenerator: Sendable {
   private struct Storage {
     var styles = OrderedSet<InlineStyle>()
     var rulesets = OrderedDictionary<InlineStyle.MediaQuery?, OrderedDictionary<String, String>>()
+    var render: _SendableAnyHTMLBox?
+    var rendered: String?
   }
 
-  fileprivate let generate: (InlineStyle) -> String
-  let stylesheet: () -> String
+  private let storage = LockIsolated(Storage())
 
-  static var liveValue: Self {
-    let storage = LockIsolated<Storage>(Storage())
+  @Sendable
+  fileprivate func generateClassName(_ style: InlineStyle) -> String {
+    self.storage.withValue { `self` in
+      let index = self.styles.firstIndex(of: style) ?? self.styles.append(style).index
+      #if DEBUG
+        let className = "\(style.property)-\(index)"
+      #else
+        let className = "c\(index)"
+      #endif
 
-    return Self { style in
-      storage.withValue { storage in
-        let index = storage.styles.firstIndex(of: style) ?? storage.styles.append(style).index
-        #if DEBUG
-          let className = "\(style.property)-\(index)"
-        #else
-          let className = "c\(index)"
-        #endif
+      let selector = "\(style.pre.flatMap { $0 + " " } ?? "").\(className)\(style.pseudo?.rawValue ?? "")\(style.post.flatMap { " " + $0 } ?? "")"
 
-        let selector = "\(style.pre.flatMap { $0 + " " } ?? "").\(className)\(style.pseudo?.rawValue ?? "")\(style.post.flatMap { " " + $0 } ?? "")"
-
-        if storage.rulesets[style.media, default: [:]][selector] == nil {
-          storage.rulesets[style.media, default: [:]][selector] = "\(style.property):\(style.value);"
-        }
-
-        return className
+      if self.rulesets[style.media, default: [:]][selector] == nil {
+        self.rulesets[style.media, default: [:]][selector] = "\(style.property):\(style.value);"
       }
-    } stylesheet: {
-      var sheet = ""
-      for (mediaQuery, styles) in storage.rulesets.sorted(by: { $0.key == nil ? $1.key != nil : false }) {
-        if let mediaQuery {
-          sheet.append("@media \(mediaQuery.rawValue){")
-        }
 
-        defer {
-          if mediaQuery != nil {
-            sheet.append("}")
-          }
-        }
-
-        for (className, style) in styles {
-          sheet.append("\(className){\(style)}")
-        }
-      }
-      return sheet
+      return className
     }
   }
+
+  @Sendable
+  func renderStyleSheet() -> String {
+    guard let rendered = storage.render?.tryTake()?.render() else {
+      return ""
+    }
+
+    self.storage.withValue { $0.rendered = rendered }
+
+    var sheet = ""
+    for (mediaQuery, styles) in storage.rulesets.sorted(by: { $0.key == nil ? $1.key != nil : false }) {
+      if let mediaQuery {
+        sheet.append("@media \(mediaQuery.rawValue){")
+      }
+
+      defer {
+        if mediaQuery != nil {
+          sheet.append("}")
+        }
+      }
+
+      for (className, style) in styles {
+        sheet.append("\(className){\(style)}")
+      }
+    }
+    return sheet
+  }
+
+  func addElements(@HTMLBuilder _ html: @Sendable () -> some HTML) {
+    self.storage.withValue { `self` in
+      self.render = _SendableAnyHTMLBox(html())
+    }
+  }
+
+  func renderedElements() -> String {
+    self.storage.withValue { `self` in
+      self.rendered ?? ""
+    }
+  }
+}
+
+extension DependencyValues {
+  var styleSheetGenerator: StyleSheetGenerator {
+    get { self[StyleSheetGeneratorKey.self] }
+    set { self[StyleSheetGeneratorKey.self] = newValue }
+  }
+}
+
+private enum StyleSheetGeneratorKey: DependencyKey {
+  static var liveValue: StyleSheetGenerator { StyleSheetGenerator() }
 }
 
 struct InlineStyle: Sendable, Hashable {
@@ -200,7 +230,7 @@ struct InlineStyle: Sendable, Hashable {
     private var name: String
     private var isElement: Bool
 
-    var rawValue: String { ":\(isElement ? ":" : "")\(name)" }
+    var rawValue: String { ":\(self.isElement ? ":" : "")\(self.name)" }
 
     private init(element: Bool, name: String = #function) {
       self.name = name
@@ -224,7 +254,7 @@ struct InlineStyle: Sendable, Hashable {
   struct MediaQuery: Sendable, Hashable, RawRepresentable, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
     private var values = [String]()
 
-    var rawValue: String { values.joined(separator: " ") }
+    var rawValue: String { self.values.joined(separator: " ") }
 
     init(rawValue: String) {
       self.values = [rawValue]

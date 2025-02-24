@@ -11,6 +11,8 @@ public struct NotFoundPage: Page {
   }
 
   public var body: some HTML {
-    EmptyHTML()
+    div {
+
+    }
   }
 }
