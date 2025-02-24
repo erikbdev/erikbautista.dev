@@ -137,85 +137,78 @@ extension HTML where Tag: HTMLTrait.Attributes.Global {
   }
 }
 
-struct StyleSheetGenerator: Sendable {
-  private struct Storage {
-    var styles = OrderedSet<InlineStyle>()
-    var rulesets = OrderedDictionary<InlineStyle.MediaQuery?, OrderedDictionary<String, String>>()
-    var render: _SendableAnyHTMLBox?
-    var rendered: String?
-  }
+struct StyleSheetGenerator: Sendable, DependencyKey {
+  let generateClassName: @Sendable (InlineStyle) -> String
+  let renderStyleSheet: @Sendable () -> String
+  let addElements: @Sendable (@Sendable () -> any HTML) -> Void
+  let renderedElements: @Sendable () -> String
 
-  private let storage = LockIsolated(Storage())
-
-  @Sendable
-  fileprivate func generateClassName(_ style: InlineStyle) -> String {
-    self.storage.withValue { `self` in
-      let index = self.styles.firstIndex(of: style) ?? self.styles.append(style).index
-      #if DEBUG
-        let className = "\(style.property)-\(index)"
-      #else
-        let className = "c\(index)"
-      #endif
-
-      let selector = "\(style.pre.flatMap { $0 + " " } ?? "").\(className)\(style.pseudo?.rawValue ?? "")\(style.post.flatMap { " " + $0 } ?? "")"
-
-      if self.rulesets[style.media, default: [:]][selector] == nil {
-        self.rulesets[style.media, default: [:]][selector] = "\(style.property):\(style.value);"
-      }
-
-      return className
-    }
-  }
-
-  @Sendable
-  func renderStyleSheet() -> String {
-    guard let rendered = storage.render?.tryTake()?.render() else {
-      return ""
+  static var liveValue: StyleSheetGenerator {
+    struct Storage {
+      var styles = OrderedSet<InlineStyle>()
+      var rulesets = OrderedDictionary<InlineStyle.MediaQuery?, OrderedDictionary<String, String>>()
+      var render: _SendableAnyHTMLBox?
+      var rendered: String?
     }
 
-    self.storage.withValue { $0.rendered = rendered }
+    let storage = LockIsolated(Storage())
 
-    var sheet = ""
-    for (mediaQuery, styles) in storage.rulesets.sorted(by: { $0.key == nil ? $1.key != nil : false }) {
-      if let mediaQuery {
-        sheet.append("@media \(mediaQuery.rawValue){")
-      }
+    return StyleSheetGenerator { style in
+      storage.withValue { `self` in
+        let index = self.styles.firstIndex(of: style) ?? self.styles.append(style).index
+        #if DEBUG
+          let className = "\(style.property)-\(index)"
+        #else
+          let className = "c\(index)"
+        #endif
 
-      defer {
-        if mediaQuery != nil {
-          sheet.append("}")
+        let selector = "\(style.pre.flatMap { $0 + " " } ?? "").\(className)\(style.pseudo?.rawValue ?? "")\(style.post.flatMap { " " + $0 } ?? "")"
+
+        if self.rulesets[style.media, default: [:]][selector] == nil {
+          self.rulesets[style.media, default: [:]][selector] = "\(style.property):\(style.value);"
         }
+
+        return className
       }
+    } renderStyleSheet: {
+        guard let rendered = storage.render?.tryTake()?.render() else {
+          return ""
+        }
 
-      for (className, style) in styles {
-        sheet.append("\(className){\(style)}")
+        storage.withValue { $0.rendered = rendered }
+
+        var sheet = ""
+        for (mediaQuery, styles) in storage.rulesets.sorted(by: { $0.key == nil ? $1.key != nil : false }) {
+          if let mediaQuery {
+            sheet.append("@media \(mediaQuery.rawValue){")
+          }
+
+          defer {
+            if mediaQuery != nil {
+              sheet.append("}")
+            }
+          }
+
+          for (className, style) in styles {
+            sheet.append("\(className){\(style)}")
+          }
+        }
+        return sheet
+    } addElements: { html in
+      storage.withValue { `self` in
+        self.render = _SendableAnyHTMLBox(html())
       }
-    }
-    return sheet
-  }
-
-  func addElements(@HTMLBuilder _ html: @Sendable () -> some HTML) {
-    self.storage.withValue { `self` in
-      self.render = _SendableAnyHTMLBox(html())
-    }
-  }
-
-  func renderedElements() -> String {
-    self.storage.withValue { `self` in
-      self.rendered ?? ""
+    } renderedElements: { 
+      storage.rendered ?? ""
     }
   }
 }
 
 extension DependencyValues {
   var styleSheetGenerator: StyleSheetGenerator {
-    get { self[StyleSheetGeneratorKey.self] }
-    set { self[StyleSheetGeneratorKey.self] = newValue }
+    get { self[StyleSheetGenerator.self] }
+    set { self[StyleSheetGenerator.self] = newValue }
   }
-}
-
-private enum StyleSheetGeneratorKey: DependencyKey {
-  static var liveValue: StyleSheetGenerator { StyleSheetGenerator() }
 }
 
 struct InlineStyle: Sendable, Hashable {

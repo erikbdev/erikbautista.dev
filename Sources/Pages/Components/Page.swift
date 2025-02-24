@@ -24,10 +24,11 @@ public extension Page {
 
   @HTMLBuilder var content: some HTML {
     withDependencies {
-      $0.styleSheetGenerator = StyleSheetGenerator()
+      $0.styleSheetGenerator = .liveValue
     } operation: {
       HTMLBuilder.builder {
         @Dependency(\.styleSheetGenerator) var generator
+
         let _ = generator.addElements {
           Elementary.body {
             self.body

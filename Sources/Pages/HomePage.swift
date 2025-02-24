@@ -27,41 +27,6 @@ public struct HomePage: Page {
     }
     .inlineStyle("overflow-x", "hidden")
   }
-
-  struct HeaderView: HTML {
-    var content: some HTML {
-      EmptyHTML()
-    }
-  }
-
-  struct FooterView: HTML {
-    private static let copyrightDateFormatter = {
-      let formatter = DateFormatter()
-      formatter.locale = Locale(languageCode: .english, languageRegion: .unitedStates)
-      formatter.timeZone = TimeZone(abbreviation: "PST") ?? formatter.timeZone
-      formatter.dateFormat = "yyyy"
-      return formatter
-    }()
-
-    var content: some HTML {
-      footer {
-        div {
-          p { "©\(Self.copyrightDateFormatter.string(from: Date.now)) Erik Bautista Santibanez" }
-          p {
-            "Made with \u{2764} using "
-            a(.target(.blank), .rel("noopener noreferrer"), .href("https://swift.org")) { "Swift" }
-            " + "
-            a(.target(.blank), .rel("noopener noreferrer"), .href("https://hummingbird.codes")) { "Hummingbird" }
-            "."
-          }
-        }
-        .inlineStyle("padding", "1rem 1.5rem")
-        .containerStyling()
-      }
-      .inlineStyle("text-align", "center")
-      .wrappedStyling()
-    }
-  }
 }
 
 private struct SectionView<Body: HTML>: HTML {
@@ -129,19 +94,6 @@ private struct SectionView<Body: HTML>: HTML {
       }
       .inlineStyle("padding", "0.75rem 1.5rem 1.5rem")
     }
-  }
-}
-
-private struct Spacer: HTML {
-  var content: some HTML {
-    div {
-      div {}
-        .inlineStyle("height", "0.85rem")
-        .inlineStyle("background", "repeating-linear-gradient(45deg, transparent 0% 35%, #333 35% 50%, transparent 50% 85%, #333 85% 100%)")
-        .inlineStyle("background-size", "5px 5px")
-        .containerStyling()
-    }
-    .wrappedStyling()
   }
 }
 
@@ -375,18 +327,6 @@ private struct PostsView: HTML {
 }
 
 private extension HTML where Tag: HTMLTrait.Attributes.Global {
-  func wrappedStyling() -> _HTMLInlineStyle<Self> {
-    self.inlineStyle("border-top", "1px solid #303030")
-  }
-
-  func containerStyling() -> _HTMLInlineStyle<Self> {
-    self.inlineStyle("max-width", "40rem")
-      .inlineStyle("margin-right", "auto")
-      .inlineStyle("margin-left", "auto")
-      .inlineStyle("border-left", "1px solid #303030")
-      .inlineStyle("border-right", "1px solid #303030")
-  }
-
   func svgIconStyling() -> _HTMLInlineStyle<Self> {
     self.inlineStyle("display", "inline-block")
       .inlineStyle("vertical-align", "middle")
