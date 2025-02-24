@@ -1,6 +1,6 @@
+import Dependencies
 import Elementary
 import Hummingbird
-import Dependencies
 
 public protocol Page: Sendable, HTMLDocument, ResponseGenerator {
   var chunkSize: Int { get }
@@ -21,14 +21,14 @@ public extension Page {
     } operation: { [context] in
       let body = try await html.body.renderAsync()
 
-      try await Document._render(
-        Document(
-          title: html.title, 
-          lang: html.lang, 
-          head: html.head, 
+      try await BaseDocument._render(
+        BaseDocument(
+          title: html.title,
+          lang: html.lang,
+          head: html.head,
           body: HTMLRaw(body)
-        ), 
-        into: &renderer, 
+        ),
+        into: &renderer,
         with: context
       )
     }
@@ -44,16 +44,16 @@ public extension Page {
     } operation: { [context] in
       let body = html.body.render()
 
-      Document._render(
-        Document(title: html.title, lang: html.lang, head: html.head, body: HTMLRaw(body)), 
-        into: &renderer, 
+      BaseDocument._render(
+        BaseDocument(title: html.title, lang: html.lang, head: html.head, body: HTMLRaw(body)),
+        into: &renderer,
         with: context
       )
     }
   }
 }
 
-private struct Document<HTMLHead: HTML>: HTMLDocument {
+private struct BaseDocument<HTMLHead: HTML>: HTMLDocument {
   var title: String
   var lang: String
   var head: HTMLHead
@@ -67,12 +67,17 @@ private struct Document<HTMLHead: HTML>: HTMLDocument {
       Elementary.head {
         meta(.charset(.utf8))
         Elementary.title { self.title }
+        meta(name: .viewport, content: "width=device-width, initial-scale=1.0")
+        BaseStylings()
         self.head
-        style { HTMLRaw(generator.stylesheet()) }
+        style { HTMLRaw(self.generator.stylesheet()) }
       }
-      Elementary.body { self.body }
+      Elementary.body {
+        self.body
+        VueScript()
+      }
     }
-    .attributes(.lang(lang))
+    .attributes(.lang(self.lang))
     .attributes(.dir(dir))
   }
 }

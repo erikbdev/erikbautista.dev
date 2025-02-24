@@ -10,8 +10,6 @@ public struct HomePage: Page {
   public init() {}
 
   public var head: some HTML {
-    meta(name: .viewport, content: "width=device-width, initial-scale=1.0")
-    BaseStylings()
     /// Xcode Styling
     style { HTMLRaw(".xml .hljs-meta{color:#6C7986}.hljs-comment,.hljs-quote{color:#6C7986}.hljs-tag,.hljs-attribute,.hljs-keyword,.hljs-selector-tag,.hljs-literal,.hljs-name{color:#FC5FA3}.hljs-variable,.hljs-template-variable{color:#FC5FA3}.hljs-code,.hljs-string,.hljs-meta-string{color:#FC6A5D}.hljs-regexp,.hljs-link{color:#5482FF}.hljs-title,.hljs-symbol,.hljs-bullet,.hljs-number{color:#41A1C0}.hljs-section,.hljs-meta{color:#FC5FA3}.hljs-class .hljs-title,.hljs-type,.hljs-built_in,.hljs-builtin-name,.hljs-params{color:#D0A8FF}.hljs-attr{color:#BF8555}.hljs-subst{color:#FFF}.hljs-formula{font-style:italic}.hljs-selector-id,.hljs-selector-class{color:#9b703f}.hljs-doctag,.hljs-strong{font-weight:bold}.hljs-emphasis{font-style:italic}") }
     script(.src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"), .defer)
@@ -24,23 +22,29 @@ public struct HomePage: Page {
 
   public var body: some HTML {
     div(.v.scope("{ showCode: true, selection: undefined }")) {
+      HeaderView()
+      Spacer()
       main {
-        Spacer()
         UserView()
         Spacer()
         PostsView()
-        Spacer()
       }
+      Spacer()
       FooterView()
     }
+    .inlineStyle("overflow-x", "hidden")
     .inlineStyle("background-color", "#1c1c1c")
     .inlineStyle("color", "#fafafa")
     .inlineStyle("font-optical-sizing", "auto")
-    .inlineStyle("font-size", "0.9em")
-    .inlineStyle("font-size", "0.8em", media: .maxWidth(480))
-    .inlineStyle("font-size", "0.7em", media: .maxWidth(380))
+    .inlineStyle("font-size", "0.7em")
+    .inlineStyle("font-size", "0.8em", media: .minWidth(390))
+    .inlineStyle("font-size", "0.9em", media: .minWidth(480))
+  }
 
-    VueScript()
+  struct HeaderView: HTML {
+    var content: some HTML {
+      EmptyHTML()
+    }
   }
 
   struct FooterView: HTML {
@@ -76,18 +80,10 @@ public struct HomePage: Page {
 private struct SectionView<Body: HTML>: HTML {
   let codeTag: String
   let codeHeader: String
-  let body: () -> Body
-  private let id: String
+  @HTMLBuilder let body: () -> Body
 
-  init(
-    codeTag: String,
-    codeHeader: String,
-    @HTMLBuilder body: @escaping () -> Body
-  ) {
-    self.codeTag = codeTag
-    self.codeHeader = codeHeader
-    self.body = body
-    self.id = codeTag.enumerated().flatMap { idx, char in
+  private var id: String {
+    codeTag.enumerated().flatMap { idx, char in
       [
         char.isUppercase && idx > 0 ? "-" : nil,
         String(char).lowercased(),
@@ -101,17 +97,8 @@ private struct SectionView<Body: HTML>: HTML {
     section(.id(self.id)) {
       div {
         header {
-          CodeTag(id: self.id, tag: self.codeTag)
-          pre {
-            code(.class("hljs language-swift")) {
-              """
-              /// \(self.codeTag).swift
-              /// Portfolio
-              \(self.codeHeader)
-              """
-            }
-          }
-          .inlineStyle("padding", "0 1.5rem 1.5rem")
+          CodeTag(id: self.id, codeTag: self.codeTag)
+          CodeHeader(codeTag: self.codeTag, codeHeader: self.codeHeader)
         }
 
         self.body()
@@ -121,24 +108,39 @@ private struct SectionView<Body: HTML>: HTML {
     .wrappedStyling()
   }
 
-  private struct CodeTag: HTML {
-    var id: String
-    var tag: String
+  struct CodeTag: HTML {
+    let id: String
+    let codeTag: String
 
     var content: some HTML {
       pre {
         a(.href("#\(self.id)")) {
-          code { "\(self.tag).swift" }
-            .inlineStyle("display", "block")
-            .inlineStyle("color", "#777")
-            .inlineStyle("text-align", "end")
-            .inlineStyle("font-size", "0.75em")
-            .inlineStyle("font-weight", "500")
-            .inlineStyle("font-family", "\"CommitMono\", monospace")
-            .inlineStyle("padding", "1.5rem 1.5rem 0.75rem")
+          code { "\(self.codeTag).swift" }
         }
-        .inlineStyle("text-decoration", "none")
+        .inlineStyle("color", "#777")
       }
+      .inlineStyle("font-size", "0.75em")
+      .inlineStyle("font-weight", "500")
+      .inlineStyle("text-align", "end")
+      .inlineStyle("padding", "1.5rem 1.5rem 0")
+    }
+  }
+
+  struct CodeHeader: HTML {
+    let codeTag: String
+    let codeHeader: String
+
+    var content: some HTML {
+      pre {
+        code(.class("hljs language-swift")) {
+          """
+          /// \(self.codeTag).swift
+          /// Portfolio
+          \(self.codeHeader)
+          """
+        }
+      }
+      .inlineStyle("padding", "0.75rem 1.5rem 1.5rem")
     }
   }
 }
@@ -194,95 +196,19 @@ private struct UserView: HTML {
     }
   }
 
-  // code(.data("highlighted", value: "yes"), .class("hljs language-swift")) {
-  //   span(.class("hljs-comment")) { "/// User.swift\n" }
-  //   span(.class("hljs-comment")) { "/// Portfolio\n" }
-  //   span(.class("hljs-keyword")) { "struct" }
-  //   " "
-  //   span(.class("hljs-title class_")) { "User" }
-  //   ": "
-  //   span(.class("hljs-title class_")) { "Portfolio" }
-  //   " {\n  "
-
-  //   span(.class("hljs-keyword")) { "let" }
-  //   " name = "
-  //   span(.class("hljs-string")) {
-  //     "\""
-  //     span(.class("hero-title")) { "Erik Bautista Santibanez" }
-  //     "\""
-  //   }
-  //   "\n  "
-
-  //   span(.class("hljs-keyword")) { "let" }
-  //   " role = "
-  //   span(.class("hljs-string")) {
-  //     "\""
-  //     span(.class("hero-subtitle")) { "Mobile & Web Developer" }
-  //     "\""
-  //   }
-  //   "\n  "
-
-  //   span(.class("hljs-keyword")) { "let" }
-  //   " home = "
-  //   span(.class("hljs-string")) {
-  //     "\""
-  //     span { self.residency }
-  //       .inlineStyle("color", "#D0D0D0")
-  //     "\""
-  //   }
-  //   "\n"
-  //   self.location
-  //   "}"
-  // }
-
-  // @HTMLBuilder
-  // var residency: some HTML {
-  //   let location = self.activityClient.location()
-  //   let residency = location?.residency ?? .default
-
   //   svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Map pin icon")) {
   //     path(
   //       .d("M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z")
   //     )
   //   }
   //   .svgIconStyling()
-  //   " \(residency)"
-  // }
 
-  // @HTMLBuilder
-  // var location: some HTML {
-  //   let location = self.activityClient.location()
-  //   let residency = location?.residency ?? .default
-
-  //   if let location, location.city != residency.city || location.state != residency.state {
-  //     "  "
-  //     span(.class("hljs-keyword")) { "let" }
-  //     " location = "
-  //     span(.class("hljs-string")) {
-  //       "\""
-  //       span(.aria.label("Location")) {
-  //         svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Navigation icon")) {
-  //           path(.d("M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"))
-  //           path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
-  //         }
-  //         .inlineStyle("scale", "calc(100% * -1) 100%")
-  //         .svgIconStyling()
-
-  //         " Currently in "
-
-  //         b {
-  //           [location.city, location.state, location.region == "United States" ? nil : location.region]
-  //             .compactMap(\.self)
-  //             .jo: ReversedCollection<[Post]>.Elementined(separator: ", ")
-  //         }
-  //       }
-  //       .inlineStyle("color", "#D0D0D0")
-  //       "\"\n"
-  //     }
-  //   } else {
-  //     EmptyHTML()
+  //   svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Navigation icon")) {
+  //     path(.d("M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"))
+  //     path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
   //   }
-  // }
+  //   .inlineStyle("scale", "calc(100% * -1) 100%")
+  //   .svgIconStyling()
 }
 
 private struct PostsView: HTML {
@@ -291,7 +217,7 @@ private struct PostsView: HTML {
     SectionView(
       codeTag: "DevLogs",
       codeHeader: """
-      var logs: [DevLog] = try await fetch(.all)
+      var logs: [DevLog] = await fetch(.all)
       """
     ) {
       for (num, post) in Post.allCases.enumerated().reversed() {
@@ -412,7 +338,7 @@ private struct PostsView: HTML {
       .inlineStyle("margin-top", "1.25rem", post: "> *")
       .inlineStyle("margin-bottom", "1.25rem", post: "> *")
       .inlineStyle("border", "1.5px solid #3A3A3A", post: "> *")
-      .inlineStyle("border-radius", "0.85rem", post: "> *")
+      .inlineStyle("border-radius", "1rem", post: "> *")
       .postCodeBlockStyling()
     }
   }
@@ -487,7 +413,7 @@ private extension HTML where Tag: HTMLTrait.Attributes.Global {
     self.inlineStyle("padding", "0.75rem", post: "pre")
       .inlineStyle("background", "#242424", post: "pre")
       .inlineStyle("border", "1.5px solid #3A3A3A", post: "pre")
-      .inlineStyle("border-radius", "0.5rem", post: "pre")
+      .inlineStyle("border-radius", "0.75rem", post: "pre")
       .inlineStyle("overflow-x", "auto", post: "pre")
       .inlineStyle("font-size", "0.85em", post: "pre")
   }
