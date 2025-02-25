@@ -22,8 +22,8 @@ struct FooterView: HTML {
           "."
         }
       }
-      .inlineStyle("padding", "1rem 1.5rem")
       .containerStyling()
+      .inlineStyle("padding", "1rem 1.5rem")
     }
     .inlineStyle("text-align", "center")
     .wrappedStyling()

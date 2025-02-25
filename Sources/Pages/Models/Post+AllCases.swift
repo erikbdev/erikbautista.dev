@@ -62,7 +62,7 @@ extension Post: CaseIterable {
         links: [
           Post.Link(
             title: "GitHub",
-            href: "https://github.com/errorerrorerror/erikbautista.dev",
+            href: "https://github.com/erikbdev/erikbautista.dev",
             role: .primary
           ),
         ]
