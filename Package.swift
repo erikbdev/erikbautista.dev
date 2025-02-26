@@ -19,6 +19,13 @@ let package = Package(
   ],
   targets: [
     .target(
+      name: "EnvVars",
+      dependencies: [
+        .product(name: "Hummingbird", package: "hummingbird"),
+        .product(name: "Dependencies", package: "swift-dependencies")
+      ]
+    ),
+    .target(
       name: "PublicAssets",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
@@ -26,7 +33,7 @@ let package = Package(
       ],
       resources: [.copy("assets")],
       plugins: [.plugin(name: "TypedAssetsPlugin", package: "swift-web")]
-    ),
+    ),    
     .target(
       name: "Models",
       dependencies: [
@@ -56,6 +63,7 @@ let package = Package(
     .target(
       name: "Pages",
       dependencies: [
+        "EnvVars",
         "Models",
         "ActivityClient",
         "PublicAssets",
@@ -70,6 +78,7 @@ let package = Package(
     .executableTarget(
       name: "App",
       dependencies: [
+        "EnvVars",
         "Models",
         "Routes",
         "Pages",

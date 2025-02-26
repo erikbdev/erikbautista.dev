@@ -1,5 +1,6 @@
 import ArgumentParser
 import Dependencies
+import EnvVars
 import Hummingbird
 import HummingbirdRouter
 import Logging
@@ -9,7 +10,7 @@ import Routes
 private let logger = Logger(label: "portfolio-server")
 
 @main
-struct Portfolio: AsyncParsableCommand {
+struct App: AsyncParsableCommand {
   @Option(name: .shortAndLong)
   var hostname = "127.0.0.1"
 
@@ -19,7 +20,7 @@ struct Portfolio: AsyncParsableCommand {
   func run() async throws {
     try await withDependencies { deps in
       #if DEBUG
-        deps.envVar = try await .dotEnv()
+        deps.envVars = try await .dotEnv()
       #endif
     } operation: {
       let app = self.buildApp()
@@ -34,8 +35,6 @@ struct Portfolio: AsyncParsableCommand {
   }
 
   func buildApp() -> some ApplicationProtocol {
-    @Dependency(\.envVar) var envVar
-
     let router = Router()
     router.addMiddleware {
       SiteMiddleware()

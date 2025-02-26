@@ -40,7 +40,7 @@ struct _HTMLInlineStyle<Content: HTML>: HTML where Content.Tag: HTMLTrait.Attrib
     pre: String? = nil,
     pseudo: InlineStyle.Pseudo? = nil,
     post: String? = nil
-  ) -> _HTMLInlineStyle {
+  ) -> Self {
     var copy = self
     if let value {
       copy.styles.append(

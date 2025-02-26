@@ -1,4 +1,3 @@
-import ArgumentParser
 import Dependencies
 import Hummingbird
 
@@ -8,7 +7,7 @@ private enum EnvKeys {
   static let basicAuthPassword = "BASIC_AUTH_PASSWD"
 }
 
-extension Environment {
+public extension Environment {
   var appSecret: String {
     self.get(EnvKeys.appSecret) ?? "deadbeefdeadbeefdeadbeefdeadbeef"
   }
@@ -22,8 +21,8 @@ private struct EnvironmentKey: TestDependencyKey {
   static let testValue = Environment()
 }
 
-extension DependencyValues {
-  var envVar: Environment {
+public extension DependencyValues {
+  var envVars: Environment {
     get { self[EnvironmentKey.self] }
     set { self[EnvironmentKey.self] = newValue }
   }

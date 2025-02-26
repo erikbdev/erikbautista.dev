@@ -2,18 +2,27 @@ import Elementary
 import Foundation
 
 struct VueScript: HTML {
-  var content: some HTML {
-    script(.type(.module), .defer) {
-      /// Imports VueJS component
-      #if DEBUG
-      let config = ""
-      #else
-      let config = ".prod"
-      #endif
+  #if DEBUG
+    private static let config = ""
+  #else
+    private static let config = ".prod"
+  #endif
 
+  var content: some HTML {
+    script(.type(.importmap)) {
+
+      """
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser\(Self.config).js"
+        }
+      }
+      """
+    }
+    script(.type(.module), .defer) {
       HTMLRaw(
         """
-        import { createApp, reactive } from 'https://unpkg.com/vue@3/dist/vue.esm-browser\(config).js';
+        import { createApp, reactive } from 'vue';
 
         const roots = [...document.documentElement.querySelectorAll(`[v-scope]`)]
           .filter((root) => !root.matches(`[v-scope] [v-scope]`));
@@ -28,6 +37,85 @@ struct VueScript: HTML {
           })
           .mount(root)
         }
+        """
+      )
+    }
+  }
+}
+
+@propertyWrapper
+struct VueState<T: Encodable> {
+  let wrappedValue: T
+
+  init(wrappedValue: T) {
+    self.wrappedValue = wrappedValue
+  }
+
+  var projectedValue: VueOperation { VueOperation() }
+}
+
+struct VueOperation: ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
+  let rawValue: String
+
+  init() {
+    rawValue = ""
+  }
+
+  init(stringLiteral value: String) {
+    rawValue = value
+  }
+
+  func assign(_ value: VueOperation) -> VueOperation {
+    VueOperation()
+  }
+
+  func assign<S>(_ value: VueState<S>) -> VueOperation {
+    VueOperation()
+  }
+
+  static prefix func ! (_ self: Self) -> VueOperation {
+    VueOperation()
+  }
+}
+
+protocol VueComponent: HTML where Content == Never {
+  associatedtype Body: HTML
+
+  var body: Body { get }
+}
+
+extension VueComponent {
+  var content: Never { fatalError() }
+
+  static func _render<Renderer: _AsyncHTMLRendering>(
+    _ html: consuming Self, 
+    into renderer: inout Renderer, 
+    with context: consuming _RenderingContext
+  ) async throws {
+    // let componentName = String(describing: Self.self)
+
+    try await Body._render(html.body, into: &renderer, with: context)
+  }
+
+  static func _render<Renderer: _HTMLRendering>(
+    _ html: consuming Self, 
+    into renderer: inout Renderer, 
+    with context: consuming _RenderingContext
+  ) {
+    // let componentName = String(describing: Self.self)
+    Body._render(html.body, into: &renderer, with: context)
+  }
+
+  @HTMLBuilder
+  private static func component() -> some HTML {
+    div {
+
+    }
+
+    script(.type(.module)) {
+      HTMLRaw(
+        """
+        import { createApp } from 'vue';
         """
       )
     }
@@ -81,22 +169,22 @@ extension HTMLAttribute.v {
   }
 
   /// Update the element's text content.
-  static func text(_ script: String) -> HTMLAttribute {
+  static func text(_ script: VueOperation) -> HTMLAttribute {
     directive(script)
   }
 
   /// Update the element's innerHTML.
-  static func html(_ script: String) -> HTMLAttribute {
+  static func html(_ script: VueOperation) -> HTMLAttribute {
     directive(script)
   }
 
   /// Toggle the element's visibility based on the truthy-ness of the expression value.
-  static func show(_ script: String) -> HTMLAttribute {
+  static func show(_ script: VueOperation) -> HTMLAttribute {
     directive(script)
   }
 
   /// Conditionally render an element or a template fragment based on the truthy-ness of the expression value.
-  static func `if`(_ script: String) -> HTMLAttribute {
+  static func `if`(_ script: VueOperation) -> HTMLAttribute {
     directive(script)
   }
 
@@ -106,12 +194,12 @@ extension HTMLAttribute.v {
   }
 
   /// Denote the "else if block" for ``v-if``. Can be chained.
-  static func elseIf(_ script: String) -> HTMLAttribute {
+  static func elseIf(_ script: VueOperation) -> HTMLAttribute {
     directive(name: "else-if", script)
   }
 
   /// Render the element or template block multiple times based on the source data.
-  static func `for`(_ script: String) -> HTMLAttribute {
+  static func `for`(_ script: VueOperation) -> HTMLAttribute {
     directive(name: "else-if", script)
   }
 
@@ -119,7 +207,7 @@ extension HTMLAttribute.v {
   static func on(
     _ event: HTMLAttributeValue.MouseEvent,
     modifiers: OnEventModifier? = nil,
-    _ script: String
+    _ script: VueOperation
   ) -> HTMLAttribute {
     directive(name: "on:\(event.rawValue)\(modifiers.flatMap { ".\($0.chain.joined(separator: "."))" } ?? "")", script)
   }
@@ -128,7 +216,7 @@ extension HTMLAttribute.v {
   static func on(
     _ event: HTMLAttributeValue.KeyboardEvent,
     modifiers: OnEventModifier? = nil,
-    _ script: String
+    _ script: VueOperation
   ) -> HTMLAttribute {
     directive(name: "on:\(event.rawValue)\(modifiers.flatMap { ".\($0.chain.joined(separator: "."))" } ?? "")", script)
   }
@@ -137,7 +225,7 @@ extension HTMLAttribute.v {
   static func on(
     _ event: HTMLAttributeValue.FormEvent,
     modifiers: OnEventModifier? = nil,
-    _ script: String
+    _ script: VueOperation
   ) -> HTMLAttribute {
     directive(name: "on:\(event.rawValue)\(modifiers.flatMap { ".\($0.chain.joined(separator: "."))" } ?? "")", script)
   }
@@ -145,13 +233,13 @@ extension HTMLAttribute.v {
   /// Dynamically bind one or more attributes, or a component prop to an expression.
   static func bind(
     _ attrOrProp: String,
-    _ script: String
+    _ script: VueOperation
   ) -> HTMLAttribute {
     directive(name: "bind:\(attrOrProp)", script)
   }
 
   static func bind(
-    _ script: String
+    _ script: VueOperation
   ) -> HTMLAttribute {
     directive(script)
   }
@@ -160,13 +248,13 @@ extension HTMLAttribute.v {
   static func model(
     _ attribute: String? = nil,
     _ modifiers: String? = nil,
-    _ script: String
+    _ script: VueOperation
   ) -> HTMLAttribute {
     directive(script)
   }
 
   /// Denote named slots or scoped slots that expect to receive props.
-  static func slot(name: String? = nil, _ script: String? = nil) -> HTMLAttribute {
+  static func slot(name: String? = nil, _ script: VueOperation? = nil) -> HTMLAttribute {
     directive(name: "slot\(name.flatMap { ":\($0)" } ?? "" )", script)
   }
 
@@ -186,14 +274,14 @@ extension HTMLAttribute.v {
   }
 
   /// Used as a replacement for `#app`, works the same way as `v-scope` in `petite-vue`
-  static func scope(_ script: String) -> HTMLAttribute {
+  static func scope(_ script: VueOperation) -> HTMLAttribute {
     directive(script)
   }
 
   private static func directive(
     name: String = #function, 
-    _ script: String? = nil
+    _ script: VueOperation? = nil
   ) -> HTMLAttribute {
-    .init(name: "v-\(name.components(separatedBy: "(").first ?? name)", value: script)
+    .init(name: "v-\(name.components(separatedBy: "(").first ?? name)", value: script?.rawValue)
   }
 }

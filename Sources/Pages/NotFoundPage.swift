@@ -46,7 +46,7 @@ public struct NotFoundPage: Page {
           .inlineStyle("margin-bottom", "0.125rem")
       }
 
-      h2 { "Page Not Found" }
+      h1 { "Page Not Found" }
         .inlineStyle("margin-bottom", "0.5rem")
 
       pre {

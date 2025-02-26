@@ -14,7 +14,7 @@ public struct HomePage: Page {
   }
 
   public var body: some HTML {
-    div(.v.scope("{ showCode: true, selection: undefined }")) {
+    div(.v.scope("{ codeStyle: 0, selection: undefined }")) {
       HeaderView()
       Spacer()
       main {
