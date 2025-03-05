@@ -1,11 +1,12 @@
-import Elementary
+import HTML
 import Dependencies
 import EnvVars
+import Vue
 
 struct HeaderView: HTML {
   @Dependency(\.envVars) var envVars
 
-  var content: some HTML {
+  var body: some HTML {
     header {
       hgroup {
         a(.href("/")) {
@@ -17,7 +18,7 @@ struct HeaderView: HTML {
         .inlineStyle("text-decoration", "none")
         // TODO: Add buttons to allow switching between code styling or plain text
 
-        // CodeStyleSelector()        
+        CodeStyleSelector()        
       }
       .containerStyling()
       .inlineStyle("display", "flex")
@@ -31,7 +32,7 @@ struct HeaderView: HTML {
 }
 
 private struct CodeStyleSelector: VueComponent {
-  // @VueState var visible = false
+  @Reactive let visible = false
 
   var body: some HTML {
     div {
@@ -46,12 +47,12 @@ private struct CodeStyleSelector: VueComponent {
       .inlineStyle("border-radius", "0.2rem")
       .inlineStyle("padding", "0.2rem 0.35rem")
 
-      // ul(.v.show("visible")) {
-      //   li { "Plain Text" }
-      //   li { "Swift" }
-      //   li { "Rust" }
-      //   li { "TypeScript" }
-      // }
+      ul(.v.show($visible)) {
+        li { "Plain Text" }
+        li { "Swift" }
+        li { "Rust" }
+        li { "TypeScript" }
+      }
     }
   }
 }

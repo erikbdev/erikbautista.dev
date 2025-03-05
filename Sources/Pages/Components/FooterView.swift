@@ -1,4 +1,4 @@
-import Elementary
+import HTML
 import Foundation
 
 struct FooterView: HTML {
@@ -10,7 +10,7 @@ struct FooterView: HTML {
     return formatter
   }()
 
-  var content: some HTML {
+  var body: some HTML {
     footer {
       div {
         p { "©\(Self.copyrightDateFormatter.string(from: Date.now)) Erik Bautista Santibanez" }

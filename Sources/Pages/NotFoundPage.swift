@@ -1,4 +1,4 @@
-import Elementary
+import HTML
 
 public struct NotFoundPage: Page {
   public let title = "Erik Bautista Santibanez | Not Found"
@@ -38,7 +38,7 @@ public struct NotFoundPage: Page {
   }
 
   private struct Heading: HTML {
-    var content: some HTML {
+    var body: some HTML {
       pre {
         code { "// 404 ERROR" }
           .inlineStyle("font-size", "0.9em")

@@ -1,5 +1,6 @@
 import Foundation
 import PublicAssets
+import HTML
 
 struct Post: Sendable {
   var header: Header?

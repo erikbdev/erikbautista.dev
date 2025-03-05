@@ -1,11 +1,11 @@
-import Elementary
+import HTML
 
-extension HTML where Tag: HTMLTrait.Attributes.Global {
-  func wrappedStyling() -> _HTMLInlineStyle<Self> {
+extension HTML {
+  func wrappedStyling() -> HTMLInlineStyle<Self> {
     self.inlineStyle("border-top", "1px solid #303030")
   }
 
-  func containerStyling() -> _HTMLInlineStyle<Self> {
+  func containerStyling() -> HTMLInlineStyle<Self> {
     self.inlineStyle("max-width", "40rem", media: .minWidth(712))
       .inlineStyle("margin-right", "auto")
       .inlineStyle("margin-left", "auto")

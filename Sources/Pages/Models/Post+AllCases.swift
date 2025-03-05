@@ -8,7 +8,7 @@ extension Post: CaseIterable {
 
     return [
       Self(
-        header: .video(assets.assets.posts.wledAppDemo),
+        header: .video(assets.assets.posts.wledAppDemoMp4),
         title: "A WLED Client for iOS", 
         content: """
         I built a native iOS app for [WLED](https://github.com/wled/WLED), an open-source LED controller for ESP32, to control my RGB LED strips.
@@ -25,7 +25,7 @@ extension Post: CaseIterable {
         kind: .project
       ),
       Self(
-        header: .image(assets.assets.projects.animeNow.anDiscover, label: "Anime Now! discover image"),
+        header: .image(assets.assets.projects.animeNow.anDiscoverPng, label: "Anime Now! discover image"),
         title: "Anime Now! \u{2014} An iOS and macOS App",
         content: """
         > TBD

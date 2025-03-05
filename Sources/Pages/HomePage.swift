@@ -1,20 +1,24 @@
 import ActivityClient
 import Dependencies
-import Elementary
 import Foundation
+import HTML
+import Vue
 
 public struct HomePage: Page {
+  struct State: Encodable, Sendable {
+    let codeStyle = 0
+    let selection: Int? = nil
+  }
+
   public let title = "Erik Bautista Santibanez | Portfolio"
   public let lang = "en"
 
   public init() {}
 
-  public var head: some HTML {
-    EmptyHTML()
-  }
+  public var head: some HTML { EmptyHTML() }
 
   public var body: some HTML {
-    div(.v.scope("{ codeStyle: 0, selection: undefined }")) {
+    div(.v.scope([:])) {
       HeaderView()
       Spacer()
       main {
@@ -29,10 +33,10 @@ public struct HomePage: Page {
   }
 }
 
-private struct SectionView<Body: HTML>: HTML {
+private struct SectionView<Content: HTML>: HTML {
   let codeTag: String
   let codeHeader: String
-  @HTMLBuilder let body: () -> Body
+  @HTMLBuilder let content: @Sendable () -> Content
 
   private var id: String {
     codeTag.enumerated().flatMap { idx, char in
@@ -45,7 +49,7 @@ private struct SectionView<Body: HTML>: HTML {
     .joined()
   }
 
-  var content: some HTML {
+  var body: some HTML {
     section(.id(self.id)) {
       div {
         header {
@@ -53,7 +57,7 @@ private struct SectionView<Body: HTML>: HTML {
           CodeHeader(codeTag: self.codeTag, codeHeader: self.codeHeader)
         }
 
-        self.body()
+        self.content()
       }
       .containerStyling()
     }
@@ -64,7 +68,7 @@ private struct SectionView<Body: HTML>: HTML {
     let id: String
     let codeTag: String
 
-    var content: some HTML {
+    var body: some HTML {
       pre {
         a(.href("#\(self.id)")) {
           code { "\(self.codeTag).swift" }
@@ -82,7 +86,7 @@ private struct SectionView<Body: HTML>: HTML {
     let codeTag: String
     let codeHeader: String
 
-    var content: some HTML {
+    var body: some HTML {
       pre {
         code(.class("hljs language-swift")) {
           """
@@ -119,7 +123,7 @@ private struct UserView: HTML {
 
   }
 
-  var content: some HTML {
+  var body: some HTML {
     SectionView(
       codeTag: "User",
       codeHeader: """
@@ -151,7 +155,7 @@ private struct UserView: HTML {
 }
 
 private struct PostsView: HTML {
-  var content: some HTML {
+  var body: some HTML {
     // TODO: Allow changing `fetch(.all)` based on filter.
     SectionView(
       codeTag: "DevLogs",
@@ -169,10 +173,11 @@ private struct PostsView: HTML {
     let number: Int
     let post: Post
 
-    var content: some HTML {
+    var body: some HTML {
       article(
-        .id(self.post.slug),
-        .v.show("!selection || selection == '\(self.post.kind.rawValue)'")
+        .id(self.post.slug)
+        // ,
+        // .v.show("!selection || selection == '\(self.post.kind.rawValue)'")
       ) {
         header {
           section {
@@ -239,7 +244,7 @@ private struct PostsView: HTML {
   struct PostHeaderView: HTML {
     let postHeader: Post.Header
 
-    var content: some HTML {
+    var body: some HTML {
       section {
         switch self.postHeader {
         case let .link(link):
@@ -286,7 +291,7 @@ private struct PostsView: HTML {
     let link: Post.Link
 
     @HTMLBuilder
-    var content: some HTML {
+    var body: some HTML {
       a(
         .href(self.link.href),
         .target(.blank),
@@ -326,8 +331,8 @@ private struct PostsView: HTML {
   }
 }
 
-private extension HTML where Tag: HTMLTrait.Attributes.Global {
-  func svgIconStyling() -> _HTMLInlineStyle<Self> {
+private extension HTML {
+  func svgIconStyling() -> HTMLInlineStyle<Self> {
     self.inlineStyle("display", "inline-block")
       .inlineStyle("vertical-align", "middle")
       .inlineStyle("position", "relative")
@@ -336,7 +341,7 @@ private extension HTML where Tag: HTMLTrait.Attributes.Global {
       .inlineStyle("height", "1em")
   }
 
-  func postCodeBlockStyling() -> _HTMLInlineStyle<Self> {
+  func postCodeBlockStyling() -> HTMLInlineStyle<Self> {
     self.inlineStyle("padding", "0.75rem", post: "pre")
       .inlineStyle("background", "#242424", post: "pre")
       .inlineStyle("border", "1.5px solid #3A3A3A", post: "pre")

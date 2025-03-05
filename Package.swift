@@ -9,13 +9,11 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.4.0"),
-    .package(url: "https://github.com/erikbdev/swift-web.git", exact: "0.0.4"),
+    .package(url: "https://github.com/erikbdev/swift-web.git", exact: "0.0.9"),
     .package(url: "https://github.com/hummingbird-project/hummingbird.git", exact: "2.5.0"),
     .package(url: "https://github.com/pointfreeco/swift-case-paths.git", from: "1.0.0"),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.6.2"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.6.2"),
-    .package(url: "https://github.com/sliemeobn/elementary.git", exact: "0.4.3"),
-    .package(url: "https://github.com/swiftlang/swift-markdown.git", revision: "e62a44fd1f2764ba8807db3b6f257627449bbb8c")
+    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.6.2")
   ],
   targets: [
     .target(
@@ -68,9 +66,9 @@ let package = Package(
         "ActivityClient",
         "PublicAssets",
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "Elementary", package: "elementary"),
-        .product(name: "Hummingbird", package: "hummingbird"),
-        .product(name: "Markdown", package: "swift-markdown")
+        .product(name: "HTML", package: "swift-web"),
+        .product(name: "Vue", package: "swift-web"),
+        .product(name: "Hummingbird", package: "hummingbird")
       ]
     ),
 

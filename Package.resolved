@@ -1,5 +1,5 @@
 {
-  "originHash" : "7037d7f272ac807b08bffc5fc777fe08f0e9a2ee86db7d6a4b97a5f42738490f",
+  "originHash" : "82397c37cf784d51b28cbd74d39904dbb4ca6fcf4c45769b38f619c148114303",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -17,15 +17,6 @@
       "state" : {
         "revision" : "9fa31f4403da54855f1e2aeaeff478f4f0e40b13",
         "version" : "1.0.2"
-      }
-    },
-    {
-      "identity" : "elementary",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sliemeobn/elementary.git",
-      "state" : {
-        "revision" : "e884367276ec18bced20c1492980817f54cb4134",
-        "version" : "0.4.3"
       }
     },
     {
@@ -94,10 +85,10 @@
     {
       "identity" : "swift-cmark",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-cmark.git",
+      "location" : "https://github.com/apple/swift-cmark.git",
       "state" : {
-        "branch" : "gfm",
-        "revision" : "b022b08312decdc46585e0b3440d97f6f22ef703"
+        "revision" : "3ccff77b2dc5b96b77db3da0d68d28068593fa53",
+        "version" : "0.5.0"
       }
     },
     {
@@ -159,7 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-markdown.git",
       "state" : {
-        "revision" : "e62a44fd1f2764ba8807db3b6f257627449bbb8c"
+        "revision" : "8f79cb175981458a0a27e76cb42fee8e17b1a993",
+        "version" : "0.5.0"
       }
     },
     {
@@ -284,8 +276,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/erikbdev/swift-web.git",
       "state" : {
-        "revision" : "82cf0c370a3fc3c96de60a8de249ab91fd5c5012",
-        "version" : "0.0.4"
+        "revision" : "9c99538f6e84440977ad9274f504176dbe0da115",
+        "version" : "0.0.9"
       }
     },
     {

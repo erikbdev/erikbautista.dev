@@ -1,7 +1,7 @@
-import Elementary
+import HTML
 
 struct Spacer: HTML {
-  var content: some HTML {
+  var body: some HTML {
     div {
       div {}
         .containerStyling()
