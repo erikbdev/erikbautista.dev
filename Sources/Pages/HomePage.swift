@@ -192,10 +192,10 @@ private struct PostsView: HTML {
                 code(.class("hljs language-swift")) {
                   "logs[\(self.number)]"
                 }
-                .inlineStyle("font-size", "0.75em")
-                .inlineStyle("color", "#777")
-                .inlineStyle("font-weight", "500")
               }
+              .inlineStyle("font-size", "0.75em")
+              .inlineStyle("color", "#777")
+              .inlineStyle("font-weight", "500")
             }
           }
           .inlineStyle("display", "flex")

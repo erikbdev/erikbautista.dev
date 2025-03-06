@@ -18,7 +18,7 @@ struct HeaderView: HTML {
         .inlineStyle("text-decoration", "none")
         // TODO: Add buttons to allow switching between code styling or plain text
 
-        CodeStyleSelector()        
+        CodeSelector()        
       }
       .containerStyling()
       .inlineStyle("display", "flex")
@@ -31,21 +31,21 @@ struct HeaderView: HTML {
   }
 }
 
-private struct CodeStyleSelector: VueComponent {
+private struct CodeSelector: VueComponent {
   @Reactive let visible = false
 
   var body: some HTML {
     div {
-      button {
+      button(.v.on(.click, Expression(rawValue: "\($visible.name) = \(!$visible)"))) {
         code { "</>" }
           .inlineStyle("color", "#AAA")
       }
       .inlineStyle("font-weight", "bold")
       .inlineStyle("font-size", "0.7em")
       .inlineStyle("background", "unset")
-      .inlineStyle("border", "1px solid #444")
-      .inlineStyle("border-radius", "0.2rem")
-      .inlineStyle("padding", "0.2rem 0.35rem")
+      .inlineStyle("border", "1.16px solid #444")
+      .inlineStyle("border-radius", "0.3rem")
+      .inlineStyle("padding", "0.28rem 0.4rem")
 
       ul(.v.show($visible)) {
         li { "Plain Text" }

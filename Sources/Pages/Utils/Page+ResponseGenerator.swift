@@ -1,5 +1,6 @@
 import HTML
 import Hummingbird
+import AsyncAlgorithms
 
 extension Page {
   public consuming func response(
@@ -18,8 +19,8 @@ extension Page {
 
 extension ResponseBodyWriter {
   fileprivate mutating func write(_ page: consuming some Page, chunkSize: Int = 1024) async throws {
-    for await bytes in page.render(chunkSize: chunkSize) {
-      try await self.write(bytes)
+    for await buffer in page.render(chunkSize: chunkSize) {
+      try await self.write(buffer)
     }
 
     try await self.finish(nil)
@@ -27,6 +28,7 @@ extension ResponseBodyWriter {
 }
 
 extension HTML {
+  /// Switch to a more performant byte streaming sequence
   fileprivate consuming func render(chunkSize: Int) -> AsyncStream<ByteBuffer> {
     AsyncStream { [self] continuation in
       var writer = AsyncHTMLWriter(continuation: continuation, chunkSize: chunkSize)
