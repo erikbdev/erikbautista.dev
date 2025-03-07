@@ -40,12 +40,6 @@ struct Post: Sendable {
     case image(GeneratedPublicAssets.ImageFile, label: String)
     case video(GeneratedPublicAssets.VideoFile)
     case code(String, lang: CodeLang)
-
-    enum CodeLang: String {
-      case swift
-      case rust
-      case javascript
-    }
   }
 
   struct Link {
