@@ -1,4 +1,4 @@
-enum CodeLang: String, CaseIterable {
+enum CodeLang: String, CaseIterable, Encodable {
   case swift
   case rust
   case typescript

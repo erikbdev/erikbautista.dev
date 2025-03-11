@@ -24,8 +24,10 @@ struct FooterView: HTML {
       }
       .containerStyling()
       .inlineStyle("padding", "1rem 1.5rem")
+      .inlineStyle("height", "100%")
     }
     .inlineStyle("text-align", "center")
+    .inlineStyle("flex-grow", "1")
     .wrappedStyling()
   }
 }

@@ -18,8 +18,8 @@ public struct HomePage: Page {
   public var head: some HTML { EmptyHTML() }
 
   public var body: some HTML {
-    div(.v.scope([:])) {
-      HeaderView()
+    #VueScope(CodeLang.swift) { (selected: Vue.Expression) in
+      HeaderView(selected: selected)
       Spacer()
       main {
         UserView()

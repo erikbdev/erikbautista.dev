@@ -24,8 +24,8 @@ extension Page {
     withDependencies {
       $0.ssg = .class
     } operation: {
-      VueDocument._render(
-        VueDocument(
+      BaseLayout._render(
+        BaseLayout(
           head: {
             meta(.charset(.utf8))
             tag("title") { document.title }
@@ -44,10 +44,12 @@ extension Page {
               }
               html {
                 line-height: 1.5;
+                height: 100%;
               }
               body {
                 background-color: #1c1c1c;
                 color: #fafafa;
+                height: 100%;
               }
               pre a {
                 text-decoration: none;
@@ -68,6 +70,9 @@ extension Page {
                 font-feature-settings: "ss03", "ss04", "ss05";
                 line-height: 1;
               }
+              [v-cloak] {
+                display: none;
+              }
               """
             }
             /// Xcode Styling
@@ -79,15 +84,19 @@ extension Page {
               .defer
             )
             script(
-              .src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"),
+              .src(
+                "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"),
               .defer
             )
             script(
-              .src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"),
+              .src(
+                "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"),
               .defer
             )
             script(
-              .src("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"), 
+              .src(
+                "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"
+              ),
               .defer
             )
             script(
@@ -107,6 +116,13 @@ extension Page {
               .inlineStyle("font-size", "0.8em", media: .minWidth(390))
               .inlineStyle("font-size", "0.9em", media: .minWidth(480))
               .attribute("lang", value: document.lang)
+
+            script(.type(.module), .defer) {
+              """
+              import { createApp } from "https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.es.js";
+              createApp().mount();
+              """
+            }
           }
         ),
         into: &output
@@ -118,4 +134,12 @@ extension Page {
 private struct BaseLayout<Head: HTML, Body: HTML>: HTMLDocument {
   var head: Head
   var body: Body
+
+  init(
+    @HTMLBuilder head: () -> Head,
+    @HTMLBuilder body: () -> Body
+  ) {
+    self.head = head()
+    self.body = body()
+  }
 }

@@ -1,4 +1,5 @@
 import HTML
+import Vue
 
 public struct NotFoundPage: Page {
   public let title = "Erik Bautista Santibanez | Not Found"
@@ -11,14 +12,14 @@ public struct NotFoundPage: Page {
   }
 
   public var body: some HTML {
-    div {
-      HeaderView()
+    #VueScope(CodeLang.swift) { (selected: Vue.Expression) in
+      HeaderView(selected: selected)
       Spacer()
       main {
         section {
           div {
             div {
-              Heading()
+              Heading(selected: selected)
             }
           }
           .containerStyling()
@@ -35,9 +36,14 @@ public struct NotFoundPage: Page {
       Spacer()
       FooterView()
     }
+    .inlineStyle("display", "flex")
+    .inlineStyle("flex-direction", "column")
+    .inlineStyle("height", "100%")
   }
 
   private struct Heading: HTML {
+    let selected: Vue.Expression
+
     var body: some HTML {
       pre {
         code { "// 404 ERROR" }
@@ -50,13 +56,23 @@ public struct NotFoundPage: Page {
         .inlineStyle("margin-bottom", "0.5rem")
 
       pre {
-        code(.class("hljs language-swift")) {
+        code(.v.cloak, .v.if(selected == Expression(CodeLang.rust)), .class("hljs language-rust")) {
+          """
+          panic!("page not found")
+          """
+        }
+        code(.v.cloak, .v.elseIf(selected == Expression(CodeLang.typescript)), .class("hljs language-typescript")) {
+          """
+          throw new Error("page not found")
+          """
+        }
+        code(.v.else, .class("hljs language-swift")) {
           """
           throw Error.pageNotFound
           """
-        }
-        .inlineStyle("font-size", "0.9em")
+        } 
       }
+      .inlineStyle("font-size", "0.9em")
     }
   }
 }

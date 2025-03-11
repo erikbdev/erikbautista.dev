@@ -4,7 +4,7 @@ import HTML
 import Vue
 
 struct HeaderView: HTML {
-  @Dependency(\.envVars) var envVars
+  let selected: Vue.Expression
 
   var body: some HTML {
     header {
@@ -16,9 +16,8 @@ struct HeaderView: HTML {
             .inlineStyle("font-weight", "bold")
         }
         .inlineStyle("text-decoration", "none")
-        // TODO: Add buttons to allow switching between code styling or plain text
 
-        CodeSelector()
+        CodeSelector(selected: selected)
       }
       .containerStyling()
       .inlineStyle("display", "flex")
@@ -31,12 +30,15 @@ struct HeaderView: HTML {
   }
 }
 
-private struct CodeSelector: VueComponent {
-  @Reactive let visible = false
+private struct CodeSelector: HTML {
+  let selected: Vue.Expression
 
   var body: some HTML {
-    div {
-      button(.v.on(.click, Expression(rawValue: "\($visible) = \(!$visible)"))) {
+    #VueScope(false) { (visible: Vue.Expression) in
+      button(
+        .v.on(.click, visible.assign(!visible)), 
+        .v.bind(attrOrProp: "style", Expression(rawValue: "\(visible) ? { background: '#8A8A8A', color: '#080808' } : null"))
+      ) {
         code { "</>" }
       }
       .inlineStyle("font-weight", "bold")
@@ -46,11 +48,15 @@ private struct CodeSelector: VueComponent {
       .inlineStyle("border-radius", "0.3rem")
       .inlineStyle("padding", "0.28rem 0.4rem")
       .inlineStyle("color", "#AAA")
+      .inlineStyle("pointer", "cursor")
 
-      ul(.v.show($visible)) {
+      ul(.hidden, .v.bind(attrOrProp: "hidden", !visible)) {
         for code in CodeLang.allCases {
           li {
-            button(.v.on(.click, Expression(rawValue: "\($visible) = null"))) {
+            button(
+              .v.on(.click, selected.assign(Expression(code))),
+              .v.on(.click, modifiers: .prevent, visible.assign(!visible))
+            ) {
               code.title
             }
             .inlineStyle("all", "unset")
@@ -58,7 +64,10 @@ private struct CodeSelector: VueComponent {
             .inlineStyle("width", "100%")
             .inlineStyle("padding", "0.5rem")
             .inlineStyle("cursor", "pointer")
+            // TODO: Add background highlight
+            // .inlineStyle("background", "#2A2A2A", pseudo: .hover)
           }
+          .inlineStyle("overflow", "hidden")
         }
       }
       .inlineStyle("position", "absolute")
