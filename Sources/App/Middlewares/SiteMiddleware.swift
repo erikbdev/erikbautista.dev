@@ -75,8 +75,9 @@ private struct NotFoundMiddleware<Context: RequestContext>: RouterMiddleware {
       guard error.status == .notFound else {
         throw error
       }
+
       return try NotFoundPage()
-        .response(from: input, context: context)
+        .response(from: input, context: context, status: .notFound)
     }
   }
 }

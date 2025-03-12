@@ -7,8 +7,16 @@ extension Page {
     from request: Request,
     context: some RequestContext
   ) throws -> Response {
+    try self.response(from: request, context: context, status: .ok)
+  }
+
+  public consuming func response(
+    from request: Request,
+    context: some RequestContext,
+    status: HTTPResponse.Status
+  ) throws -> Response {
     Response(
-      status: .ok,
+      status: status,
       headers: self.headers,
       body: ResponseBody { [self] writer in
         try await writer.write(self, chunkSize: self.chunkSize)
