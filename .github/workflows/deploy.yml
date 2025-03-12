@@ -59,5 +59,4 @@ jobs:
 
       - name: Push To Production
         run: |
-          curl '${{ secrets.DEPLOYMENT_WEBHOOK_URL }}' \
-            --header 'Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}'
+          echo "::add-mask::$(curl -X PUT '${{ secrets.DEPLOYMENT_WEBHOOK_URL }}')"
