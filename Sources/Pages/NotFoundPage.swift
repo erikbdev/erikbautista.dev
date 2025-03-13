@@ -47,7 +47,6 @@ public struct NotFoundPage: Page {
     var body: some HTML {
       pre {
         code { "// 404 ERROR" }
-          .inlineStyle("font-size", "0.9em")
           .inlineStyle("color", "#808080")
           .inlineStyle("margin-bottom", "0.125rem")
       }
@@ -72,7 +71,6 @@ public struct NotFoundPage: Page {
           """
         } 
       }
-      .inlineStyle("font-size", "0.9em")
     }
   }
 }

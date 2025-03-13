@@ -2,14 +2,10 @@ import ActivityClient
 import Dependencies
 import Foundation
 import HTML
+import Models
 import Vue
 
 public struct HomePage: Page {
-  struct State: Encodable, Sendable {
-    let codeStyle = 0
-    let selection: Int? = nil
-  }
-
   public let title = "Erik Bautista Santibanez | Portfolio"
   public let lang = "en"
 
@@ -33,74 +29,6 @@ public struct HomePage: Page {
   }
 }
 
-private struct SectionView<Content: HTML>: HTML {
-  let codeTag: String
-  let codeHeader: String
-  @HTMLBuilder let content: @Sendable () -> Content
-
-  private var id: String {
-    codeTag.enumerated().flatMap { idx, char in
-      [
-        char.isUppercase && idx > 0 ? "-" : nil,
-        String(char).lowercased(),
-      ]
-      .compactMap(\.self)
-    }
-    .joined()
-  }
-
-  var body: some HTML {
-    section(.id(self.id)) {
-      div {
-        header {
-          CodeTag(id: self.id, codeTag: self.codeTag)
-          CodeHeader(codeTag: self.codeTag, codeHeader: self.codeHeader)
-        }
-
-        self.content()
-      }
-      .containerStyling()
-    }
-    .wrappedStyling()
-  }
-
-  struct CodeTag: HTML {
-    let id: String
-    let codeTag: String
-
-    var body: some HTML {
-      pre {
-        a(.href("#\(self.id)")) {
-          code { "\(self.codeTag).swift" }
-        }
-        .inlineStyle("color", "#777")
-      }
-      .inlineStyle("font-size", "0.75em")
-      .inlineStyle("font-weight", "500")
-      .inlineStyle("text-align", "end")
-      .inlineStyle("padding", "1.5rem 1.5rem 0")
-    }
-  }
-
-  struct CodeHeader: HTML {
-    let codeTag: String
-    let codeHeader: String
-
-    var body: some HTML {
-      pre {
-        code(.class("hljs language-swift")) {
-          """
-          /// \(self.codeTag).swift
-          /// Portfolio
-          \(self.codeHeader)
-          """
-        }
-      }
-      .inlineStyle("padding", "0.75rem 1.5rem 1.5rem")
-    }
-  }
-}
-
 private struct UserView: HTML {
   @Dependency(\.activityClient) private var activityClient
 
@@ -120,21 +48,41 @@ private struct UserView: HTML {
     return [location.city, location.state, location.region == "United States" ? nil : location.region]
       .compactMap(\.self)
       .joined(separator: ", ")
-
   }
 
+  @HTMLBuilder
   var body: some HTML {
-    SectionView(
-      codeTag: "User",
-      codeHeader: """
-      struct User: Portfolio {
-        let name = "Erik Bautista Santibanez"
-        let role = "Mobile & Web Developer"
-        let home = "\(residency ?? .default)"\
-        \(currentLocation.flatMap { "\n  let location = \"Currently in \($0)\"" } ?? "")
+    SectionView(id: "user") { lang in
+      switch lang {
+        case .swift: 
+        """
+        let user = User(
+          name: "Erik Bautista Santibanez",
+          role: "Mobile & Web Developer",
+          home: "\(residency ?? .default)"\
+          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
+        )
+        """
+        case .typescript: 
+        """
+        const user = {
+          name: "Erik Bautista Santibanez",
+          role: "Mobile & Web Developer",
+          home: "\(residency ?? .default)"\
+          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
+        };
+        """
+        case .rust: 
+        """
+        let user = Portfolio {
+          name: "Erik Bautista Santibanez",
+          role: "Mobile & Web Developer",
+          home: "\(residency ?? .default)"\
+          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
+        }
+        """
       }
-      """
-    ) {
+    } content: {
       EmptyHTML()
     }
   }
@@ -156,13 +104,22 @@ private struct UserView: HTML {
 
 private struct PostsView: HTML {
   var body: some HTML {
-    // TODO: Allow changing `fetch(.all)` based on filter.
-    SectionView(
-      codeTag: "DevLogs",
-      codeHeader: """
-      var logs: [DevLog] = await fetch(.all)
-      """
-    ) {
+    SectionView(id: "dev-logs") { lang in
+      switch lang {
+        case .swift: 
+        """
+        let logs: [DevLog] = await fetch(.all)
+        """
+        case .typescript: 
+        """
+        const logs = await fetch(Filter.All)
+        """
+        case .rust: 
+        """
+        let logs = fetch(Filter::All).await
+        """
+      }
+    } content: {
       for (num, post) in Post.allCases.enumerated().reversed() {
         PostView(number: num, post: post)
       }
@@ -290,8 +247,7 @@ private struct PostsView: HTML {
   struct PostLinkView: HTML {
     let link: Post.Link
 
-    @HTMLBuilder
-    var body: some HTML {
+    @HTMLBuilder var body: some HTML {
       a(
         .href(self.link.href),
         .target(.blank),

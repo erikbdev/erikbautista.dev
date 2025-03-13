@@ -42,30 +42,33 @@ private struct CodeSelector: HTML {
         code { "</>" }
       }
       .inlineStyle("font-weight", "bold")
-      .inlineStyle("font-size", "0.7em")
+      .inlineStyle("font-size", "0.8em")
       .inlineStyle("background", "unset")
       .inlineStyle("border", "1.16px solid #444")
       .inlineStyle("border-radius", "0.3rem")
       .inlineStyle("padding", "0.28rem 0.4rem")
       .inlineStyle("color", "#AAA")
-      .inlineStyle("pointer", "cursor")
+      .inlineStyle("cursor", "pointer")
 
       ul(.hidden, .v.bind(attrOrProp: "hidden", !visible)) {
         for code in CodeLang.allCases {
           li {
             button(
               .v.on(.click, selected.assign(Expression(code))),
-              .v.on(.click, modifiers: .prevent, visible.assign(!visible))
+              .v.on(.click, modifiers: .prevent, visible.assign(!visible)),
+              .v.bind(attrOrProp: "style", Expression(rawValue: "{ background: \(selected) == \(Expression(code)) ? '#3A3A3A' : undefined }")),
+              .style("border-radius: 0.75rem")
             ) {
-              code.title
+              p {
+                code.title
+              }
+              .inlineStyle("width", "100%")
+              .inlineStyle("padding", "0.5rem")
             }
             .inlineStyle("all", "unset")
-            .inlineStyle("display", "inline-block")
+            .inlineStyle("display", "block")
             .inlineStyle("width", "100%")
-            .inlineStyle("padding", "0.5rem")
             .inlineStyle("cursor", "pointer")
-            // TODO: Add background highlight
-            // .inlineStyle("background", "#2A2A2A", pseudo: .hover)
           }
           .inlineStyle("overflow", "hidden")
         }
@@ -73,10 +76,11 @@ private struct CodeSelector: HTML {
       .inlineStyle("position", "absolute")
       .inlineStyle("right", "0")
       .inlineStyle("list-style", "none")
-      .inlineStyle("padding", "0")
+      .inlineStyle("padding", "0.4rem")
       .inlineStyle("margin-top", "0.25rem")
-      .inlineStyle("background", "#383838")
-      .inlineStyle("border-radius", "0.75rem")
+      .inlineStyle("background", "#2A2A2A")
+      .inlineStyle("border-radius", "1rem")
+      .inlineStyle("font-size", "1.125em")
     }
     .inlineStyle("position", "relative")
   }

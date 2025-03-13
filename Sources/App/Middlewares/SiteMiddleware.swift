@@ -31,6 +31,7 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
     URLRoutingMiddleware(self.siteRouter) { req, ctx, route in
       try withDependencies {
         $0.currentRoute = route
+        $0.currentCodeLang = .swift
       } operation: {
         switch route {
         case .robots:
