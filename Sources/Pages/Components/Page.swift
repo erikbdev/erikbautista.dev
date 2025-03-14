@@ -22,7 +22,7 @@ extension Page {
     into output: inout Output
   ) {
     withDependencies {
-      $0.ssg = .class
+      $0.ssg = .groupedStyles
     } operation: {
       BaseLayout._render(
         BaseLayout(

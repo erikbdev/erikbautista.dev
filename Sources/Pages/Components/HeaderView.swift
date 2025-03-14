@@ -4,7 +4,7 @@ import HTML
 import Vue
 
 struct HeaderView: HTML {
-  let selected: Vue.Expression
+  let selected: Vue.Expression<CodeLang>
 
   var body: some HTML {
     header {
@@ -31,10 +31,10 @@ struct HeaderView: HTML {
 }
 
 private struct CodeSelector: HTML {
-  let selected: Vue.Expression
+  let selected: Vue.Expression<CodeLang>
 
   var body: some HTML {
-    #VueScope(false) { (visible: Vue.Expression) in
+    #VueScope(false) { visible in
       button(
         .v.on(.click, visible.assign(!visible)), 
         .v.bind(attrOrProp: "style", Expression(rawValue: "\(visible) ? { background: '#8A8A8A', color: '#080808' } : null"))
@@ -56,8 +56,7 @@ private struct CodeSelector: HTML {
             button(
               .v.on(.click, selected.assign(Expression(code))),
               .v.on(.click, modifiers: .prevent, visible.assign(!visible)),
-              .v.bind(attrOrProp: "style", Expression(rawValue: "{ background: \(selected) == \(Expression(code)) ? '#3A3A3A' : undefined }")),
-              .style("border-radius: 0.75rem")
+              .v.bind(attrOrProp: "style", Expression(rawValue: "{ background: \(selected) == \(Expression(code)) ? '#3A3A3A' : undefined }"))
             ) {
               p {
                 code.title
@@ -69,6 +68,8 @@ private struct CodeSelector: HTML {
             .inlineStyle("display", "block")
             .inlineStyle("width", "100%")
             .inlineStyle("cursor", "pointer")
+            .inlineStyle("border-radius", "0.75rem")
+            .inlineStyle("background", "#4A4A4A", post: ":hover")
           }
           .inlineStyle("overflow", "hidden")
         }

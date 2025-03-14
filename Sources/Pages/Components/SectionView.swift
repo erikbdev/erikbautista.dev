@@ -1,29 +1,24 @@
 import HTML
 import Models
 import Dependencies
+import Vue
 
 struct SectionView<Content: HTML>: HTML {
-  @Dependency(\.currentCodeLang) var currentCodeLang
-
   let id: String
+  let selectedCodeLang: Vue.Expression<CodeLang>
   let codeHeader: @Sendable (CodeLang) -> String
   @HTMLBuilder let content: @Sendable () -> Content
 
   var body: some HTML {
-    let allCodeLangs = CodeLang.allCases.sorted(initial: currentCodeLang)
     section(.id(self.id)) {
       div {
         header {
           pre {
             a(.href("#\(self.id)")) {
-              for (idx, lang) in allCodeLangs.enumerated() {
+              CodeLang.conditionalCases(initial: selectedCodeLang) { lang in
                 code {
                   slugToFileName(lang)
                 }
-                .attribute("v-cloak", value: idx == allCodeLangs.startIndex ? nil : "")
-                .attribute("v-if", value: idx == allCodeLangs.startIndex ? "selected == '\(lang.rawValue)'" : nil)
-                .attribute("v-else-if", value: allCodeLangs.startIndex < idx && idx < allCodeLangs.index(before: allCodeLangs.endIndex) ? "selected == '\(lang.rawValue)'" : nil)
-                .attribute("v-else", value: idx == allCodeLangs.index(before: allCodeLangs.endIndex) ? "" : nil)
               }
             }
             .inlineStyle("color", "#777")
@@ -34,7 +29,7 @@ struct SectionView<Content: HTML>: HTML {
           .inlineStyle("padding", "1.5rem 1.5rem 0")
 
           pre {
-            for (idx, lang) in allCodeLangs.enumerated() {
+            CodeLang.conditionalCases(initial: selectedCodeLang) { lang in
               code(.class("hljs language-\(lang.rawValue)")) {
                 """
                 // \(slugToFileName(lang))
@@ -42,16 +37,10 @@ struct SectionView<Content: HTML>: HTML {
                 \(codeHeader(lang))
                 """
               }
-              .attribute("v-cloak", value: idx == allCodeLangs.startIndex ? nil : "")
-              .attribute("v-if", value: idx == allCodeLangs.startIndex ? "selected == '\(lang.rawValue)'" : nil)
-              .attribute("v-else-if", value: allCodeLangs.startIndex < idx && idx < allCodeLangs.index(before: allCodeLangs.endIndex) ? "selected == '\(lang.rawValue)'" : nil)
-              .attribute("v-else", value: idx == allCodeLangs.index(before: allCodeLangs.endIndex) ? "" : nil)
             }
           }
           .inlineStyle("padding", "0.75rem 1.5rem 1.5rem")
         }
-        // .inlineStyle("background-image", "radial-gradient(#2A2A2A 1px, transparent 0)")
-        // .inlineStyle("background-size", "12px 12px")
 
         self.content()
       }

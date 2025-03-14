@@ -5,24 +5,28 @@ import HTML
 import Models
 import Vue
 
-public struct HomePage: Page {
+public struct HomePage: Page { 
   public let title = "Erik Bautista Santibanez | Portfolio"
   public let lang = "en"
 
-  public init() {}
+  let initialCodeLang: CodeLang
+
+  public init(codeLang: CodeLang = .swift) {
+    self.initialCodeLang = codeLang
+  }
 
   public var head: some HTML { EmptyHTML() }
 
   public var body: some HTML {
-    #VueScope(CodeLang.swift) { (selected: Vue.Expression) in
-      HeaderView(selected: selected)
-      Spacer()
+    #VueScope(initialCodeLang) { codeLang in
+      HeaderView(selected: codeLang)
       main {
-        UserView()
         Spacer()
-        PostsView()
+        UserView(selected: codeLang)
+        Spacer()
+        PostsView(selected: codeLang)
+        Spacer()
       }
-      Spacer()
       FooterView()
     }
     .inlineStyle("overflow-x", "hidden")
@@ -31,6 +35,8 @@ public struct HomePage: Page {
 
 private struct UserView: HTML {
   @Dependency(\.activityClient) private var activityClient
+
+  let selected: Vue.Expression<CodeLang>
 
   var location: ActivityClient.Location? {
     self.activityClient.location()
@@ -52,7 +58,7 @@ private struct UserView: HTML {
 
   @HTMLBuilder
   var body: some HTML {
-    SectionView(id: "user") { lang in
+    SectionView(id: "user", selectedCodeLang: selected) { lang in
       switch lang {
         case .swift: 
         """
@@ -103,8 +109,9 @@ private struct UserView: HTML {
 }
 
 private struct PostsView: HTML {
+  let selected: Vue.Expression<CodeLang>
   var body: some HTML {
-    SectionView(id: "dev-logs") { lang in
+    SectionView(id: "dev-logs", selectedCodeLang: selected) { lang in
       switch lang {
         case .swift: 
         """
@@ -168,15 +175,15 @@ private struct PostsView: HTML {
         section {
           self.post.content
         }
-        .inlineStyle("margin", "revert", post: "*")
-        .inlineStyle("display", "block", post: "blockquote")
-        .inlineStyle("background", "#2A2A2A", post: "blockquote")
-        .inlineStyle("padding", "0.125rem 1rem", post: "blockquote")
-        .inlineStyle("border", "1.5px solid #4A4A4A", post: "blockquote")
-        .inlineStyle("border-radius", "0.125rem", post: "blockquote")
-        .inlineStyle("margin-left", "0", post: "blockquote")
-        .inlineStyle("margin-right", "0", post: "blockquote")
         .postCodeBlockStyling()
+        .inlineStyle("margin", "revert", post: " *")
+        .inlineStyle("display", "block", post: " blockquote")
+        .inlineStyle("background", "#2A2A2A", post: " blockquote")
+        .inlineStyle("padding", "0.125rem 1rem", post: " blockquote")
+        .inlineStyle("border", "1.5px solid #4A4A4A", post: " blockquote")
+        .inlineStyle("border-radius", "0.125rem", post: " blockquote")
+        .inlineStyle("margin-left", "0", post: " blockquote")
+        .inlineStyle("margin-right", "0", post: " blockquote")
 
         if !self.post.links.isEmpty {
           section {
@@ -235,11 +242,11 @@ private struct PostsView: HTML {
           }
         }
       }
-      .inlineStyle("width", "100%", post: "> *")
-      .inlineStyle("margin-top", "1.25rem", post: "> *")
-      .inlineStyle("margin-bottom", "1.25rem", post: "> *")
-      .inlineStyle("border", "1.5px solid #3A3A3A", post: "> *")
-      .inlineStyle("border-radius", "1rem", post: "> *")
+      .inlineStyle("width", "100%", post: " > *")
+      .inlineStyle("margin-top", "1.25rem", post: " > *")
+      .inlineStyle("margin-bottom", "1.25rem", post: " > *")
+      .inlineStyle("border", "1.5px solid #3A3A3A", post: " > *")
+      .inlineStyle("border-radius", "1rem", post: " > *")
       .postCodeBlockStyling()
     }
   }
@@ -298,11 +305,11 @@ private extension HTML {
   }
 
   func postCodeBlockStyling() -> HTMLInlineStyle<Self> {
-    self.inlineStyle("padding", "0.75rem", post: "pre")
-      .inlineStyle("background", "#242424", post: "pre")
-      .inlineStyle("border", "1.5px solid #3A3A3A", post: "pre")
-      .inlineStyle("border-radius", "0.75rem", post: "pre")
-      .inlineStyle("overflow-x", "auto", post: "pre")
-      .inlineStyle("font-size", "0.85em", post: "pre")
+    self.inlineStyle("padding", "0.75rem", post: " pre")
+      .inlineStyle("background", "#242424", post: " pre")
+      .inlineStyle("border", "1.5px solid #3A3A3A", post: " pre")
+      .inlineStyle("border-radius", "0.75rem", post: " pre")
+      .inlineStyle("overflow-x", "auto", post: " pre")
+      .inlineStyle("font-size", "0.85em", post: " pre")
   }
 }

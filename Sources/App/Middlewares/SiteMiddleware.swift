@@ -1,6 +1,5 @@
 import ActivityClient
 import Dependencies
-import class Foundation.JSONEncoder
 import Hummingbird
 import HummingbirdRouter
 import HummingbirdURLRouting
@@ -8,6 +7,8 @@ import MiddlewareUtils
 import Pages
 import PublicAssets
 import Routes
+
+import class Foundation.JSONEncoder
 
 struct SiteMiddleware<Context: RequestContext>: RouterController {
   @Dependency(\.siteRouter) private var siteRouter
@@ -31,13 +32,12 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
     URLRoutingMiddleware(self.siteRouter) { req, ctx, route in
       try withDependencies {
         $0.currentRoute = route
-        $0.currentCodeLang = .swift
       } operation: {
         switch route {
         case .robots:
           return ""
         case .home:
-          return HomePage()
+          return HomePage(codeLang: .resolve(req))
         case .api(.activity(.all)):
           do {
             return try JSONEncoder().encode(self.activityClient.activity(), from: req, context: ctx)
@@ -77,8 +77,16 @@ private struct NotFoundMiddleware<Context: RequestContext>: RouterMiddleware {
         throw error
       }
 
-      return try NotFoundPage()
+      return try NotFoundPage(codeLang: .resolve(input))
         .response(from: input, context: context, status: .notFound)
     }
+  }
+}
+
+fileprivate extension CodeLang {
+  static func resolve(_ req: Request) -> CodeLang {
+    req.uri.queryParameters["codeLang"]
+      .flatMap { CodeLang(rawValue: $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()) }
+      ?? .swift
   }
 }
