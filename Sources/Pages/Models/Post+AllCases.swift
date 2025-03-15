@@ -4,11 +4,11 @@ import PublicAssets
 
 extension Post: CaseIterable {
   static var allCases: [Self] {
-    @Dependency(\.publicAssets) var assets
+    @Dependency(\.publicAssets) var assetsDir
 
     return [
       Self(
-        header: .video(assets.assets.posts.wledAppDemoMp4),
+        header: .video(assetsDir.assets.posts.wledAppDemo.videoWebm),
         title: "A WLED Client for iOS", 
         content: """
         I built a native iOS app for [WLED](https://github.com/wled/WLED), an open-source LED controller for ESP32, to control my RGB LED strips.
@@ -25,7 +25,7 @@ extension Post: CaseIterable {
         kind: .project
       ),
       Self(
-        header: .image(assets.assets.projects.animeNow.anDiscoverPng, label: "Anime Now! discover image"),
+        header: .image(assetsDir.assets.posts.animeNowReleased.anDiscoverWebp, label: "Anime Now! discover image"),
         title: "Anime Now! \u{2014} An iOS and macOS App",
         content: """
         > TBD
@@ -56,14 +56,26 @@ extension Post: CaseIterable {
         content: """
         I finally decided to redesign my website. \
         To expand my skills with Swift, I decided to rebuild my portfolio in Swift.
+
+        Additionally, I built a library called [swift-web](https://github.com/erikbdev/swift-web) which contains tools used to build \
+        this website in Swift. It utilizes Swift build tools to generate typed asset generation, and \
+        utilities to build a reactive website using Swift and Vue.
+
+        Feel free to check out both projects on GitHub. 😊
         """,
         date: Date(month: 2, day: 2, year: 2025),
+        lastUpdated: Date(month: 3, day: 14, year: 2025),
         kind: .blog,
         links: [
           Post.Link(
-            title: "GitHub",
+            title: "Portfolio",
             href: "https://github.com/erikbdev/erikbautista.dev",
             role: .primary
+          ),
+          Post.Link(
+            title: "swift-web",
+            href: "https://github.com/erikbdev/swift-web",
+            role: .secondary
           ),
         ]
       ),

@@ -5,7 +5,7 @@ import Vue
 
 struct SectionView<Content: HTML>: HTML {
   let id: String
-  let selectedCodeLang: Vue.Expression<CodeLang>
+  let selected: Vue.Expression<CodeLang>
   let codeHeader: @Sendable (CodeLang) -> String
   @HTMLBuilder let content: @Sendable () -> Content
 
@@ -15,7 +15,7 @@ struct SectionView<Content: HTML>: HTML {
         header {
           pre {
             a(.href("#\(self.id)")) {
-              CodeLang.conditionalCases(initial: selectedCodeLang) { lang in
+              CodeLang.conditionalCases(initial: selected) { lang in
                 code {
                   slugToFileName(lang)
                 }
@@ -27,9 +27,8 @@ struct SectionView<Content: HTML>: HTML {
           .inlineStyle("font-weight", "500")
           .inlineStyle("text-align", "end")
           .inlineStyle("padding", "1.5rem 1.5rem 0")
-
           pre {
-            CodeLang.conditionalCases(initial: selectedCodeLang) { lang in
+            CodeLang.conditionalCases(initial: selected) { lang in
               code(.class("hljs language-\(lang.rawValue)")) {
                 """
                 // \(slugToFileName(lang))
@@ -41,7 +40,6 @@ struct SectionView<Content: HTML>: HTML {
           }
           .inlineStyle("padding", "0.75rem 1.5rem 1.5rem")
         }
-
         self.content()
       }
       .containerStyling()

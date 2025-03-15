@@ -23,6 +23,10 @@ struct Post: Sendable {
     Self.dateCreatedFormatter.string(from: self.date)
   }
 
+  var dateUpdated: String? {
+    self.lastUpdated.flatMap(Self.dateCreatedFormatter.string(from:))
+  }
+
   private static let timestampFormatter = {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "en_US_POSIX")

@@ -17,8 +17,8 @@ public struct NotFoundPage: Page {
   }
 
   public var body: some HTML {
-    #VueScope(initialCodeLang) { selected in
-      HeaderView(selected: selected)
+    #VueScope(initialCodeLang) { codeLang in
+      HeaderView(selected: codeLang)
       Spacer()
       main {
         section {
@@ -34,7 +34,7 @@ public struct NotFoundPage: Page {
                 .inlineStyle("margin-bottom", "0.5rem")
 
               pre {
-                CodeLang.conditionalCases(initial: selected) { lang in
+                CodeLang.conditionalCases(initial: codeLang) { lang in
                   code {
                     switch lang {
                     case .swift:
@@ -43,11 +43,11 @@ public struct NotFoundPage: Page {
                       """
                     case .rust:
                       """
-                      panic!("page not found")
+                      panic!("page not found");
                       """
                     case .typescript:
                       """
-                      throw new Error("page not found")
+                      throw new Error("page not found");
                       """
                     }
                   }

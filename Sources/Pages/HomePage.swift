@@ -58,7 +58,7 @@ private struct UserView: HTML {
 
   @HTMLBuilder
   var body: some HTML {
-    SectionView(id: "user", selectedCodeLang: selected) { lang in
+    SectionView(id: "user", selected: selected) { lang in
       switch lang {
         case .swift: 
         """
@@ -85,7 +85,7 @@ private struct UserView: HTML {
           role: "Mobile & Web Developer",
           home: "\(residency ?? .default)"\
           \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
-        }
+        };
         """
       }
     } content: {
@@ -111,7 +111,7 @@ private struct UserView: HTML {
 private struct PostsView: HTML {
   let selected: Vue.Expression<CodeLang>
   var body: some HTML {
-    SectionView(id: "dev-logs", selectedCodeLang: selected) { lang in
+    SectionView(id: "dev-logs", selected: selected) { lang in
       switch lang {
         case .swift: 
         """
@@ -119,11 +119,11 @@ private struct PostsView: HTML {
         """
         case .typescript: 
         """
-        const logs = await fetch(Filter.All)
+        const logs = await fetch(Filter.All);
         """
         case .rust: 
         """
-        let logs = fetch(Filter::All).await
+        let logs = fetch(Filter::All).await;
         """
       }
     } content: {
@@ -194,6 +194,19 @@ private struct PostsView: HTML {
           .inlineStyle("display", "flex")
           .inlineStyle("gap", "0.75rem")
           .inlineStyle("margin-top", "1.5rem")
+        }
+
+        if let dateUpdated = self.post.dateUpdated {
+          footer {
+            em {
+              "Last updated: "
+              span { dateUpdated }
+            }
+          }
+          .inlineStyle("color", "#8A8A8A")
+          .inlineStyle("font-size", "0.84em")
+          .inlineStyle("margin-top", "0.5rem")
+          .inlineStyle("text-align", "end")
         }
       }
       .inlineStyle("width", "100%")
