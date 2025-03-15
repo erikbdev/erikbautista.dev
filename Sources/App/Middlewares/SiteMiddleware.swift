@@ -34,8 +34,6 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
         $0.currentRoute = route
       } operation: {
         switch route {
-        case .robots:
-          return ""
         case .home:
           return HomePage(codeLang: .resolve(req))
         case .api(.activity(.all)):

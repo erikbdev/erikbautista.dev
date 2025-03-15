@@ -5,7 +5,6 @@ import URLRouting
 
 @CasePathable
 public enum SiteRoute: Sendable, Equatable {
-  case robots
   case home
   case api(APIRoute)
 
@@ -19,10 +18,6 @@ extension SiteRoute {
     public var body: some URLRouting.Router<SiteRoute> {
       OneOf {
         Route(.case(SiteRoute.home))
-
-        Route(.case(SiteRoute.robots)) {
-          Path { "robots.txt" }
-        }
 
         Route(.case(SiteRoute.api)) {
           Path { "api" }
