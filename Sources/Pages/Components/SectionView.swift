@@ -18,7 +18,7 @@ struct SectionView<Header: HTML, Content: HTML>: HTML {
               a(.href("#\(self.id)")) {
                 CodeLang.conditionalCases(initial: selected) { lang in
                   code {
-                    slugToFileName(lang)
+                    CodeLang.slugToFileName(self.id, lang: lang)
                   }
                 }
               }
@@ -34,8 +34,7 @@ struct SectionView<Header: HTML, Content: HTML>: HTML {
                 pre {
                   code(.class("hljs language-\(lang.rawValue)")) {
                     """
-                    // \(slugToFileName(lang))
-                    // Portfolio\n
+                    // \(CodeLang.slugToFileName(self.id, lang: lang))\n
                     """
                     self.header(lang)
                   }
@@ -57,13 +56,15 @@ struct SectionView<Header: HTML, Content: HTML>: HTML {
     }
     .wrappedStyling()
   }
+}
 
-  private func slugToFileName(_ lang: CodeLang?) -> String {
+extension CodeLang {
+  static func slugToFileName(_ slug: String, lang: CodeLang?) -> String {
     let fileName =
       switch lang {
-      case .none: self.id
+      case .none: slug
       case .swift:
-        self.id.components(separatedBy: "-")
+        slug.components(separatedBy: "-")
           .map { component -> String in
             if let first = component.first {
               first.uppercased().appending(component.dropFirst())
@@ -72,9 +73,9 @@ struct SectionView<Header: HTML, Content: HTML>: HTML {
             }
           }
           .joined()
-      case .rust: self.id
+      case .rust: slug
       case .typescript:
-        self.id.components(separatedBy: "-")
+        slug.components(separatedBy: "-")
           .enumerated()
           .map { (idx, component) -> String in
             if idx == 0 {

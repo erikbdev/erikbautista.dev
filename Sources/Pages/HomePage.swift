@@ -87,40 +87,55 @@ private struct UserView: HTML {
           };
           """
         case .none:
-          h1(.aria.label("Name")) { "Erik Bautista Santibanez" }
-          p(.aria.label("Occupation")) { "Mobile & Web Developer" }
-            .inlineStyle("color", "#e0e0e0")
-          p(.aria.label("Residency")) {
-            svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Map pin icon")) {
-              path(
-                .d("M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z")
-              )
-            }
-            .svgIconStyling()
-            .inlineStyle("margin-right", "0.25rem")
-
-            "\(residency ?? .default)" 
+          h1(.aria.label("Name")) {
+            span { "#" }
+              .inlineStyle("color", "#808080")
+              .inlineStyle("font-weight", "700")
+            " "
+            "Erik Bautista Santibanez" 
           }
-          .inlineStyle("color", "#e0e0e0")
+          .inlineStyle("margin-bottom", "0.25rem")
 
-          if let currentLocation {
-            p(.aria.label("Current location")) { 
-              svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Navigation icon")) {
-                path(.d("M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"))
-                path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
+          HTMLGroup {
+            p(.aria.label("Occupation")) { "Mobile & Web Developer" }
+
+            p(.aria.label("Residency")) {
+              svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Map pin icon")) {
+                path(
+                  .d("M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z")
+                )
               }
-              .inlineStyle("scale", "calc(100% * -1) 100%")
               .svgIconStyling()
               .inlineStyle("margin-right", "0.25rem")
 
-              "Currently in "
-
-              em { currentLocation }
-                .inlineStyle("font-weight", "600")
+              "\(residency ?? .default)" 
             }
-            .inlineStyle("color", "#a0a0a0")
 
+            if let currentLocation {
+              p(.aria.label("Current location")) { 
+                svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Navigation icon")) {
+                  path(.d("M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"))
+                  path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
+                }
+                .inlineStyle("scale", "calc(100% * -1) 100%")
+                .svgIconStyling()
+                .inlineStyle("margin-right", "0.25rem")
+
+                "Currently in "
+
+                span { "***" }
+                  .inlineStyle("color", "#808080")
+                  .inlineStyle("font-weight", "700")
+                em { currentLocation }
+                  .inlineStyle("font-weight", "700")
+                  .inlineStyle("color", "#fafafa")
+                span { "***" }
+                  .inlineStyle("color", "#808080")
+                  .inlineStyle("font-weight", "700")
+              }
+            }
           }
+          .inlineStyle("color", "#d8d8d8")
       }
     } content: {
       // div {
@@ -135,25 +150,41 @@ private struct UserView: HTML {
 
 private struct PostsView: HTML {
   let selected: Vue.Expression<CodeLang?>
+
+  static let description = "A curated list of projects I've worked on."
+
   var body: some HTML {
     SectionView(id: "dev-logs", selected: selected) { lang in
       switch lang {
         case .swift: 
           """
+          // \(Self.description)
           let logs: [DevLog] = await fetch(.all)
           """
         case .typescript: 
           """
+          // \(Self.description)
           const logs = await fetch(Filter.All);
           """
         case .rust: 
           """
+          // \(Self.description)
           let logs = fetch(Filter::All).await;
           """
         case .none:
-          h1 { "Dev Logs" }
-          p { "A curated list of projects I've worked on." }
-            .inlineStyle("color", "#e0e0e0")
+          h1 {
+            span { "#" }
+              .inlineStyle("color", "#808080")
+              .inlineStyle("font-weight", "700")
+            " "
+            "Dev Logs"
+          }
+          .inlineStyle("margin-bottom", "0.25rem")
+
+          HTMLGroup {
+            p { Self.description }
+          }
+          .inlineStyle("color", "#d8d8d8")
       }
     } content: {
       for (num, post) in Post.allCases.enumerated().reversed() {

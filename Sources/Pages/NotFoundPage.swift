@@ -20,57 +20,7 @@ public struct NotFoundPage: Page {
       HeaderView(selected: codeLang)
       Spacer()
       main {
-        section {
-          div {
-            div {
-              pre {
-                code { "// 404 ERROR" }
-                  .inlineStyle("color", "#808080")
-                  .inlineStyle("margin-bottom", "0.125rem")
-              }
-
-              h1 { "Page Not Found" }
-                .inlineStyle("margin-bottom", "0.5rem")
-
-              CodeLang.conditionalCases(initial: codeLang) { lang in
-                if let lang {
-                  pre {
-                    code {
-                      switch lang {
-                      case .swift:
-                        """
-                        throw Error.pageNotFound
-                        """
-                      case .rust:
-                        """
-                        panic!("page not found");
-                        """
-                      case .typescript:
-                        """
-                        throw new Error("page not found");
-                        """
-                      }
-                    }
-                  }
-                } else {
-                  p { "The asset or page you are looking for does not exist" }
-                    .inlineStyle("max-width", "400px")
-                    .inlineStyle("color", "#d0d0d0")
-                    .inlineStyle("font-weight", "500")
-                }
-              }
-            }
-          }
-          .containerStyling()
-          .inlineStyle("display", "flex")
-          .inlineStyle("flex-direction", "column")
-          .inlineStyle("justify-content", "center")
-          .inlineStyle("align-items", "center")
-          .inlineStyle("padding", "160px 32px")
-          .inlineStyle("background-image", "radial-gradient(#2A2A2A 1px, transparent 0)")
-          .inlineStyle("background-size", "12px 12px")
-        }
-        .wrappedStyling()
+        InnerView(codeLang: codeLang)
       }
       Spacer()
       FooterView()
@@ -78,5 +28,82 @@ public struct NotFoundPage: Page {
     .inlineStyle("display", "flex")
     .inlineStyle("flex-direction", "column")
     .inlineStyle("height", "100%")
+  }
+}
+
+private struct InnerView: HTML {
+  let codeLang: Expression<CodeLang?>
+
+  private static let notFoundDescription = "The asset or page does not exist."
+
+  var body: some HTML {
+        section {
+          CodeLang.conditionalCases(initial: codeLang) { lang in
+            div {
+              pre {
+                a(.href("/not-found")) {
+                  code {
+                    CodeLang.slugToFileName("not-found", lang: lang)
+                  }
+                }
+                .inlineStyle("color", "#777")
+              }
+              .inlineStyle("font-size", "0.75em")
+              .inlineStyle("font-weight", "500")
+              .inlineStyle("text-align", "end")
+              .inlineStyle("padding-bottom", "0.5rem")
+
+              div {
+                if let lang {
+                  pre {
+                    code {
+                      switch lang {
+                      case .swift:
+                        """
+                        // 404 ERROR
+                        // \(Self.notFoundDescription)
+                        throw Error.notFound
+                        """
+                      case .rust:
+                        """
+                        // 404 ERROR
+                        // \(Self.notFoundDescription)
+                        panic!("Not found");
+                        """
+                      case .typescript:
+                        """
+                        // 404 ERROR
+                        // \(Self.notFoundDescription)
+                        throw new Error("Not found");
+                        """
+                      }
+                    }
+                  }
+                } else {
+                  h1 {
+                    span { "#" }
+                      .inlineStyle("color", "#808080")
+                      .inlineStyle("font-weight", "700")
+                    " "
+                    "Not Found" 
+                  }
+                  .inlineStyle("margin-bottom", "0.125rem")
+
+                  p { Self.notFoundDescription }
+                    .inlineStyle("color", "#d0d0d0")
+                    .inlineStyle("font-weight", "500")
+                }
+              }
+              .inlineStyle("padding", "160px 32px")
+              .inlineStyle("justify-self", "center")
+            }
+          }
+          .containerStyling()
+          .inlineStyle("width", "100%")
+          .inlineStyle("padding", "1.5rem")
+          .inlineStyle("background-image", "radial-gradient(#2A2A2A 1px, transparent 0)")
+          .inlineStyle("background-size", "12px 12px")
+        }
+        .wrappedStyling()
   }
 }
