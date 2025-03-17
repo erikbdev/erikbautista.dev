@@ -3,12 +3,11 @@ import HTML
 import Vue
 
 public struct NotFoundPage: Page {
-  public let title = "Erik Bautista Santibanez | Not Found"
-  public let lang = "en"
+  public let title = "404 | Erik Bautista Santibanez"
 
-  let initialCodeLang: CodeLang
+  let initialCodeLang: CodeLang?
 
-  public init(codeLang: CodeLang = .swift) {
+  public init(codeLang: CodeLang? = .swift) {
     self.initialCodeLang = codeLang
   }
 
@@ -33,24 +32,31 @@ public struct NotFoundPage: Page {
               h1 { "Page Not Found" }
                 .inlineStyle("margin-bottom", "0.5rem")
 
-              pre {
-                CodeLang.conditionalCases(initial: codeLang) { lang in
-                  code {
-                    switch lang {
-                    case .swift:
-                      """
-                      throw Error.pageNotFound
-                      """
-                    case .rust:
-                      """
-                      panic!("page not found");
-                      """
-                    case .typescript:
-                      """
-                      throw new Error("page not found");
-                      """
+              CodeLang.conditionalCases(initial: codeLang) { lang in
+                if let lang {
+                  pre {
+                    code {
+                      switch lang {
+                      case .swift:
+                        """
+                        throw Error.pageNotFound
+                        """
+                      case .rust:
+                        """
+                        panic!("page not found");
+                        """
+                      case .typescript:
+                        """
+                        throw new Error("page not found");
+                        """
+                      }
                     }
                   }
+                } else {
+                  p { "The asset or page you are looking for does not exist" }
+                    .inlineStyle("max-width", "400px")
+                    .inlineStyle("color", "#d0d0d0")
+                    .inlineStyle("font-weight", "500")
                 }
               }
             }

@@ -7,6 +7,9 @@ public enum CodeLang: String, Hashable, Encodable, CaseIterable, Sendable, RawRe
   case rust
   case typescript
 
+  // TODO: Add markdown as valid codelang
+  // case markdown
+
   public init?(rawValue: String) {
     if let value = Self.allCases.first(where: { $0.rawValue == rawValue }) {
       self = value
@@ -32,10 +35,10 @@ public enum CodeLang: String, Hashable, Encodable, CaseIterable, Sendable, RawRe
   }
 
   @HTMLBuilder static func conditionalCases<Content: HTML>(
-    initial selected: Vue.Expression<CodeLang>,
-    @HTMLBuilder content: (CodeLang) -> Content
+    initial selected: Vue.Expression<CodeLang?>,
+    @HTMLBuilder content: (CodeLang?) -> Content
   ) -> some HTML {
-    let allCodeLangs = [selected.initialValue] + Self.allCases.filter { $0 != selected.initialValue }
+    let allCodeLangs = [selected.initialValue] + (Self.allCases + [nil]).filter { $0 != selected.initialValue }
     for (idx, lang) in allCodeLangs.enumerated() {
       content(lang)
         .attribute(

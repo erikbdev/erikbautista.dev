@@ -39,12 +39,13 @@ extension Post: CaseIterable {
         > TBD
         """,
         date: Date(month: 9, day: 15, year: 2024),
+        lastUpdated: Date(month: 3, day: 15, year: 2025),
         kind: .project
       ),
       Self(
         header: .code(
           """
-          struct Portfolio {
+          struct Portfolio: HTML {
             var body: some HTML {
               HomePage()
             }
@@ -54,26 +55,23 @@ extension Post: CaseIterable {
         ),
         title: "Website Redesign",
         content: """
-        I finally decided to redesign my website. \
-        To expand my skills with Swift, I decided to rebuild my portfolio in Swift.
-
-        Additionally, I built a library called [swift-web](https://github.com/erikbdev/swift-web) which contains tools used to build \
-        this website in Swift. It utilizes Swift build tools to generate typed asset generation, and \
-        utilities to build a reactive website using Swift and Vue.
+        I redesigned my website, but instead of using traditional web frameworks, I used Swift! \
+        I've also built a library called [swift-web](https://github.com/erikbdev/swift-web) which contains tools used to build \
+        this website.
 
         Feel free to check out both projects on GitHub. 😊
         """,
         date: Date(month: 2, day: 2, year: 2025),
-        lastUpdated: Date(month: 3, day: 14, year: 2025),
+        lastUpdated: Date(month: 3, day: 15, year: 2025),
         kind: .blog,
         links: [
           Post.Link(
-            title: "Portfolio",
+            title: "Portfolio on GitHub",
             href: "https://github.com/erikbdev/erikbautista.dev",
             role: .primary
           ),
           Post.Link(
-            title: "swift-web",
+            title: "swift-web on GitHub",
             href: "https://github.com/erikbdev/swift-web",
             role: .secondary
           ),

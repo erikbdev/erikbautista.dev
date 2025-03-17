@@ -6,12 +6,11 @@ import Models
 import Vue
 
 public struct HomePage: Page { 
-  public let title = "Erik Bautista Santibanez | Portfolio"
-  public let lang = "en"
+  public let title = "Portfolio | Erik Bautista Santibanez"
 
-  let initialCodeLang: CodeLang
+  let initialCodeLang: CodeLang?
 
-  public init(codeLang: CodeLang = .swift) {
+  public init(codeLang: CodeLang? = .swift) {
     self.initialCodeLang = codeLang
   }
 
@@ -36,7 +35,7 @@ public struct HomePage: Page {
 private struct UserView: HTML {
   @Dependency(\.activityClient) private var activityClient
 
-  let selected: Vue.Expression<CodeLang>
+  let selected: Vue.Expression<CodeLang?>
 
   var location: ActivityClient.Location? {
     self.activityClient.location()
@@ -61,70 +60,100 @@ private struct UserView: HTML {
     SectionView(id: "user", selected: selected) { lang in
       switch lang {
         case .swift: 
-        """
-        let user = User(
-          name: "Erik Bautista Santibanez",
-          role: "Mobile & Web Developer",
-          home: "\(residency ?? .default)"\
+          """
+          let user = User(
+            name: "Erik Bautista Santibanez",
+            role: "Mobile & Web Developer",
+            home: "\(residency ?? .default)"\
           \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
-        )
-        """
+          )
+          """
         case .typescript: 
-        """
-        const user = {
-          name: "Erik Bautista Santibanez",
-          role: "Mobile & Web Developer",
-          home: "\(residency ?? .default)"\
+          """
+          const user = {
+            name: "Erik Bautista Santibanez",
+            role: "Mobile & Web Developer",
+            home: "\(residency ?? .default)"\
           \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
-        };
-        """
+          };
+          """
         case .rust: 
-        """
-        let user = Portfolio {
-          name: "Erik Bautista Santibanez",
-          role: "Mobile & Web Developer",
-          home: "\(residency ?? .default)"\
+          """
+          let user = User {
+            name: "Erik Bautista Santibanez",
+            role: "Mobile & Web Developer",
+            home: "\(residency ?? .default)"\
           \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
-        };
-        """
+          };
+          """
+        case .none:
+          h1(.aria.label("Name")) { "Erik Bautista Santibanez" }
+          p(.aria.label("Occupation")) { "Mobile & Web Developer" }
+            .inlineStyle("color", "#e0e0e0")
+          p(.aria.label("Residency")) {
+            svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Map pin icon")) {
+              path(
+                .d("M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z")
+              )
+            }
+            .svgIconStyling()
+            .inlineStyle("margin-right", "0.25rem")
+
+            "\(residency ?? .default)" 
+          }
+          .inlineStyle("color", "#e0e0e0")
+
+          if let currentLocation {
+            p(.aria.label("Current location")) { 
+              svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Navigation icon")) {
+                path(.d("M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"))
+                path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
+              }
+              .inlineStyle("scale", "calc(100% * -1) 100%")
+              .svgIconStyling()
+              .inlineStyle("margin-right", "0.25rem")
+
+              "Currently in "
+
+              em { currentLocation }
+                .inlineStyle("font-weight", "600")
+            }
+            .inlineStyle("color", "#a0a0a0")
+
+          }
       }
     } content: {
+      // div {
+      // }
+      // .inlineStyle("display", "flex")
+      // .inlineStyle("flex-direction", "row")
+      // .inlineStyle("gap", "1.125rem")
       EmptyHTML()
     }
   }
-
-  //   svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Map pin icon")) {
-  //     path(
-  //       .d("M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z")
-  //     )
-  //   }
-  //   .svgIconStyling()
-
-  //   svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Navigation icon")) {
-  //     path(.d("M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"))
-  //     path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
-  //   }
-  //   .inlineStyle("scale", "calc(100% * -1) 100%")
-  //   .svgIconStyling()
 }
 
 private struct PostsView: HTML {
-  let selected: Vue.Expression<CodeLang>
+  let selected: Vue.Expression<CodeLang?>
   var body: some HTML {
     SectionView(id: "dev-logs", selected: selected) { lang in
       switch lang {
         case .swift: 
-        """
-        let logs: [DevLog] = await fetch(.all)
-        """
+          """
+          let logs: [DevLog] = await fetch(.all)
+          """
         case .typescript: 
-        """
-        const logs = await fetch(Filter.All);
-        """
+          """
+          const logs = await fetch(Filter.All);
+          """
         case .rust: 
-        """
-        let logs = fetch(Filter::All).await;
-        """
+          """
+          let logs = fetch(Filter::All).await;
+          """
+        case .none:
+          h1 { "Dev Logs" }
+          p { "A curated list of projects I've worked on." }
+            .inlineStyle("color", "#e0e0e0")
       }
     } content: {
       for (num, post) in Post.allCases.enumerated().reversed() {
@@ -185,28 +214,28 @@ private struct PostsView: HTML {
         .inlineStyle("margin-left", "0", post: " blockquote")
         .inlineStyle("margin-right", "0", post: " blockquote")
 
-        if !self.post.links.isEmpty {
-          section {
-            for link in self.post.links {
-              PostLinkView(link: link)
+        footer {
+          if !self.post.links.isEmpty {
+            section {
+              for link in self.post.links {
+                PostLinkView(link: link)
+              }
             }
+            .inlineStyle("display", "flex")
+            .inlineStyle("gap", "0.75rem")
+            .inlineStyle("margin-top", "1.5rem")
           }
-          .inlineStyle("display", "flex")
-          .inlineStyle("gap", "0.75rem")
-          .inlineStyle("margin-top", "1.5rem")
-        }
 
-        if let dateUpdated = self.post.dateUpdated {
-          footer {
-            em {
-              "Last updated: "
-              span { dateUpdated }
+          if let dateUpdated = self.post.dateUpdated {
+            p {
+              em {
+                "Last updated: \(dateUpdated)"
+              }
             }
+            .inlineStyle("color", "#7A7A7A")
+            .inlineStyle("font-size", "0.86em")
+            .inlineStyle("margin-top", "0.75rem")
           }
-          .inlineStyle("color", "#8A8A8A")
-          .inlineStyle("font-size", "0.84em")
-          .inlineStyle("margin-top", "0.5rem")
-          .inlineStyle("text-align", "end")
         }
       }
       .inlineStyle("width", "100%")

@@ -19,7 +19,8 @@ struct FooterView: HTML {
           a(.target(.blank), .rel("noopener noreferrer"), .href("https://swift.org")) { "Swift" }
           " + "
           a(.target(.blank), .rel("noopener noreferrer"), .href("https://hummingbird.codes")) { "Hummingbird" }
-          "."
+          " + "
+          a(.target(.blank), .rel("noopener noreferrer"), .href("https://github.com/vuejs/petite-vue")) { "petite-vue" }          
         }
       }
       .containerStyling()

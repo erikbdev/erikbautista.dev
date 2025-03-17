@@ -12,8 +12,8 @@ public extension DependencyValues {
   }
 }
 
-public extension URL {
-  var assetString: String {
+extension URL {
+  public var assetString: String {
     if self.isFileURL {
       "/" + self.relativeString
     } else {
