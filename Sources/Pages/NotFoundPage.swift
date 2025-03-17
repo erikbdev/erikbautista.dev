@@ -34,7 +34,7 @@ public struct NotFoundPage: Page {
 private struct InnerView: HTML {
   let codeLang: Expression<CodeLang?>
 
-  private static let notFoundDescription = "The asset or page does not exist."
+  private static let notFoundDescription = "The asset or page could not be found"
 
   var body: some HTML {
         section {
@@ -57,23 +57,22 @@ private struct InnerView: HTML {
                 if let lang {
                   pre {
                     code {
+                      """
+                      // 404 ERROR
+                      // \(Self.notFoundDescription)\n
+                      """
+
                       switch lang {
                       case .swift:
                         """
-                        // 404 ERROR
-                        // \(Self.notFoundDescription)
                         throw Error.notFound
                         """
                       case .rust:
                         """
-                        // 404 ERROR
-                        // \(Self.notFoundDescription)
                         panic!("Not found");
                         """
                       case .typescript:
                         """
-                        // 404 ERROR
-                        // \(Self.notFoundDescription)
                         throw new Error("Not found");
                         """
                       }
@@ -91,7 +90,7 @@ private struct InnerView: HTML {
 
                   p { Self.notFoundDescription }
                     .inlineStyle("color", "#d0d0d0")
-                    .inlineStyle("font-weight", "500")
+                    .inlineStyle("font-weight", "normal")
                 }
               }
               .inlineStyle("padding", "160px 32px")

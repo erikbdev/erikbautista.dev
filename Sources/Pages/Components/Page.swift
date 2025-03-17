@@ -18,6 +18,7 @@ extension Page {
   public var title: String { "Erik Bautista Santibanez" }
   public var desc: String { 
     """
+    A software developer specialized in mobile and web applications.
     """
   }
   public var lang: String { "en" }

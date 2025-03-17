@@ -139,10 +139,33 @@ private struct UserView: HTML {
       }
     } content: {
       // div {
+      //   p {
+      //     """
+      //     I'm a passionate software developer who builds applications using Swift and modern web technologies.
+      //     """
+      //   }
+      //   div {
+      //     button {
+      //       "Resume"
+      //     }
+
+      //     button {
+      //       "GitHub"
+      //     }
+
+      //     button {
+      //       "LinkedIn"
+      //     }
+
+      //     button {
+      //       "Contact"
+      //     }
+      //   }
+      //   .inlineStyle("display", "flex")
+      //   .inlineStyle("flex-direction", "row")
+      //   .inlineStyle("gap", "1.125rem")
       // }
-      // .inlineStyle("display", "flex")
-      // .inlineStyle("flex-direction", "row")
-      // .inlineStyle("gap", "1.125rem")
+      // .inlineStyle("padding", "0 1.5rem 1.5rem")
       EmptyHTML()
     }
   }
@@ -264,7 +287,7 @@ private struct PostsView: HTML {
               }
             }
             .inlineStyle("color", "#7A7A7A")
-            .inlineStyle("font-size", "0.86em")
+            .inlineStyle("font-size", "0.7em")
             .inlineStyle("margin-top", "0.75rem")
           }
         }
