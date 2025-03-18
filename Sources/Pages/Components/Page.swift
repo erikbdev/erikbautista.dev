@@ -131,6 +131,9 @@ extension Page {
               [v-cloak] {
                 display: none;
               }
+              a {
+                color: inherit;
+              }
               """
             }
             /// Xcode Styling
