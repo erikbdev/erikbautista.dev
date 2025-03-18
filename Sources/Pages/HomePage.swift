@@ -73,8 +73,8 @@ private struct UserView: HTML {
           home: "\(residency ?? .default)"\
         \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
           about: \"\"\"
-          \(Self.aboutDescription)
-          \"\"\"
+            \(Self.aboutDescription)
+            \"\"\"
         )
         """
       case .typescript:
