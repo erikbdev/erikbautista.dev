@@ -11,11 +11,10 @@ public enum CodeLang: String, Hashable, Encodable, CaseIterable, Sendable, RawRe
   // case markdown
 
   public init?(rawValue: String) {
-    if let value = Self.allCases.first(where: { $0.rawValue == rawValue }) {
-      self = value
-    } else {
+    guard let value = Self.allCases.first(where: { $0.rawValue == rawValue }) else {
       return nil
     }
+    self = value
   }
 
   public var title: String {
@@ -36,8 +35,8 @@ public enum CodeLang: String, Hashable, Encodable, CaseIterable, Sendable, RawRe
 
   var hasSemiColon: Bool {
     switch self {
-      case .swift: false
-      default: true
+    case .swift: false
+    default: true
     }
   }
 
@@ -45,7 +44,8 @@ public enum CodeLang: String, Hashable, Encodable, CaseIterable, Sendable, RawRe
     initial selected: Vue.Expression<CodeLang?>,
     @HTMLBuilder content: (CodeLang?) -> Content
   ) -> some HTML {
-    let allCodeLangs = [selected.initialValue] + (Self.allCases + [nil]).filter { $0 != selected.initialValue }
+    let allCodeLangs =
+      [selected.initialValue] + (Self.allCases + [nil]).filter { $0 != selected.initialValue }
     for (idx, lang) in allCodeLangs.enumerated() {
       content(lang)
         .attribute(

@@ -1,6 +1,6 @@
 import Foundation
-import PublicAssets
 import HTML
+import PublicAssets
 
 struct Post: Sendable {
   var header: Header?
@@ -64,13 +64,13 @@ struct Post: Sendable {
     case project
     case education
     case experience
-    
+
     var tabTitle: String {
       switch self {
-        case .blog: "Blog"
-        case .project: "Projects"
-        case .education: "Education"
-        case .experience: "Experiences"
+      case .blog: "Blog"
+      case .project: "Projects"
+      case .education: "Education"
+      case .experience: "Experiences"
       }
     }
   }

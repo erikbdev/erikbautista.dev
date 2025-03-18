@@ -13,7 +13,7 @@ public struct ActivityClient: Sendable {
 extension ActivityClient {
   public func activity() -> Activity {
     .init(
-      location: self.location(), 
+      location: self.location(),
       nowPlaying: self.nowPlaying()
     )
   }
@@ -57,20 +57,20 @@ extension ActivityClient: DependencyKey {
   public static var liveValue: ActivityClient {
     let state = LockIsolated((Location?.none, NowPlaying?.none))
     return ActivityClient(
-      location: { state.value.0 }, 
+      location: { state.value.0 },
       updateLocation: { newLocation in
         state.withValue { $0.0 = newLocation }
       },
       nowPlaying: { state.value.1 },
-      updateNowPlaying: { nowPlaying in 
-        state.withValue { $0.1 = nowPlaying} 
+      updateNowPlaying: { nowPlaying in
+        state.withValue { $0.1 = nowPlaying }
       }
     )
   }
 }
 
-public extension DependencyValues {
-  var activityClient: ActivityClient {
+extension DependencyValues {
+  public var activityClient: ActivityClient {
     get { self[ActivityClient.self] }
     set { self[ActivityClient.self] = newValue }
   }

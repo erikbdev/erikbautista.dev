@@ -1,12 +1,13 @@
 import Dependencies
+
 import struct Foundation.URL
 
 private enum PublicAssetsKey: DependencyKey {
   static let liveValue = GeneratedPublicAssets()
 }
 
-public extension DependencyValues {
-  var publicAssets: GeneratedPublicAssets {
+extension DependencyValues {
+  public var publicAssets: GeneratedPublicAssets {
     get { self[PublicAssetsKey.self] }
     set { self[PublicAssetsKey.self] = newValue }
   }

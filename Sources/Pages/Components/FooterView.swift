@@ -1,5 +1,5 @@
-import HTML
 import Foundation
+import HTML
 
 struct FooterView: HTML {
   private static let copyrightDateFormatter = {
@@ -18,9 +18,15 @@ struct FooterView: HTML {
           "Made with \u{2764} using "
           a(.target(.blank), .rel("noopener noreferrer"), .href("https://swift.org")) { "Swift" }
           " + "
-          a(.target(.blank), .rel("noopener noreferrer"), .href("https://hummingbird.codes")) { "Hummingbird" }
+          a(.target(.blank), .rel("noopener noreferrer"), .href("https://hummingbird.codes")) {
+            "Hummingbird"
+          }
           " + "
-          a(.target(.blank), .rel("noopener noreferrer"), .href("https://github.com/vuejs/petite-vue")) { "petite-vue" }          
+          a(
+            .target(.blank),
+            .rel("noopener noreferrer"),
+            .href("https://github.com/vuejs/petite-vue")
+          ) { "petite-vue" }
         }
       }
       .containerStyling()

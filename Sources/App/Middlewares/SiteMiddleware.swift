@@ -81,12 +81,13 @@ private struct NotFoundMiddleware<Context: RequestContext>: RouterMiddleware {
   }
 }
 
-fileprivate extension CodeLang {
-  static func resolve(_ req: Request) -> CodeLang? {
+extension CodeLang {
+  fileprivate static func resolve(_ req: Request) -> CodeLang? {
     req.uri.queryParameters["codeLang"]
-      .flatMap { 
-        $0 == "markdown" || $0 == "md" ? nil : 
-        CodeLang(rawValue: $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()) 
+      .flatMap {
+        $0 == "markdown" || $0 == "md"
+          ? nil
+          : CodeLang(rawValue: $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())
       }
   }
 }

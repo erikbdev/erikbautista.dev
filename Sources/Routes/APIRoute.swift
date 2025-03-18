@@ -3,16 +3,16 @@ import CasePaths
 import Foundation
 import URLRouting
 
-public extension SiteRoute {
+extension SiteRoute {
   @CasePathable
-  enum APIRoute: Sendable, Equatable {
+  public enum APIRoute: Sendable, Equatable {
     case activity(ActivityRoute)
   }
 }
 
-public extension SiteRoute.APIRoute {
+extension SiteRoute.APIRoute {
   @CasePathable
-  enum ActivityRoute: Sendable, Equatable {
+  public enum ActivityRoute: Sendable, Equatable {
     case all
     case location(ActivityClient.Location?)
     case nowPlaying(ActivityClient.NowPlaying?)

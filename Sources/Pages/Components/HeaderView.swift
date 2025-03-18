@@ -57,7 +57,9 @@ private struct CodeSelector: HTML {
             button(
               .v.on(
                 .click,
-                Expression(rawValue: "\(selected.assign(Expression(codeLang))), \(visible.assign(!visible))")
+                Expression(
+                  rawValue: "\(selected.assign(Expression(codeLang))), \(visible.assign(!visible))"
+                )
               ),
               .v.bind(attrOrProp: "aria-selected", selected == Expression(codeLang))
             ) {

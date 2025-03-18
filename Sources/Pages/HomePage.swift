@@ -5,7 +5,7 @@ import HTML
 import Models
 import Vue
 
-public struct HomePage: Page { 
+public struct HomePage: Page {
   public let title = "Portfolio | Erik Bautista Santibanez"
 
   let initialCodeLang: CodeLang?
@@ -50,113 +50,135 @@ private struct UserView: HTML {
     guard let location, location.city != residency.city || location.state != residency.state else {
       return nil
     }
-    return [location.city, location.state, location.region == "United States" ? nil : location.region]
-      .compactMap(\.self)
-      .joined(separator: ", ")
+    return [
+      location.city, location.state, location.region == "United States" ? nil : location.region,
+    ]
+    .compactMap(\.self)
+    .joined(separator: ", ")
   }
 
   static let aboutDescription = """
-  I'm a passionate software developer who builds applications using Swift and modern web technologies.
-  """
+    I'm a passionate software developer who builds applications using Swift and modern web technologies.
+    """
 
   @HTMLBuilder
   var body: some HTML {
     SectionView(id: "user", selected: selected) { lang in
       switch lang {
-        case .swift: 
-          """
-          let user = User(
-            name: "Erik Bautista Santibanez",
-            role: "Mobile & Web Developer",
-            home: "\(residency ?? .default)"\
-          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
-            about: \"\"\"
-            \(Self.aboutDescription)
-            \"\"\"
-          )
-          """
-        case .typescript: 
-          """
-          const user = {
-            name: "Erik Bautista Santibanez",
-            role: "Mobile & Web Developer",
-            home: "\(residency ?? .default)"\
-          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
-            about: `\(Self.aboutDescription)`
-          };
-          """
-        case .rust: 
-          """
-          let user = User {
-            name: "Erik Bautista Santibanez",
-            role: "Mobile & Web Developer",
-            home: "\(residency ?? .default)"\
-          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
-            about: "\(Self.aboutDescription)"
-          };
-          """
-        case .none:
-          h1(.aria.label("Name")) {
-            span { "#" }
-              .inlineStyle("color", "#808080")
-              .inlineStyle("font-weight", "700")
-            " "
-            "Erik Bautista Santibanez" 
+      case .swift:
+        """
+        let user = User(
+          name: "Erik Bautista Santibanez",
+          role: "Mobile & Web Developer",
+          home: "\(residency ?? .default)"\
+        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
+          about: \"\"\"
+          \(Self.aboutDescription)
+          \"\"\"
+        )
+        """
+      case .typescript:
+        """
+        const user = {
+          name: "Erik Bautista Santibanez",
+          role: "Mobile & Web Developer",
+          home: "\(residency ?? .default)"\
+        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
+          about: `\(Self.aboutDescription)`
+        };
+        """
+      case .rust:
+        """
+        let user = User {
+          name: "Erik Bautista Santibanez",
+          role: "Mobile & Web Developer",
+          home: "\(residency ?? .default)"\
+        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
+          about: "\(Self.aboutDescription)"
+        };
+        """
+      case .none:
+        h1(.aria.label("Name")) {
+          span { "#" }
+            .inlineStyle("color", "#808080")
+            .inlineStyle("font-weight", "700")
+          " "
+          "Erik Bautista Santibanez"
+        }
+        .inlineStyle("margin-bottom", "0.25rem")
+
+        HTMLGroup {
+          p(.aria.label("Occupation")) { "Mobile & Web Developer" }
+
+          p(.aria.label("Residency")) {
+            svg(
+              .xmlns(),
+              .fill("currentColor"),
+              .viewBox("0 0 256 256"),
+              .aria.label("Map pin icon")
+            ) {
+              path(
+                .d(
+                  "M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z"
+                )
+              )
+            }
+            .svgIconStyling()
+            .inlineStyle("margin-right", "0.25rem")
+
+            "\(residency ?? .default)"
           }
-          .inlineStyle("margin-bottom", "0.25rem")
 
-          HTMLGroup {
-            p(.aria.label("Occupation")) { "Mobile & Web Developer" }
-
-            p(.aria.label("Residency")) {
-              svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Map pin icon")) {
+          if let currentLocation {
+            p(.aria.label("Current location")) {
+              svg(
+                .xmlns(),
+                .fill("currentColor"),
+                .viewBox("0 0 256 256"),
+                .aria.label("Navigation icon")
+              ) {
                 path(
-                  .d("M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z")
+                  .d(
+                    "M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"
+                  )
+                )
+                path(
+                  .d(
+                    "M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"
+                  )
                 )
               }
+              .inlineStyle("scale", "calc(100% * -1) 100%")
               .svgIconStyling()
               .inlineStyle("margin-right", "0.25rem")
 
-              "\(residency ?? .default)" 
+              "Currently in "
+
+              span { "***" }
+                .inlineStyle("color", "#808080")
+                .inlineStyle("font-weight", "700")
+              em { currentLocation }
+                .inlineStyle("font-weight", "700")
+                .inlineStyle("color", "#fafafa")
+              span { "***" }
+                .inlineStyle("color", "#808080")
+                .inlineStyle("font-weight", "700")
             }
-
-            if let currentLocation {
-              p(.aria.label("Current location")) { 
-                svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("Navigation icon")) {
-                  path(.d("M234.35,129,152,152,129,234.35a8,8,0,0,1-15.21.27l-65.28-176A8,8,0,0,1,58.63,48.46l176,65.28A8,8,0,0,1,234.35,129Z"))
-                  path(.d("M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"))
-                }
-                .inlineStyle("scale", "calc(100% * -1) 100%")
-                .svgIconStyling()
-                .inlineStyle("margin-right", "0.25rem")
-
-                "Currently in "
-
-                span { "***" }
-                  .inlineStyle("color", "#808080")
-                  .inlineStyle("font-weight", "700")
-                em { currentLocation }
-                  .inlineStyle("font-weight", "700")
-                  .inlineStyle("color", "#fafafa")
-                span { "***" }
-                  .inlineStyle("color", "#808080")
-                  .inlineStyle("font-weight", "700")
-              }
-            }
-
-            p(.aria.label("about me")) {
-              Self.aboutDescription
-            }
-            .inlineStyle("margin-top", "0.75rem")
           }
-          .inlineStyle("color", "#d8d8d8")
+
+          p(.aria.label("about me")) {
+            Self.aboutDescription
+          }
+          .inlineStyle("margin-top", "0.75rem")
+        }
+        .inlineStyle("color", "#d8d8d8")
       }
     } content: {
       div {
         div {
           a(.href("mailto:me@erikb.dev")) {
             ConditionalCodeLabel(
-              label: "email", 
+              label: "email",
               value: "me@erikb.dev",
               selected: selected
             )
@@ -169,7 +191,7 @@ private struct UserView: HTML {
             .rel("noopener noreferrer")
           ) {
             ConditionalCodeLabel(
-              label: "github", 
+              label: "github",
               value: "/erikbdev",
               selected: selected
             )
@@ -182,7 +204,7 @@ private struct UserView: HTML {
             .rel("noopener noreferrer")
           ) {
             ConditionalCodeLabel(
-              label: "linkedin", 
+              label: "linkedin",
               value: "/erikbautista",
               selected: selected
             )
@@ -226,35 +248,35 @@ private struct PostsView: HTML {
   var body: some HTML {
     SectionView(id: "dev-logs", selected: selected) { lang in
       switch lang {
-        case .swift: 
-          """
-          // \(Self.description)
-          let logs: [DevLog] = await fetch(.all)
-          """
-        case .typescript: 
-          """
-          // \(Self.description)
-          const logs = await fetch(Filter.All);
-          """
-        case .rust: 
-          """
-          // \(Self.description)
-          let logs = fetch(Filter::All).await;
-          """
-        case .none:
-          h1 {
-            span { "#" }
-              .inlineStyle("color", "#808080")
-              .inlineStyle("font-weight", "700")
-            " "
-            "Dev Logs"
-          }
-          .inlineStyle("margin-bottom", "0.25rem")
+      case .swift:
+        """
+        // \(Self.description)
+        let logs: [DevLog] = await fetch(.all)
+        """
+      case .typescript:
+        """
+        // \(Self.description)
+        const logs = await fetch(Filter.All);
+        """
+      case .rust:
+        """
+        // \(Self.description)
+        let logs = fetch(Filter::All).await;
+        """
+      case .none:
+        h1 {
+          span { "#" }
+            .inlineStyle("color", "#808080")
+            .inlineStyle("font-weight", "700")
+          " "
+          "Dev Logs"
+        }
+        .inlineStyle("margin-bottom", "0.25rem")
 
-          HTMLGroup {
-            p { Self.description }
-          }
-          .inlineStyle("color", "#d8d8d8")
+        HTMLGroup {
+          p { Self.description }
+        }
+        .inlineStyle("color", "#d8d8d8")
       }
     } content: {
       for (num, post) in Post.allCases.enumerated().reversed() {
@@ -342,7 +364,10 @@ private struct PostsView: HTML {
       .inlineStyle("width", "100%")
       .inlineStyle("display", "inline-block")
       .inlineStyle("padding", "1.5rem")
-      .inlineStyle("background-image", "repeating-linear-gradient(90deg,#444 0 15px,transparent 0 30px)")
+      .inlineStyle(
+        "background-image",
+        "repeating-linear-gradient(90deg,#444 0 15px,transparent 0 30px)"
+      )
       .inlineStyle("background-repeat", "repeat-x")
       .inlineStyle("background-size", "100% 1px")
     }
@@ -406,16 +431,30 @@ private struct PostsView: HTML {
         HTMLText(self.link.title)
         " "
         if self.link.isExternal {
-          svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("external link icon")) {
+          svg(
+            .xmlns(),
+            .fill("currentColor"),
+            .viewBox("0 0 256 256"),
+            .aria.label("external link icon")
+          ) {
             path(
-              .d("M228,104a12,12,0,0,1-24,0V69l-59.51,59.51a12,12,0,0,1-17-17L187,52H152a12,12,0,0,1,0-24h64a12,12,0,0,1,12,12Zm-44,24a12,12,0,0,0-12,12v64H52V84h64a12,12,0,0,0,0-24H48A20,20,0,0,0,28,80V208a20,20,0,0,0,20,20H176a20,20,0,0,0,20-20V140A12,12,0,0,0,184,128Z")
+              .d(
+                "M228,104a12,12,0,0,1-24,0V69l-59.51,59.51a12,12,0,0,1-17-17L187,52H152a12,12,0,0,1,0-24h64a12,12,0,0,1,12,12Zm-44,24a12,12,0,0,0-12,12v64H52V84h64a12,12,0,0,0,0-24H48A20,20,0,0,0,28,80V208a20,20,0,0,0,20,20H176a20,20,0,0,0,20-20V140A12,12,0,0,0,184,128Z"
+              )
             )
           }
           .svgIconStyling()
         } else {
-          svg(.xmlns(), .fill("currentColor"), .viewBox("0 0 256 256"), .aria.label("external link icon")) {
+          svg(
+            .xmlns(),
+            .fill("currentColor"),
+            .viewBox("0 0 256 256"),
+            .aria.label("external link icon")
+          ) {
             path(
-              .d("M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z")
+              .d(
+                "M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"
+              )
             )
           }
           .svgIconStyling()
@@ -426,8 +465,8 @@ private struct PostsView: HTML {
   }
 }
 
-private extension HTML {
-  func svgIconStyling() -> HTMLInlineStyle<Self> {
+extension HTML {
+  fileprivate func svgIconStyling() -> HTMLInlineStyle<Self> {
     self.inlineStyle("display", "inline-block")
       .inlineStyle("vertical-align", "middle")
       .inlineStyle("position", "relative")
@@ -436,7 +475,7 @@ private extension HTML {
       .inlineStyle("height", "1em")
   }
 
-  func postCodeBlockStyling() -> HTMLInlineStyle<Self> {
+  fileprivate func postCodeBlockStyling() -> HTMLInlineStyle<Self> {
     self.inlineStyle("padding", "0.75rem", post: " pre")
       .inlineStyle("background", "#242424", post: " pre")
       .inlineStyle("border", "1.5px solid #3A3A3A", post: " pre")
@@ -445,7 +484,7 @@ private extension HTML {
       .inlineStyle("font-size", "0.85em", post: " pre")
   }
 
-  func primaryButtonStyle() -> HTMLInlineStyle<Self> {
+  fileprivate func primaryButtonStyle() -> HTMLInlineStyle<Self> {
     self.inlineStyle("all", "unset")
       .inlineStyle("padding", "0.5rem 0.625rem")
       .inlineStyle("border", "#444 1px solid")
@@ -455,13 +494,13 @@ private extension HTML {
       .inlineStyle("cursor", "pointer")
   }
 
-  func secondaryButtonStyle() -> HTMLInlineStyle<Self> {
+  fileprivate func secondaryButtonStyle() -> HTMLInlineStyle<Self> {
     self.primaryButtonStyle()
       .inlineStyle("background-color", "#f0f0f0")
       .inlineStyle("color", "#0f0f0f")
   }
 
-  func buttonStyle(isPrimary: Bool = true) -> HTMLInlineStyle<Self> {
+  fileprivate func buttonStyle(isPrimary: Bool = true) -> HTMLInlineStyle<Self> {
     if isPrimary {
       self.primaryButtonStyle()
     } else {

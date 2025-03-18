@@ -1,6 +1,6 @@
+import AsyncAlgorithms
 import HTML
 import Hummingbird
-import AsyncAlgorithms
 
 extension Page {
   public consuming func response(

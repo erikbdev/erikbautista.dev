@@ -25,9 +25,9 @@ struct App: AsyncParsableCommand {
     } operation: {
       let app = self.buildApp()
       #if DEBUG
-      let buildMode = "development"
+        let buildMode = "development"
       #else
-      let buildMode = "release"
+        let buildMode = "release"
       #endif
       logger.info("Running server in '\(buildMode)' mode")
       try await app.runService()

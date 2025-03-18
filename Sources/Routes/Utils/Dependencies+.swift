@@ -8,13 +8,13 @@ extension SiteRoute.Router: DependencyKey {
   public static let liveValue = Self()
 }
 
-public extension DependencyValues {
-  var siteRouter: SiteRoute.Router {
+extension DependencyValues {
+  public var siteRouter: SiteRoute.Router {
     get { self[SiteRoute.Router.self] }
     set { self[SiteRoute.Router.self] = newValue }
   }
 
-  var currentRoute: SiteRoute {
+  public var currentRoute: SiteRoute {
     get { self[SiteRoute.self] }
     set { self[SiteRoute.self] = newValue }
   }
