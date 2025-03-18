@@ -34,6 +34,13 @@ public enum CodeLang: String, Hashable, Encodable, CaseIterable, Sendable, RawRe
     }
   }
 
+  var hasSemiColon: Bool {
+    switch self {
+      case .swift: false
+      default: true
+    }
+  }
+
   @HTMLBuilder static func conditionalCases<Content: HTML>(
     initial selected: Vue.Expression<CodeLang?>,
     @HTMLBuilder content: (CodeLang?) -> Content

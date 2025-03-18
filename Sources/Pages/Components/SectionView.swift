@@ -39,6 +39,7 @@ struct SectionView<Header: HTML, Content: HTML>: HTML {
                     self.header(lang)
                   }
                 }
+                .inlineStyle("white-space", "pre-wrap")
               } else {
                 hgroup {
                   self.header(nil)

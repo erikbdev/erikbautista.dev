@@ -45,7 +45,6 @@ private struct CodeSelector: HTML {
       .inlineStyle("font-size", "0.8em")
       .inlineStyle("background", "unset")
       .inlineStyle("border", "1.16px solid #444")
-      .inlineStyle("border-radius", "0.3rem")
       .inlineStyle("padding", "0.28rem 0.4rem")
       .inlineStyle("color", "#AAA")
       .inlineStyle("cursor", "pointer")
@@ -87,7 +86,6 @@ private struct CodeSelector: HTML {
       // .inlineStyle("margin-top", "0.25rem")
       .inlineStyle("background", "#2A2A2A")
       .inlineStyle("border-radius", "1rem")
-      // .inlineStyle("font-size", "1.125em")
     }
     .inlineStyle("position", "relative")
   }

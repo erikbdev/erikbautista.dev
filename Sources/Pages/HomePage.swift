@@ -55,6 +55,10 @@ private struct UserView: HTML {
       .joined(separator: ", ")
   }
 
+  static let aboutDescription = """
+  I'm a passionate software developer who builds applications using Swift and modern web technologies.
+  """
+
   @HTMLBuilder
   var body: some HTML {
     SectionView(id: "user", selected: selected) { lang in
@@ -65,7 +69,10 @@ private struct UserView: HTML {
             name: "Erik Bautista Santibanez",
             role: "Mobile & Web Developer",
             home: "\(residency ?? .default)"\
-          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
+          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
+            about: \"\"\"
+            \(Self.aboutDescription)
+            \"\"\"
           )
           """
         case .typescript: 
@@ -74,7 +81,8 @@ private struct UserView: HTML {
             name: "Erik Bautista Santibanez",
             role: "Mobile & Web Developer",
             home: "\(residency ?? .default)"\
-          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
+          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
+            about: `\(Self.aboutDescription)`
           };
           """
         case .rust: 
@@ -83,7 +91,8 @@ private struct UserView: HTML {
             name: "Erik Bautista Santibanez",
             role: "Mobile & Web Developer",
             home: "\(residency ?? .default)"\
-          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
+          \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
+            about: "\(Self.aboutDescription)"
           };
           """
         case .none:
@@ -134,39 +143,77 @@ private struct UserView: HTML {
                   .inlineStyle("font-weight", "700")
               }
             }
+
+            p(.aria.label("about me")) {
+              Self.aboutDescription
+            }
+            .inlineStyle("margin-top", "0.75rem")
           }
           .inlineStyle("color", "#d8d8d8")
       }
     } content: {
-      // div {
-      //   p {
-      //     """
-      //     I'm a passionate software developer who builds applications using Swift and modern web technologies.
-      //     """
-      //   }
-      //   div {
-      //     button {
-      //       "Resume"
-      //     }
+      div {
+        div {
+          a(.href("mailto:me@erikb.dev")) {
+            ConditionalCodeLabel(
+              label: "email", 
+              value: "me@erikb.dev",
+              selected: selected
+            )
+          }
+          .primaryButtonStyle()
 
-      //     button {
-      //       "GitHub"
-      //     }
+          a(
+            .href("https://github.com/erikbdev"),
+            .target(.blank),
+            .rel("noopener noreferrer")
+          ) {
+            ConditionalCodeLabel(
+              label: "github", 
+              value: "@erikbdev",
+              selected: selected
+            )
+          }
+          .secondaryButtonStyle()
 
-      //     button {
-      //       "LinkedIn"
-      //     }
+          a(
+            .href("https://www.linkedin.com/in/erikbautista"),
+            .target(.blank),
+            .rel("noopener noreferrer")
+          ) {
+            ConditionalCodeLabel(
+              label: "linkedin", 
+              value: "@erikbautista",
+              selected: selected
+            )
+          }
+          .secondaryButtonStyle()
+        }
+        .inlineStyle("display", "flex")
+        .inlineStyle("flex-direction", "row")
+        .inlineStyle("flex-wrap", "wrap")
+        .inlineStyle("gap", "0.625rem")
+      }
+      .inlineStyle("margin-top", "-1rem")
+      .inlineStyle("padding", "0 1.5rem 1.5rem")
+    }
+  }
 
-      //     button {
-      //       "Contact"
-      //     }
-      //   }
-      //   .inlineStyle("display", "flex")
-      //   .inlineStyle("flex-direction", "row")
-      //   .inlineStyle("gap", "1.125rem")
-      // }
-      // .inlineStyle("padding", "0 1.5rem 1.5rem")
-      EmptyHTML()
+  struct ConditionalCodeLabel: HTML {
+    let label: String
+    let value: String
+    let selected: Vue.Expression<CodeLang?>
+
+    var body: some HTML {
+      CodeLang.conditionalCases(initial: selected) { lang in
+        code {
+          if let lang {
+            "user.\(label)()\(lang.hasSemiColon ? ";" : "")"
+          } else {
+            "[\(label)](\(value))"
+          }
+        }
+      }
     }
   }
 }
@@ -227,7 +274,7 @@ private struct PostsView: HTML {
         // .v.show("!selection || selection == '\(self.post.kind.rawValue)'")
       ) {
         header {
-          section {
+          hgroup {
             span { self.post.datePosted.uppercased() }
               .inlineStyle("flex-grow", "1")
               .inlineStyle("color", "#9A9A9A")
@@ -287,7 +334,7 @@ private struct PostsView: HTML {
               }
             }
             .inlineStyle("color", "#7A7A7A")
-            .inlineStyle("font-size", "0.7em")
+            .inlineStyle("font-size", "0.73em")
             .inlineStyle("margin-top", "0.75rem")
           }
         }
@@ -374,18 +421,7 @@ private struct PostsView: HTML {
           .svgIconStyling()
         }
       }
-      .inlineStyle("all", "unset")
-      .inlineStyle("font-size", "0.85em")
-      .inlineStyle("font-weight", "550")
-      .inlineStyle("align-content", "center")
-      .inlineStyle("min-height", "1.5rem")
-      .inlineStyle("min-width", "2rem")
-      .inlineStyle("padding", "0.375rem 0.75rem")
-      .inlineStyle("cursor", "pointer")
-      .inlineStyle("border-radius", "0.5rem")
-      .inlineStyle("color", self.link.role == .primary ? "white" : "black")
-      .inlineStyle("background", self.link.role == .primary ? "linear-gradient(to bottom, hsla(0, 0%, 24%, 1), hsla(0, 0%, 16%, 1))" : "linear-gradient(to bottom, hsl(0deg 0% 100%), hsl(0deg 0% 92.91%))")
-      .inlineStyle("box-shadow", self.link.role == .primary ? "inset 0 1px 1px rgba(255, 255, 255, 0.12)" : "inset 0px -1px 2px 0px hsl(0 0% 50% / 0.5)")
+      .buttonStyle(isPrimary: self.link.role == .primary)
     }
   }
 }
@@ -407,5 +443,29 @@ private extension HTML {
       .inlineStyle("border-radius", "0.75rem", post: " pre")
       .inlineStyle("overflow-x", "auto", post: " pre")
       .inlineStyle("font-size", "0.85em", post: " pre")
+  }
+
+  func primaryButtonStyle() -> HTMLInlineStyle<Self> {
+    self.inlineStyle("all", "unset")
+      .inlineStyle("padding", "0.5rem 0.625rem")
+      .inlineStyle("border", "#444 1px solid")
+      .inlineStyle("font-size", "0.8em")
+      .inlineStyle("font-weight", "500")
+      .inlineStyle("align-items", "center")
+      .inlineStyle("cursor", "pointer")
+  }
+
+  func secondaryButtonStyle() -> HTMLInlineStyle<Self> {
+    self.primaryButtonStyle()
+      .inlineStyle("background-color", "#f0f0f0")
+      .inlineStyle("color", "#0f0f0f")
+  }
+
+  func buttonStyle(isPrimary: Bool = true) -> HTMLInlineStyle<Self> {
+    if isPrimary {
+      self.primaryButtonStyle()
+    } else {
+      self.secondaryButtonStyle()
+    }
   }
 }
