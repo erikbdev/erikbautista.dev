@@ -170,7 +170,7 @@ private struct UserView: HTML {
           ) {
             ConditionalCodeLabel(
               label: "github", 
-              value: "@erikbdev",
+              value: "/erikbdev",
               selected: selected
             )
           }
@@ -183,7 +183,7 @@ private struct UserView: HTML {
           ) {
             ConditionalCodeLabel(
               label: "linkedin", 
-              value: "@erikbautista",
+              value: "/erikbautista",
               selected: selected
             )
           }
