@@ -71,21 +71,23 @@ private struct UserView: HTML {
           name: "Erik Bautista Santibanez",
           role: "Mobile & Web Developer",
           home: "\(residency ?? .default)"\
-        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
-          about: \"\"\"
-            \(Self.aboutDescription)
-            \"\"\"
+        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
         )
+
+        > print(user.about())
+        // \(Self.aboutDescription)
         """
       case .typescript:
         """
-        const user = {
+        const user: User = {
           name: "Erik Bautista Santibanez",
           role: "Mobile & Web Developer",
           home: "\(residency ?? .default)"\
-        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
-          about: `\(Self.aboutDescription)`
+        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
         };
+
+        > console.log(user.about());
+        // \(Self.aboutDescription)
         """
       case .rust:
         """
@@ -93,9 +95,11 @@ private struct UserView: HTML {
           name: "Erik Bautista Santibanez",
           role: "Mobile & Web Developer",
           home: "\(residency ?? .default)"\
-        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? ""),
-          about: "\(Self.aboutDescription)"
+        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
         };
+
+        > println!("{}", user.about());
+        // \(Self.aboutDescription)
         """
       case .none:
         h1(.aria.label("Name")) {
@@ -280,7 +284,7 @@ private struct PostsView: HTML {
       }
     } content: {
       for (num, post) in Post.allCases.enumerated().reversed() {
-        PostView(number: num, post: post)
+        PostView(number: num, post: post, selected: selected)
       }
     }
   }
@@ -288,6 +292,7 @@ private struct PostsView: HTML {
   struct PostView: HTML {
     let number: Int
     let post: Post
+    let selected: Vue.Expression<CodeLang?>
 
     var body: some HTML {
       article(
@@ -305,8 +310,13 @@ private struct PostsView: HTML {
 
             pre {
               a(.href("#\(self.post.slug)")) {
-                code(.class("hljs language-swift")) {
-                  "logs[\(self.number)]"
+                CodeLang.conditionalCases(initial: selected) { lang in
+                  code(.class("hljs \("language-\(lang?.rawValue ?? "markdown")")")) {
+                    switch lang {
+                      case .none: "log-\(self.number).md"
+                      case .some: "logs[\(self.number)]"
+                    }
+                  }
                 }
               }
               .inlineStyle("font-size", "0.75em")
@@ -333,7 +343,6 @@ private struct PostsView: HTML {
         .inlineStyle("background", "#2A2A2A", post: " blockquote")
         .inlineStyle("padding", "0.125rem 1rem", post: " blockquote")
         .inlineStyle("border", "1.5px solid #4A4A4A", post: " blockquote")
-        .inlineStyle("border-radius", "0.125rem", post: " blockquote")
         .inlineStyle("margin-left", "0", post: " blockquote")
         .inlineStyle("margin-right", "0", post: " blockquote")
 
@@ -414,7 +423,6 @@ private struct PostsView: HTML {
       .inlineStyle("margin-top", "1.25rem", post: " > *")
       .inlineStyle("margin-bottom", "1.25rem", post: " > *")
       .inlineStyle("border", "1.5px solid #3A3A3A", post: " > *")
-      .inlineStyle("border-radius", "1rem", post: " > *")
       .postCodeBlockStyling()
     }
   }
@@ -479,7 +487,6 @@ extension HTML {
     self.inlineStyle("padding", "0.75rem", post: " pre")
       .inlineStyle("background", "#242424", post: " pre")
       .inlineStyle("border", "1.5px solid #3A3A3A", post: " pre")
-      .inlineStyle("border-radius", "0.75rem", post: " pre")
       .inlineStyle("overflow-x", "auto", post: " pre")
       .inlineStyle("font-size", "0.85em", post: " pre")
   }

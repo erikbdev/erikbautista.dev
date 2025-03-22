@@ -73,21 +73,20 @@ private struct CodeSelector: HTML {
             .inlineStyle("display", "block")
             .inlineStyle("width", "100%")
             .inlineStyle("cursor", "pointer")
-            .inlineStyle("border-radius", "0.75rem")
-            .inlineStyle("background", "#3A3A3A", post: ":hover")
-            .inlineStyle("background", "#4A4A4A", post: "[aria-selected=\"true\"]")
+            .inlineStyle("box-shadow", "inset 1px 1px #383838, inset -1px -1px #383838", post: "[aria-selected=\"true\"]")
+            .inlineStyle("background", "#3F3F3F", post: ":hover")
+            .inlineStyle("background", "#303030", post: "[aria-selected=\"true\"]")
           }
-          .inlineStyle("overflow", "hidden")
+          .inlineStyle("margin", "0.4rem 0")
         }
       }
-      .inlineStyle("margin-top", "0.375rem", post: " > li:not(:first-child)")
       .inlineStyle("position", "absolute")
       .inlineStyle("right", "0")
       .inlineStyle("list-style", "none")
-      .inlineStyle("padding", "0.4rem")
-      // .inlineStyle("margin-top", "0.25rem")
-      .inlineStyle("background", "#2A2A2A")
-      .inlineStyle("border-radius", "1rem")
+      .inlineStyle("padding", "0 0.4rem")
+      .inlineStyle("margin-top", "0.25rem")
+      .inlineStyle("background", "#202020")
+      .inlineStyle("border", "1px solid #303030")
     }
     .inlineStyle("position", "relative")
   }

@@ -39,11 +39,16 @@ extension Post: CaseIterable {
       Self(
         title: "Mochi \u{2014} Content Viewer for iOS and macOS",
         content: """
-          > TBD
           """,
-        date: Date(month: 9, day: 15, year: 2024),
-        lastUpdated: Date(month: 3, day: 15, year: 2025),
-        kind: .project
+        date: Date(month: 12, day: 10, year: 2023),
+        kind: .project,
+        links: [
+          .init(
+            title: "Mochi Website", 
+            href: "https://mochi.erikb.dev",
+            role: .primary
+          )
+        ]
       ),
       Self(
         header: .code(
