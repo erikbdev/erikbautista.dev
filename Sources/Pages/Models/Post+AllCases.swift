@@ -14,15 +14,33 @@ extension Post: CaseIterable {
           I built a native iOS app for [WLED](https://github.com/wled/WLED), an open-source LED controller for ESP32, to control my RGB LED strips.
           """,
         date: Date(month: 8, day: 4, year: 2022),
-        kind: .project
+        kind: .project,
+        links: []
       ),
       Self(
-        title: "PrismUI \u{2014} Controlling MSI RGB Keyboard on mac",
+        // header: .link("https://github.com/PrismMSI/PrismUI"),
+        title: "PrismUI \u{2014} Controlling MSI RGB Keyboard on macOS",
         content: """
-          > TBD
+          When I set up my Hackintosh, I couldn't control the RGB keyboard on my MSI laptop since the software was supported on Windows only. To fix this issue, my first approach was to build an app using AppKit, C++, and Objective-C to communicate with the HID keyboard, which was ultimately called [SSKeyboardHue](https://github.com/erikbdev/SSKeyboardHue).
+
+          Later, I decided to switch the communication protocol to Swift and redesign the front end using SwiftUI.
+
+          Both projects are available on GitHub — feel free to check them out!
           """,
-        date: Date(month: 9, day: 15, year: 2024),
-        kind: .project
+        date: Date(month: 8, day: 8, year: 2021),
+        kind: .project,
+        links: [
+          .init(
+            title: "PrismUI on GitHub", 
+            href: "https://github.com/erikbdev/PrismUI",
+            role: .primary
+          ),
+          .init(
+            title: "SSKeyboardHue on GitHub", 
+            href: "https://github.com/erikbdev/SSKeyboardHue",
+            role: .secondary
+          )
+        ]
       ),
       Self(
         header: .image(
@@ -31,9 +49,9 @@ extension Post: CaseIterable {
         ),
         title: "Anime Now! \u{2014} An iOS and macOS App",
         content: """
-          > TBD
+          
           """,
-        date: Date(month: 9, day: 15, year: 2024),
+        date: Date(month: 9, day: 15, year: 2022),
         kind: .project
       ),
       Self(
@@ -70,7 +88,7 @@ extension Post: CaseIterable {
           Feel free to check out both projects on GitHub. 😊
           """,
         date: Date(month: 2, day: 2, year: 2025),
-        lastUpdated: Date(month: 3, day: 15, year: 2025),
+        // lastUpdated: Date(month: 3, day: 15, year: 2025),
         kind: .blog,
         links: [
           Post.Link(
