@@ -33,9 +33,6 @@ struct SectionView<Header: HTML, Content: HTML>: HTML {
               if let lang {
                 pre {
                   code(.class("hljs language-\(lang.rawValue)")) {
-                    // """
-                    // // \(CodeLang.slugToFileName(self.id, lang: lang))\n
-                    // """
                     self.header(lang)
                   }
                 }
