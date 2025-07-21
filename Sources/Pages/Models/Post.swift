@@ -10,12 +10,13 @@ struct Post: Sendable {
   var lastUpdated: Date?
   let kind: Kind
   var links: [Link] = []
+  var hidden = false
 
   private static let dateCreatedFormatter = {
     let formatter = DateFormatter()
     formatter.locale = Locale(languageCode: .english, languageRegion: .unitedStates)
     formatter.timeZone = TimeZone(abbreviation: "PST") ?? formatter.timeZone
-    formatter.dateFormat = "MMM, d yyyy"
+    formatter.dateFormat = "MMM d, yyyy"
     return formatter
   }()
 

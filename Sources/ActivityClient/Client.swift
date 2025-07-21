@@ -11,9 +11,19 @@ public struct ActivityClient: Sendable {
 }
 
 extension ActivityClient {
-  public func activity() -> Activity {
-    .init(
-      location: self.location(),
+  public func redactedActivity() -> Activity {
+    let location = self.location()
+    let redactedLocation = location.flatMap { 
+      Location(
+        city: $0.city, 
+        state: $0.state, 
+        region: $0.region, 
+        timestamp: $0.timestamp,
+        residency: nil
+      ) 
+    }
+    return Activity(
+      location: redactedLocation,
       nowPlaying: self.nowPlaying()
     )
   }

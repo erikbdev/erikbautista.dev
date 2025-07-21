@@ -295,11 +295,7 @@ private struct PostsView: HTML {
     let selected: Vue.Expression<CodeLang?>
 
     var body: some HTML {
-      article(
-        .id(self.post.slug)
-        // ,
-        // .v.show("!selection || selection == '\(self.post.kind.rawValue)'")
-      ) {
+      article(.id(self.post.slug)) {
         header {
           hgroup {
             span { self.post.datePosted.uppercased() }
