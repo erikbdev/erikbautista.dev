@@ -32,13 +32,17 @@ extension SiteRoute.APIRoute {
             Route(.case(SiteRoute.APIRoute.ActivityRoute.location)) {
               Method.post
               Path { "location" }
-              Body(.json(ActivityClient.Location?.self))
+              Optionally {
+                Body(.json(ActivityClient.Location.self, decoder: ActivityClient.Activity.decoder, encoder: ActivityClient.Activity.encoder))
+              }
             }
 
             Route(.case(SiteRoute.APIRoute.ActivityRoute.nowPlaying)) {
               Method.post
               Path { "now-playing" }
-              Body(.json(ActivityClient.NowPlaying?.self))
+              Optionally {
+                Body(.json(ActivityClient.NowPlaying.self, decoder: ActivityClient.Activity.decoder, encoder: ActivityClient.Activity.encoder))
+              }
             }
           }
         }

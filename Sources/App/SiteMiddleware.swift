@@ -38,7 +38,7 @@ struct SiteMiddleware<Context: RequestContext>: RouterController {
           return HomePage(codeLang: .resolve(req))
         case .api(.activity(.all)):
           do {
-            return try JSONEncoder().encode(self.activityClient.redactedActivity(), from: req, context: ctx)
+            return try ActivityClient.Activity.encoder.encode(self.activityClient.redactedActivity(), from: req, context: ctx)
           } catch {
             throw HTTPError(.forbidden)
           }

@@ -57,6 +57,21 @@ private struct UserView: HTML {
     .joined(separator: ", ")
   }
 
+  var nowPlaying: String? {
+    guard let nowPlaying = activityClient.nowPlaying() else {
+      return nil
+    }
+    
+    let nowPlayingText = [
+      nowPlaying.title,
+      nowPlaying.artist?.isEmpty == false ? "—" : nil,
+      nowPlaying.artist
+    ]
+    .compactMap { $0 }
+    .joined(separator: " ")
+    return nowPlayingText
+  }
+
   static let aboutDescription = """
     I'm a passionate software developer who builds applications using Swift and modern web technologies.
     """
@@ -71,7 +86,8 @@ private struct UserView: HTML {
           name: "Erik Bautista Santibanez",
           role: "Mobile & Web Developer",
           home: "\(residency ?? .default)"\
-        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
+        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")\
+        \(nowPlaying.flatMap { ",\n  listeningTo: \"\($0)\"" } ?? "")
         )
 
         > print(user.about())
@@ -83,7 +99,8 @@ private struct UserView: HTML {
           name: "Erik Bautista Santibanez",
           role: "Mobile & Web Developer",
           home: "\(residency ?? .default)"\
-        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
+        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")\
+        \(nowPlaying.flatMap { ",\n  listeningTo: \"\($0)\"" } ?? "")
         };
 
         > console.log(user.about());
@@ -95,14 +112,15 @@ private struct UserView: HTML {
           name: "Erik Bautista Santibanez",
           role: "Mobile & Web Developer",
           home: "\(residency ?? .default)"\
-        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")
+        \(currentLocation.flatMap { ",\n  location: \"Currently in \($0)\"" } ?? "")\
+        \(nowPlaying.flatMap { ",\n  listeningTo: \"\($0)\"" } ?? "")
         };
 
         > println!("{}", user.about());
         // \(Self.aboutDescription)
         """
       case .none:
-        h1(.aria.label("Name")) {
+        h1(.aria.label("name")) {
           span { "#" }
             .inlineStyle("color", "#808080")
             .inlineStyle("font-weight", "700")
@@ -112,9 +130,9 @@ private struct UserView: HTML {
         .inlineStyle("margin-bottom", "0.25rem")
 
         HTMLGroup {
-          p(.aria.label("Occupation")) { "Mobile & Web Developer" }
+          p(.aria.label("occupation")) { "Mobile & Web Developer" }
 
-          p(.aria.label("Residency")) {
+          p(.aria.label("residency")) {
             svg(
               .xmlns(),
               .fill("currentColor"),
@@ -134,7 +152,7 @@ private struct UserView: HTML {
           }
 
           if let currentLocation {
-            p(.aria.label("Current location")) {
+            p(.aria.label("current location")) {
               svg(
                 .xmlns(),
                 .fill("currentColor"),
@@ -158,15 +176,48 @@ private struct UserView: HTML {
 
               "Currently in "
 
-              span { "***" }
-                .inlineStyle("color", "#808080")
-                .inlineStyle("font-weight", "700")
+              // span { "***" }
+              //   .inlineStyle("color", "#808080")
+              //   .inlineStyle("font-weight", "700")
               em { currentLocation }
                 .inlineStyle("font-weight", "700")
                 .inlineStyle("color", "#fafafa")
-              span { "***" }
-                .inlineStyle("color", "#808080")
+              // span { "***" }
+              //   .inlineStyle("color", "#808080")
+              //   .inlineStyle("font-weight", "700")
+            }
+          }
+
+          if let nowPlaying {
+            p(.aria.label("music playing")) {
+              // <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d=""></path></svg>
+              svg(
+                .xmlns(),
+                .fill("currentColor"),
+                .viewBox("0 0 256 256"),
+                .aria.label("wave icon")
+              ) {
+                path(
+                  .d(
+                    "M56,96v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0ZM88,24a8,8,0,0,0-8,8V224a8,8,0,0,0,16,0V32A8,8,0,0,0,88,24Zm40,32a8,8,0,0,0-8,8V192a8,8,0,0,0,16,0V64A8,8,0,0,0,128,56Zm40,32a8,8,0,0,0-8,8v64a8,8,0,0,0,16,0V96A8,8,0,0,0,168,88Zm40-16a8,8,0,0,0-8,8v96a8,8,0,0,0,16,0V80A8,8,0,0,0,208,72Z"
+                  )
+                )
+              }
+              .inlineStyle("scale", "calc(100% * -1) 100%")
+              .svgIconStyling()
+              .inlineStyle("margin-right", "0.25rem")
+
+              "Listening to "
+
+              // span { "***" }
+                // .inlineStyle("color", "#808080")
+                // .inlineStyle("font-weight", "700")
+              em { nowPlaying }
                 .inlineStyle("font-weight", "700")
+                .inlineStyle("color", "#fafafa")
+              // span { "***" }
+                // .inlineStyle("color", "#808080")
+                // .inlineStyle("font-weight", "700")
             }
           }
 

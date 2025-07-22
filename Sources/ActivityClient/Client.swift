@@ -46,13 +46,13 @@ extension ActivityClient {
   }
 
   public struct NowPlaying: Sendable, Equatable, Codable {
-    public let name: String
-    public let albumn: String?
-    public let artist: String
+    public let title: String
+    public let album: String?
+    public let artist: String?
     public let service: Service
 
-    public enum Service: Sendable, Equatable, Codable {
-      case appleMusic
+    public enum Service: String, Sendable, Equatable, Codable {
+      case apple
       case spotify
     }
   }
@@ -60,6 +60,18 @@ extension ActivityClient {
   public struct Activity: Sendable, Equatable, Codable {
     public let location: Location?
     public let nowPlaying: NowPlaying?
+
+    public static let encoder = {
+      let encoder = JSONEncoder()
+      encoder.dateEncodingStrategy = .iso8601
+      return encoder
+    }()
+
+    public static let decoder = {
+      let decoder = JSONDecoder()
+      decoder.dateDecodingStrategy = .iso8601
+      return decoder
+    }()
   }
 }
 
