@@ -11,7 +11,7 @@ struct Layout<Content: HTML>: HTML {
   var pageTitle: String? = nil
   @HTMLBuilder var content: Content
 
-  @Dependency(\.siteRouter) private var router
+  @Dependency(\.serverRouter) private var router
 
   private var resolvedTitle: String {
     return [pageTitle ?? "","erikb.dev"].filter { !$0.isEmpty }

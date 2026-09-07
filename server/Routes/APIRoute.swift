@@ -3,7 +3,7 @@ import Foundation
 import Shared
 import URLRouting
 
-extension SiteRoute {
+extension ServerRoute {
   @CasePathable
   public enum APIRoute: Sendable, Equatable {
     case activity(ActivityRoute)
@@ -14,7 +14,7 @@ extension SiteRoute {
   }
 }
 
-extension SiteRoute.APIRoute {
+extension ServerRoute.APIRoute {
   @CasePathable
   public enum ActivityRoute: Sendable, Equatable {
     case all
@@ -23,17 +23,17 @@ extension SiteRoute.APIRoute {
   }
 }
 
-extension SiteRoute.APIRoute {
+extension ServerRoute.APIRoute {
   public struct Router: Sendable, ParserPrinter {
-    public var body: some URLRouting.Router<SiteRoute.APIRoute> {
+    public var body: some URLRouting.Router<ServerRoute.APIRoute> {
       OneOf {
-        Route(.case(\.activity) as AnyCasePath<SiteRoute.APIRoute, SiteRoute.APIRoute.ActivityRoute>) {
+        Route(.case(\.activity) as AnyCasePath<ServerRoute.APIRoute, ServerRoute.APIRoute.ActivityRoute>) {
           Path { "activity" }
 
           OneOf {
-            Route(.case(SiteRoute.APIRoute.ActivityRoute.all))
+            Route(.case(ServerRoute.APIRoute.ActivityRoute.all))
 
-            Route(.case(\SiteRoute.APIRoute.ActivityRoute.Cases.location)) {
+            Route(.case(\ServerRoute.APIRoute.ActivityRoute.Cases.location)) {
               Method.post
               Path { "location" }
               Optionally {
@@ -41,7 +41,7 @@ extension SiteRoute.APIRoute {
               }
             }
 
-            Route(.case(\SiteRoute.APIRoute.ActivityRoute.Cases.nowPlaying)) {
+            Route(.case(\ServerRoute.APIRoute.ActivityRoute.Cases.nowPlaying)) {
               Method.post
               Path { "now-playing" }
               Optionally {
@@ -52,7 +52,7 @@ extension SiteRoute.APIRoute {
         }
 
         #if DEBUG
-          Route(.case(\SiteRoute.APIRoute.Cases.liveReload)) {
+          Route(.case(\ServerRoute.APIRoute.Cases.liveReload)) {
             Method.get
             Path { "live-reload" }
             Query {

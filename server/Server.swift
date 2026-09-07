@@ -40,7 +40,7 @@ struct Server: AsyncParsableCommand {
 
         PublicFilesMiddleware()
 
-        SiteMiddleware()
+        ServerRoutingMiddleware()
       }
 
       // TODO: support h2c for h1/h2.
