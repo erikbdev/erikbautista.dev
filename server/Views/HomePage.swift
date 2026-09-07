@@ -25,7 +25,7 @@ struct HomePage: HTML {
           p(.class("role-line")) { "Mobile & Web Developer" }
           p { (activity()?.location?.residency ?? .default).description }
 
-          div(.id("activity"), .hx.get(serverRouter.path(for: .page(.index(.activity)))), .hx.trigger(.every("10s"))) {
+          div(.id("activity"), .hx.get(serverRouter.path(for: .page(.index(.components(.activity))))), .hx.trigger(.every("10s"))) {
             ActivityComponent()
           }
 
@@ -108,14 +108,14 @@ struct HomePage: HTML {
 
 extension HomePage: PageResponder {
   static func response(
-    for component: ServerRoute.PageRoute.IndexComponent?,
+    for route: ServerRoute.PageRoute.IndexRoute?,
     request: Request,
     context: some RequestContext
   ) async throws -> any ResponseGenerator {
-    switch component {
+    switch route {
     case nil:
       return HTMLResponse { HomePage() }
-    case .activity:
+    case .components(.activity):
       return HTMLResponse { ActivityComponent() }
     }
   }

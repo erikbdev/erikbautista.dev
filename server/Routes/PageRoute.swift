@@ -4,7 +4,7 @@ import URLRouting
 extension ServerRoute {
   @CasePathable
   public enum PageRoute: Sendable, Equatable {
-    case index(IndexComponent? = nil)
+    case index(IndexRoute? = nil)
     case devLogs
     case showcase
 
@@ -14,8 +14,13 @@ extension ServerRoute {
 
 extension ServerRoute.PageRoute {
   @CasePathable
-  public enum IndexComponent: Sendable, Equatable {
-    case activity
+  public enum IndexRoute: Sendable, Equatable {
+    case components(IndexComponentRoute)
+
+    @CasePathable
+    public enum IndexComponentRoute: Sendable, Equatable {
+      case activity
+    }
   }
 }
 
@@ -27,14 +32,17 @@ extension ServerRoute.PageRoute {
 
     public var body: some URLRouting.Router<BaseRoute> {
       OneOf {
-        Route(.case(\BaseRoute.Cases.index)) {
+        Route(.case(\.index) as AnyCasePath<BaseRoute, BaseRoute.IndexRoute?>) {
           OneOf {
-            Route(.case(\BaseRoute.IndexComponent?.Cases.some)) {
-              Route(.case(\.activity) as AnyCasePath<BaseRoute.IndexComponent, Void>) {
-                Path { "activity" }
+            Route(.case(\.some) as AnyCasePath<BaseRoute.IndexRoute?, BaseRoute.IndexRoute>) {
+              Route(.case(\.components) as AnyCasePath<BaseRoute.IndexRoute, BaseRoute.IndexRoute.IndexComponentRoute>) {
+                Path { "components" }
+                Route(.case(\.activity) as AnyCasePath<BaseRoute.IndexRoute.IndexComponentRoute, Void>) {
+                  Path { "activity" }
+                }
               }
             }
-            Route(.case(\BaseRoute.IndexComponent?.Cases.none))
+            Route(.case(\.none) as AnyCasePath<BaseRoute.IndexRoute?, Void>)
           }
         }
         Route(.case(\BaseRoute.Cases.devLogs)) {
