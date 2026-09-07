@@ -1,9 +1,11 @@
+import CasePaths
 import Dependencies
 import Elementary
 import Foundation
 import Hummingbird
 import HummingbirdElementary
 import Shared
+import URLRouting
 
 struct HomePage: HTML {
   @Dependency(\.activityClient.activity) private var activity
@@ -25,7 +27,7 @@ struct HomePage: HTML {
           p(.class("role-line")) { "Mobile & Web Developer" }
           p { (activity()?.location?.residency ?? .default).description }
 
-          div(.id("activity"), .hx.get(serverRouter.path(for: .page(.index(.components(.activity))))), .hx.trigger(.every("10s"))) {
+          div(.id("activity"), .hx.get(serverRouter.path(for: .page(.index(.activity)))), .hx.trigger(.every("10s"))) {
             ActivityComponent()
           }
 
@@ -34,7 +36,7 @@ struct HomePage: HTML {
           }
 
           div(.class("link-row")) {
-            a(.href("mailto:me@erikb.dev"), .class(linkClass)) { 
+            a(.href("mailto:me@erikb.dev"), .class(linkClass)) {
               code { "/me@erikb.dev" }
             }
             a(.href("/resume.pdf"), .custom(name: "target", value: "_blank"), .class(linkClass)) { code { "/resume.pdf" } }
@@ -69,22 +71,30 @@ struct HomePage: HTML {
                 span(.class("log-entry-date")) { post.formattedDate }
               }
             }
-            
+
             section(.class("log-entry-body")) {
               switch post.header {
-                case let .code(lang, value):
+              case let .code(lang, value):
+                pre {
                   code(.class("language-\(lang)")) {
                     value
                   }
-                case let .image(src, label):
-                  img(.src(src), .alt(label))
-                case let .video(src, label):
-                  video(.src(src), .title(label), .custom(name: "autoplay", value: nil), .custom(name: "playsinline"), .custom(name: "muted"), .custom(name: "loop"))
-                case .link, .none:
-                  // og
-                  EmptyHTML()
+                }
+              case let .image(src, label):
+                img(.src(src), .alt(label))
+              case let .video(src, label):
+                video(
+                  .src(src),
+                  .title(label),
+                  .custom(name: "autoplay", value: nil),
+                  .custom(name: "playsinline"),
+                  .custom(name: "muted"),
+                  .custom(name: "loop")
+                )
+              case .link, .none:
+                // og
+                EmptyHTML()
               }
-
 
               MarkdownHTML(markdown: post.content)
             }
@@ -115,8 +125,35 @@ extension HomePage: PageResponder {
     switch route {
     case nil:
       return HTMLResponse { HomePage() }
-    case .components(.activity):
+    case .activity:
       return HTMLResponse { ActivityComponent() }
+    }
+  }
+}
+
+extension ServerRoute.PageRoute {
+  @CasePathable
+  enum IndexRoute: Sendable, Equatable {
+    case activity
+  }
+}
+
+extension ServerRoute.PageRoute.IndexRoute {
+  struct Router: Sendable, ParserPrinter {
+    typealias IndexRoute = ServerRoute.PageRoute.IndexRoute
+
+    init() {}
+
+    var body: some URLRouting.Router<IndexRoute?> {
+      OneOf {
+        Route(.case(\.some) as AnyCasePath<IndexRoute?, IndexRoute>) {
+          Path { "_components" }
+          Route(.case(\.activity) as AnyCasePath<IndexRoute, Void>) {
+            Path { "activity" }
+          }
+        }
+        Route(.case(\.none) as AnyCasePath<IndexRoute?, Void>)
+      }
     }
   }
 }

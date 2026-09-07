@@ -5,7 +5,7 @@ import URLRouting
 
 extension ServerRoute {
   @CasePathable
-  public enum APIRoute: Sendable, Equatable {
+  enum APIRoute: Sendable, Equatable {
     case activity(ActivityRoute)
 
     #if DEBUG
@@ -16,7 +16,7 @@ extension ServerRoute {
 
 extension ServerRoute.APIRoute {
   @CasePathable
-  public enum ActivityRoute: Sendable, Equatable {
+  enum ActivityRoute: Sendable, Equatable {
     case all
     case location(Activity.Location?)
     case nowPlaying(Activity.NowPlaying?)
@@ -24,10 +24,10 @@ extension ServerRoute.APIRoute {
 }
 
 extension ServerRoute.APIRoute {
-  public struct Router: Sendable, ParserPrinter {
-    public typealias BaseRoute = ServerRoute.APIRoute
+  struct Router: Sendable, ParserPrinter {
+    typealias BaseRoute = ServerRoute.APIRoute
 
-    public var body: some URLRouting.Router<BaseRoute> {
+    var body: some URLRouting.Router<BaseRoute> {
       OneOf {
         Route(.case(\.activity) as AnyCasePath<BaseRoute, BaseRoute.ActivityRoute>) {
           Path { "activity" }

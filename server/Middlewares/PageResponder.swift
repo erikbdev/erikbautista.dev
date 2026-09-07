@@ -1,10 +1,10 @@
 import Hummingbird
 
-protocol PageResponder<Route> {
-  associatedtype Route
+protocol PageResponder<SubRoute> {
+  associatedtype SubRoute
 
   static func response(
-    for route: Route,
+    for route: SubRoute,
     request: Request,
     context: some RequestContext
   ) async throws -> any ResponseGenerator
