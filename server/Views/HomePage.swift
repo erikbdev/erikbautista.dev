@@ -114,7 +114,7 @@ struct HomePage: HTML {
 
 extension HomePage: PageResponder {
   static func response(
-    for component: ServerRoute.SiteRoute.IndexComponent?,
+    for component: ServerRoute.PageRoute.IndexComponent?,
     request: Request,
     context: some RequestContext
   ) async throws -> any ResponseGenerator {

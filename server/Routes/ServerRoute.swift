@@ -5,7 +5,7 @@ import URLRouting
 @CasePathable
 public enum ServerRoute: Sendable, Equatable {
   case api(APIRoute)
-  case page(SiteRoute)
+  case page(PageRoute)
 }
 
 extension ServerRoute {
@@ -19,7 +19,7 @@ extension ServerRoute {
           APIRoute.Router()
         }
         Route(.case(\ServerRoute.Cases.page)) {
-          SiteRoute.Router()
+          PageRoute.Router()
         }
       }
     }
