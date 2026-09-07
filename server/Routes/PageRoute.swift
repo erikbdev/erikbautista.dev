@@ -21,24 +21,26 @@ extension ServerRoute.PageRoute {
 
 extension ServerRoute.PageRoute {
   public struct Router: Sendable, ParserPrinter {
+    public typealias BaseRoute = ServerRoute.PageRoute
+
     public init() {}
 
-    public var body: some URLRouting.Router<ServerRoute.PageRoute> {
+    public var body: some URLRouting.Router<BaseRoute> {
       OneOf {
-        Route(.case(\ServerRoute.PageRoute.Cases.index)) {
+        Route(.case(\BaseRoute.Cases.index)) {
           OneOf {
-            Route(.case(\ServerRoute.PageRoute.IndexComponent?.Cases.some)) {
-              Route(.case(\.activity) as AnyCasePath<ServerRoute.PageRoute.IndexComponent, Void>) {
+            Route(.case(\BaseRoute.IndexComponent?.Cases.some)) {
+              Route(.case(\.activity) as AnyCasePath<BaseRoute.IndexComponent, Void>) {
                 Path { "activity" }
               }
             }
-            Route(.case(\ServerRoute.PageRoute.IndexComponent?.Cases.none))
+            Route(.case(\BaseRoute.IndexComponent?.Cases.none))
           }
         }
-        Route(.case(\ServerRoute.PageRoute.Cases.devLogs)) {
+        Route(.case(\BaseRoute.Cases.devLogs)) {
           Path { "dev-logs" }
         }
-        Route(.case(\ServerRoute.PageRoute.Cases.showcase)) {
+        Route(.case(\BaseRoute.Cases.showcase)) {
           Path { "showcase" }
         }
       }

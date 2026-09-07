@@ -25,15 +25,17 @@ extension ServerRoute.APIRoute {
 
 extension ServerRoute.APIRoute {
   public struct Router: Sendable, ParserPrinter {
-    public var body: some URLRouting.Router<ServerRoute.APIRoute> {
+    public typealias BaseRoute = ServerRoute.APIRoute
+
+    public var body: some URLRouting.Router<BaseRoute> {
       OneOf {
-        Route(.case(\.activity) as AnyCasePath<ServerRoute.APIRoute, ServerRoute.APIRoute.ActivityRoute>) {
+        Route(.case(\.activity) as AnyCasePath<BaseRoute, BaseRoute.ActivityRoute>) {
           Path { "activity" }
 
           OneOf {
-            Route(.case(ServerRoute.APIRoute.ActivityRoute.all))
+            Route(.case(BaseRoute.ActivityRoute.all))
 
-            Route(.case(\ServerRoute.APIRoute.ActivityRoute.Cases.location)) {
+            Route(.case(\BaseRoute.ActivityRoute.Cases.location)) {
               Method.post
               Path { "location" }
               Optionally {
@@ -41,7 +43,7 @@ extension ServerRoute.APIRoute {
               }
             }
 
-            Route(.case(\ServerRoute.APIRoute.ActivityRoute.Cases.nowPlaying)) {
+            Route(.case(\BaseRoute.ActivityRoute.Cases.nowPlaying)) {
               Method.post
               Path { "now-playing" }
               Optionally {
@@ -52,7 +54,7 @@ extension ServerRoute.APIRoute {
         }
 
         #if DEBUG
-          Route(.case(\ServerRoute.APIRoute.Cases.liveReload)) {
+          Route(.case(\BaseRoute.Cases.liveReload)) {
             Method.get
             Path { "live-reload" }
             Query {
