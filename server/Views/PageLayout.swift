@@ -39,11 +39,13 @@ struct Layout<Content: HTML>: HTML {
       Elementary.body(.class("site-body")) {
         header(.class("site-header")) {
           BlockSection(divider: false, extraClass: "terminal-banner") {
-            "TERM xterm-256color · TTY0 · connection opened"
+            code {
+              "TERM xterm-256color · TTY0 · connection opened"
+            }
           }
           NavBlockSection(divider: false, extraClass: "site-nav") {
             a(.href("/"), .class("brand-link")) {
-              span(.class("brand-text")) {
+              code(.class("brand-text")) {
                 "erikb@dev:~"
                 span(.class("prompt-symbol")) { "$" }
               }
@@ -56,7 +58,9 @@ struct Layout<Content: HTML>: HTML {
             "© \(copyrightYear) erikb.dev"
           }
           BlockSection(divider: false, extraClass: "site-footer-status") {
-            "connection closed."
+            code {
+              "connection closed."
+            }
           }
         }
 

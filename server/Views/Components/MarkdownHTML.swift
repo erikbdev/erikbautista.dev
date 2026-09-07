@@ -6,6 +6,6 @@ struct MarkdownHTML: HTML {
   var markdown: String
 
   var body: some HTML {
-    HTMLRaw(HTMLFormatter.format(parseMarkdownDocument(markdown)))
+    HTMLRaw(HTMLFormatter.format(markdown))
   }
 }

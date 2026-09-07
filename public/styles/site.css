@@ -43,7 +43,7 @@ body {
   height: 100%;
   background-color: var(--color-base);
   color: var(--color-body-text);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-optical-sizing: auto;
   overscroll-behavior: none;
 }
@@ -59,7 +59,7 @@ a {
 }
 
 code, kbd, samp, pre {
-  font-family: inherit;
+  font-family: var(--font-mono);
   line-height: 1;
 }
 
