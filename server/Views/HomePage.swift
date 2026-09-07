@@ -7,13 +7,7 @@ import Shared
 
 struct HomePage: HTML {
   @Dependency(\.activityClient.activity) private var activity
-
-  private static let postDateFormatter: DateFormatter = {
-    let f = DateFormatter()
-    f.dateFormat = "MMM d, yyyy"
-    f.timeZone = TimeZone(identifier: "UTC")
-    return f
-  }()
+  @Dependency(\.serverRouter) private var serverRouter
 
   var body: some HTML {
     Layout {
@@ -31,7 +25,7 @@ struct HomePage: HTML {
           p(.class("role-line")) { "Mobile & Web Developer" }
           p { (activity()?.location?.residency ?? .default).description }
 
-          div(.id("activity"), .hx.get("/activity"), .hx.trigger(.event(.load))) {
+          div(.id("activity"), .hx.get(serverRouter.path(for: .page(.index(.activity)))), .hx.trigger(.every("10s"))) {
             ActivityComponent()
           }
 
@@ -72,7 +66,7 @@ struct HomePage: HTML {
                     " cat log-\(post.index).md"
                   }
                 }
-                span(.class("log-entry-date")) { Self.postDateFormatter.string(from: post.date) }
+                span(.class("log-entry-date")) { post.formattedDate }
               }
             }
             
