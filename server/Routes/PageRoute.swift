@@ -4,11 +4,18 @@ import URLRouting
 extension SiteRoute {
   @CasePathable
   public enum PageRoute: Sendable, Equatable {
-    case home
+    case index(IndexComponent? = nil)
     case devLogs
     case showcase
 
-    public static let index = PageRoute.home
+    public static let index = PageRoute.index()
+  }
+}
+
+extension SiteRoute.PageRoute {
+  @CasePathable
+  public enum IndexComponent: Sendable, Equatable {
+    case activity
   }
 }
 
@@ -18,7 +25,16 @@ extension SiteRoute.PageRoute {
 
     public var body: some URLRouting.Router<SiteRoute.PageRoute> {
       OneOf {
-        Route(.case(SiteRoute.PageRoute.home))
+        Route(.case(\SiteRoute.PageRoute.Cases.index)) {
+          OneOf {
+            Route(.case(\SiteRoute.PageRoute.IndexComponent?.Cases.some)) {
+              Route(.case(\.activity) as AnyCasePath<SiteRoute.PageRoute.IndexComponent, Void>) {
+                Path { "activity" }
+              }
+            }
+            Route(.case(\SiteRoute.PageRoute.IndexComponent?.Cases.none))
+          }
+        }
         Route(.case(\SiteRoute.PageRoute.Cases.devLogs)) {
           Path { "dev-logs" }
         }

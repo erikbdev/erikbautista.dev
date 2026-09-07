@@ -27,11 +27,6 @@ struct SiteMiddleware<Context: RequestContext>: RouterMiddleware {
           )
         #endif
         case .api(.activity(.all)):
-          if request.headers[.hx.request] == String(true) {
-            return HTMLResponse {
-              ActivityFragment()
-            }
-          }
           do {
             return try Activity.encoder.encode(self.activityClient.activity(), from: request, context: context)
           } catch {
@@ -45,18 +40,12 @@ struct SiteMiddleware<Context: RequestContext>: RouterMiddleware {
           try request.headers.verifyAuthorization()
           self.activityClient.updateNowPlaying(nowPlaying)
           return Response(status: .ok)
-        case .page(.home):
-          return HTMLResponse { 
-            HomePage() 
-          }
+        case .page(.index(let component)):
+          return try await HomePage.response(for: component, request: request, context: context)
         case .page(.devLogs):
-          return HTMLResponse { 
-            DevLogsPage() 
-          }
+          return try await DevLogsPage.response(request: request, context: context)
         case .page(.showcase):
-          return HTMLResponse { 
-            ShowcasePage()
-          }
+          return try await ShowcasePage.response(request: request, context: context)
         }
       }
       return try response.response(from: request, context: context)
@@ -76,12 +65,8 @@ struct SiteMiddleware<Context: RequestContext>: RouterMiddleware {
 
   private func parse(request: Request) async throws -> URLRequestData {
     var body: ByteBuffer?
-    do {
-      for try await var buffer in request.body {
-        body.setOrWriteBuffer(&buffer)
-      }
-    } catch {
-      body = nil
+    for try await var buffer in request.body {
+      body.setOrWriteBuffer(&buffer)
     }
 
     let authorization = request.headers.basicAuthentication

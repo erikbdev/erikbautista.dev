@@ -2,7 +2,7 @@ import Elementary
 import Shared
 import Dependencies
 
-struct ActivityFragment: HTML {
+struct ActivityComponent: HTML {
   @Dependency(\.activityClient.activity) private var activity
 
   var body: some HTML {

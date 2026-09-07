@@ -1,4 +1,6 @@
 import Elementary
+import Hummingbird
+import HummingbirdElementary
 
 struct DevLogsPage: HTML {
   var body: some HTML {
@@ -7,5 +9,11 @@ struct DevLogsPage: HTML {
         p { "Coming Soon" }
       }
     }
+  }
+}
+
+extension DevLogsPage: PageResponder {
+  static func response(request: Request, context: some RequestContext) async throws -> any ResponseGenerator {
+    HTMLResponse { DevLogsPage() }
   }
 }

@@ -1,7 +1,9 @@
+import Dependencies
 import Elementary
 import Foundation
+import Hummingbird
+import HummingbirdElementary
 import Shared
-import Dependencies
 
 struct HomePage: HTML {
   @Dependency(\.activityClient.activity) private var activity
@@ -29,8 +31,8 @@ struct HomePage: HTML {
           p(.class("role-line")) { "Mobile & Web Developer" }
           p { (activity()?.location?.residency ?? .default).description }
 
-          div(.id("activity"), .hx.get("/api/activity"), .hx.trigger(.event(.load))) {
-            ActivityFragment()
+          div(.id("activity"), .hx.get("/activity"), .hx.trigger(.event(.load))) {
+            ActivityComponent()
           }
 
           p(.class("intro-text")) {
@@ -108,4 +110,19 @@ struct HomePage: HTML {
   }
 
   private var linkClass: String { "pill-link" }
+}
+
+extension HomePage: PageResponder {
+  static func response(
+    for component: SiteRoute.PageRoute.IndexComponent?,
+    request: Request,
+    context: some RequestContext
+  ) async throws -> any ResponseGenerator {
+    switch component {
+    case nil:
+      return HTMLResponse { HomePage() }
+    case .activity:
+      return HTMLResponse { ActivityComponent() }
+    }
+  }
 }

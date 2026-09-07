@@ -27,7 +27,7 @@ extension SiteRoute.APIRoute {
   public struct Router: Sendable, ParserPrinter {
     public var body: some URLRouting.Router<SiteRoute.APIRoute> {
       OneOf {
-        Route(.case(\SiteRoute.APIRoute.Cases.activity)) {
+        Route(.case(\.activity) as AnyCasePath<SiteRoute.APIRoute, SiteRoute.APIRoute.ActivityRoute>) {
           Path { "activity" }
 
           OneOf {
