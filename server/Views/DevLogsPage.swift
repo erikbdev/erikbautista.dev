@@ -13,7 +13,7 @@ struct DevLogsPage: HTML {
 }
 
 extension DevLogsPage: PageResponder {
-  static func response(request: Request, context: some RequestContext) async throws -> any ResponseGenerator {
+  static func response(for route: Void, request: Request, context: some RequestContext) async throws -> any ResponseGenerator {
     HTMLResponse { DevLogsPage() }
   }
 }
