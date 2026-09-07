@@ -43,9 +43,9 @@ struct SiteMiddleware<Context: RequestContext>: RouterMiddleware {
         case .page(.index(let component)):
           return try await HomePage.response(for: component, request: request, context: context)
         case .page(.devLogs):
-          return try await DevLogsPage.response(request: request, context: context)
+          return try await DevLogsPage.response(for: (), request: request, context: context)
         case .page(.showcase):
-          return try await ShowcasePage.response(request: request, context: context)
+          return try await ShowcasePage.response(for: (), request: request, context: context)
         }
       }
       return try response.response(from: request, context: context)
