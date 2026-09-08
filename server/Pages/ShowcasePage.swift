@@ -5,7 +5,7 @@ import URLRouting
 
 struct ShowcasePage: HTML {
   var body: some HTML {
-    Layout(pageTitle: "showcase") {
+    PageLayout(pageTitle: "showcase") {
       BlockSection {
         p { "Coming Soon" }
       }

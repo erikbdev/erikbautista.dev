@@ -12,7 +12,7 @@ struct HomePage: HTML {
   @Dependency(\.router) private var serverRouter
 
   var body: some HTML {
-    Layout {
+    PageLayout {
       BlockSection(id: "user") {
         header {
           a(.href("#user"), .class("whoami-prompt")) {

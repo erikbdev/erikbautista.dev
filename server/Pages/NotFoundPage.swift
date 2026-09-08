@@ -5,7 +5,7 @@ struct NotFoundPage: HTML {
   var statusCode = HTTPResponse.Status.notFound
 
   var body: some HTML {
-    Layout(pageTitle: "\(statusCode.code)") {
+    PageLayout(pageTitle: "\(statusCode.code)") {
       BlockSection(id: "error") {
         header {
           a(.href("#error"), .class("whoami-prompt")) {

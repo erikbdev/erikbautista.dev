@@ -44,6 +44,7 @@ struct PageLayout<Content: HTML>: HTML {
               --size-gridline: 0.8px;
               --color-primary: #ffc900;
               --color-terminal: var(--color-primary);
+              --color-danger: #ff5f56;
               --color-white: #fff;
               --color-body-text: #e0e0e0;
               --color-neutral-50: #f7f7f7;
@@ -144,6 +145,37 @@ struct PageLayout<Content: HTML>: HTML {
               background-color: transparent !important;
               color: var(--color-neutral-800);
               border-bottom: var(--size-gridline) solid var(--color-gridline);
+            }
+
+            .dev-banner {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 0.5rem;
+              width: 100%;
+              padding-block: 0.5rem;
+              font-size: 0.75rem;
+              font-family: var(--font-mono);
+              background-color: var(--color-primary);
+              color: var(--color-base);
+              border-bottom: var(--size-gridline) solid var(--color-gridline);
+            }
+
+            .dev-banner--offline {
+              background-color: var(--color-danger);
+              color: var(--color-white);
+            }
+
+            .dev-banner__offline {
+              display: none;
+            }
+
+            .dev-banner--offline .dev-banner__ok {
+              display: none;
+            }
+
+            .dev-banner--offline .dev-banner__offline {
+              display: inline;
             }
 
             .site-nav {
@@ -487,17 +519,24 @@ struct PageLayout<Content: HTML>: HTML {
         script(.src("/scripts/vendors/htmx.min.js"))
       }
       Elementary.body(.class("site-body")) {
-        #if DEBUG
-          // TODO: show banner that you are in development mode, show error if it failed to communicate with server on error.
-          div(
-            .hx.get(router.path(for: .api(.liveReload(build: buildTimestamp)))),
-            .hx.trigger(.every("2s")),
-            .hx.swap(.none),
-          ) {
-            
-          }
-        #endif
         header(.class("site-header")) {
+          #if DEBUG
+            div(
+              .class("dev-banner"),
+              .hx.get(router.path(for: .api(.liveReload(build: buildTimestamp)))),
+              .hx.trigger(.every("2s")),
+              .hx.swap(.none),
+              .hx.on("htmx:error", "this.classList.add('dev-banner--offline')"),
+              .hx.on("htmx:response:error", "this.classList.add('dev-banner--offline')"),
+              .hx.on("htmx:after:request", "this.classList.remove('dev-banner--offline')"),
+            ) {
+              code {
+                span(.class("dev-banner__ok")) { "● DEV MODE · watching for changes" }
+                span(.class("dev-banner__offline")) { "● DEV MODE · lost connection to server" }
+              }
+            }
+          #endif
+
           BlockSection(divider: false, extraClass: "terminal-banner") {
             code {
               "TERM xterm-256color · TTY0 · connection opened"
