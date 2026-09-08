@@ -18,9 +18,12 @@ extension ActivityClient {
       activity: { storage.value },
       updateLocation: { newValue in
         storage.withValue {
-          let residency = $0.location?.residency
-          $0.location = newValue
-          $0.location?.residency = residency
+          $0.location = Activity.Location(
+            city: newValue?.city, 
+            state: newValue?.state, 
+            region: newValue?.region, 
+            residency: newValue?.residency ?? .default
+          )
         }
       },
       updateNowPlaying: { newValue in
