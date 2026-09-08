@@ -1,21 +1,33 @@
-import Foundation
 import Dependencies
 import DependenciesMacros
+import Foundation
 
 @DependencyClient
 public struct ActivityClient: Sendable {
-  public private(set) var activity: @Sendable () -> Activity?
+  public private(set) var activity: @Sendable () -> Activity = {
+    Activity(location: .init(city: nil, state: nil, region: nil, residency: .default), nowPlaying: nil)
+  }
   public private(set) var updateLocation: @Sendable (Activity.Location?) -> Void
   public private(set) var updateNowPlaying: @Sendable (Activity.NowPlaying?) -> Void
 }
 
 extension ActivityClient {
   public static var live: Self {
-    let storage = LockIsolated(Activity())
+    let storage = LockIsolated(Activity(location: .init(city: nil, state: nil, region: nil, residency: .default), nowPlaying: nil))
     return Self(
       activity: { storage.value },
-      updateLocation: { newValue in storage.withValue { $0.location = newValue } },
-      updateNowPlaying: { newValue in storage.withValue { $0.nowPlaying = newValue } }
+      updateLocation: { newValue in
+        storage.withValue {
+          let residency = $0.location?.residency
+          $0.location = newValue
+          $0.location?.residency = residency
+        }
+      },
+      updateNowPlaying: { newValue in
+        storage.withValue {
+          $0.nowPlaying = newValue
+        }
+      }
     )
   }
 }
@@ -76,7 +88,7 @@ extension Activity {
     public let region: String?
     // public let timestamp: Date
 
-    public let residency: Residency?
+    public var residency: Residency?
 
     public struct Residency: Sendable, Equatable, CustomStringConvertible, Codable {
       public let city: String

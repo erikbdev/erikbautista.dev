@@ -25,7 +25,6 @@ struct HomePage: HTML {
           h1(.class("page-title")) { "Erik Bautista Santibanez" }
 
           p(.class("role-line")) { "Mobile & Web Developer" }
-          p { (activity()?.location?.residency ?? .default).description }
 
           div(.id("activity"), .hx.get(serverRouter.path(for: .page(.index(.activity)))), .hx.trigger(.every("10s"))) {
             ActivityComponent()

@@ -28,7 +28,7 @@ struct ServerRoutingMiddleware<Context: RequestContext>: RouterMiddleware {
         #endif
         case .api(.activity(.all)):
           do {
-            return try Activity.encoder.encode(self.activityClient.activity(), from: request, context: context)
+            return try Activity.encoder.encode(self.activityClient.activity().redacted, from: request, context: context)
           } catch {
             throw HTTPError(.badRequest)
           }

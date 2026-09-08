@@ -8,6 +8,13 @@ extension Post: CaseIterable {
     return f
   }()
 
+  public static let prettyDateFormatter: DateFormatter = {
+    let f = DateFormatter()
+    f.dateFormat = "MMM d, yyyy"
+    f.timeZone = TimeZone(identifier: "UTC")
+    return f
+  }()
+
   private static func date(_ string: String) -> Date {
     Self.dateFormatter.date(from: string) ?? .now
   }
@@ -154,6 +161,6 @@ extension Post: CaseIterable {
 
 extension Post {
   public var formattedDate: String {
-    Self.dateFormatter.string(from: self.date)
+    Self.prettyDateFormatter.string(from: self.date)
   }
 }
