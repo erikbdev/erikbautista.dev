@@ -9,7 +9,7 @@ import URLRouting
 
 struct HomePage: HTML {
   @Dependency(\.activityClient.activity) private var activity
-  @Dependency(\.serverRouter) private var serverRouter
+  @Dependency(\.router) private var serverRouter
 
   var body: some HTML {
     Layout {

@@ -9,7 +9,7 @@ import Shared
 import URLRouting
 
 struct ServerRoutingMiddleware<Context: RequestContext>: RouterMiddleware {
-  @Dependency(\.serverRouter) private var router
+  @Dependency(\.router) private var router
   @Dependency(\.currentRoute) private var currentRoute
   @Dependency(\.activityClient) private var activityClient
 

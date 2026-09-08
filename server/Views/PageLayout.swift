@@ -10,7 +10,7 @@ struct Layout<Content: HTML>: HTML {
   var pageTitle: String? = nil
   @HTMLBuilder var content: Content
 
-  @Dependency(\.serverRouter) private var router
+  @Dependency(\.router) private var router
 
   private var resolvedTitle: String {
     [pageTitle ?? "", "erikb.dev"].filter { !$0.isEmpty }

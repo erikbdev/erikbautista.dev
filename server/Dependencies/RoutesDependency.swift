@@ -9,7 +9,7 @@ extension ServerRoute.Router: DependencyKey {
 }
 
 extension DependencyValues {
-  var serverRouter: ServerRoute.Router {
+  var router: ServerRoute.Router {
     get { self[ServerRoute.Router.self] }
     set { self[ServerRoute.Router.self] = newValue }
   }
