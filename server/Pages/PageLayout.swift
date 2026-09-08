@@ -6,7 +6,7 @@ import Foundation
   let buildTimestamp = Date().formatted(.iso8601)
 #endif
 
-struct Layout<Content: HTML>: HTML {
+struct PageLayout<Content: HTML>: HTML {
   var pageTitle: String? = nil
   @HTMLBuilder var content: Content
 
@@ -488,7 +488,7 @@ struct Layout<Content: HTML>: HTML {
       }
       Elementary.body(.class("site-body")) {
         #if DEBUG
-          // Live reload
+          // TODO: show banner that you are in development mode, show error if it failed to communicate with server on error.
           div(
             .hx.get(router.path(for: .api(.liveReload(build: buildTimestamp)))),
             .hx.trigger(.every("2s")),
