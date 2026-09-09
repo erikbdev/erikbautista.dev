@@ -247,10 +247,6 @@ struct PageLayout<Content: HTML>: HTML {
               bottom: 0;
             }
 
-            .block-section--divider::before {
-              bottom: -1rem;
-            }
-
             .block-section:not(.block-section--fill) {
               border-inline: var(--size-gridline) solid var(--color-gridline);
               max-width: var(--content-max-width);
@@ -268,20 +264,14 @@ struct PageLayout<Content: HTML>: HTML {
               padding: 0 !important;
             }
 
-            .block-section--divider {
-              margin-bottom: 1rem;
-            }
-
-            .block-section--divider::after {
-              content: "";
-              position: absolute;
+            .block-section-divider {
+              position: relative;
               height: 1rem;
               width: 100vw;
-              bottom: -1rem;
-              left: 50%;
-              transform: translateX(-50%);
+              left: 0;
+              background-color: var(--color-base);
               border-top: var(--size-gridline) solid;
-              border-color: inherit;
+              border-color: var(--color-gridline);
 
               box-shadow:
                 -1px 0 0 0 inset var(--color-gridline),
@@ -292,8 +282,9 @@ struct PageLayout<Content: HTML>: HTML {
             }
 
             @media (min-width: 48rem) {
-              .block-section--divider::after {
+              .block-section-divider {
                 max-width: var(--content-max-width);
+                margin-inline: auto;
               }
             }
 
@@ -537,12 +528,12 @@ struct PageLayout<Content: HTML>: HTML {
             }
           #endif
 
-          BlockSection(divider: false, extraClass: "terminal-banner") {
+          BlockSection(extraClass: "terminal-banner") {
             code {
               "TERM xterm-256color · TTY0 · connection opened"
             }
           }
-          NavBlockSection(divider: false, extraClass: "site-nav") {
+          NavBlockSection(extraClass: "site-nav") {
             a(.href("/"), .class("brand-link")) {
               code(.class("brand-text")) {
                 "erikb@dev:~"
@@ -553,10 +544,10 @@ struct PageLayout<Content: HTML>: HTML {
         }
         content
         footer {
-          BlockSection(divider: false, extraClass: "site-footer-copyright") {
+          BlockSection(extraClass: "site-footer-copyright") {
             "© \(copyrightYear) erikb.dev"
           }
-          BlockSection(divider: false, extraClass: "site-footer-status") {
+          BlockSection(extraClass: "site-footer-status") {
             code {
               "connection closed."
             }

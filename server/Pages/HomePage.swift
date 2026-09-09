@@ -45,6 +45,8 @@ struct HomePage: HTML {
         }
       }
 
+      Divider()
+
       BlockSection(flush: true) {
         header(.class("dev-logs-header")) {
           a(.href("#dev-logs"), .class("devlogs-prompt")) {
@@ -109,6 +111,8 @@ struct HomePage: HTML {
           }
         }
       }
+
+      Divider()
     }
   }
 

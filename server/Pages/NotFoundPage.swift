@@ -24,6 +24,8 @@ struct NotFoundPage: HTML {
           }
         }
       }
+
+      Divider()
     }
   }
 }
